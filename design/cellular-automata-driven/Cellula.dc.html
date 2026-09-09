@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-1ca77ff9-c0c9-4e71-8631-180f5c8d1988/styles.css" />
+<script src="_ds/organic-1ca77ff9-c0c9-4e71-8631-180f5c8d1988/_ds_bundle.js"></script>
+<style>
+  body { margin: 0; background: var(--color-neutral-200); font-family: var(--font-body); }
+  a { color: var(--color-accent-700); } a:hover { color: var(--color-accent-800); }
+  input[type=range] { accent-color: var(--color-accent); }
+  * { -webkit-tap-highlight-color: transparent; }
+  @keyframes cel-pop { from { transform: scale(.6); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+  @keyframes cel-sheet { from { transform: translateY(100%) } to { transform: translateY(0) } }
+  @keyframes cel-pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 90%, transparent) } 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 0%, transparent) } }
+</style>
+</helmet>
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px" style="margin: 24px auto">
+<div style="height: 100%; display: flex; flex-direction: column; background: var(--color-bg); font-family: var(--font-body); color: var(--color-text); overflow: hidden">
+
+  <div style="padding: 58px 14px 8px; display: flex; align-items: flex-end; gap: 10px; background: var(--color-bg); border-bottom: 1px solid var(--color-divider)">
+    <div style="width: 32px; height: 32px; border-radius: 999px; background: var(--color-accent-2-400); display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+      <div style="width: 13px; height: 13px; border-radius: 999px; background: var(--color-accent-700)"></div>
+    </div>
+    <div style="flex: 1; min-width: 0">
+      <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px; line-height: 1; letter-spacing: .5px">CELLULA</div>
+      <div style="font-size: 11px; color: var(--color-neutral-600); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ simName }} · <span style="text-transform: uppercase; letter-spacing: .6px">{{ tickLabel }}</span></div>
+    </div>
+    <div onClick="{{ openGallery }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); padding: 7px 13px; font-size: 11px; font-weight: 700; box-shadow: var(--shadow-sm)" style-active="transform: translate(1px,1px); box-shadow: var(--shadow-sm)">GALERIA<div style="font-size: 8px; font-weight: 600; color: var(--color-neutral-600); letter-spacing: .5px">GALLERY</div></div>
+  </div>
+
+  <div style="flex: 1; min-height: 0; position: relative; overflow: hidden">
+
+    <sc-if value="{{ isPlay }}" hint-placeholder-val="{{ true }}">
+    <div style="position: absolute; inset: 0; display: flex; flex-direction: column; overflow-y: auto">
+      <div style="padding: 12px 14px 6px; display: flex; align-items: center; justify-content: space-between">
+        <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 12px; letter-spacing: .5px">JOGAR <span style="color: var(--color-neutral-600)">/ PLAY</span></div>
+        <div style="display: flex; gap: 4px">
+          <div onClick="{{ setSpeed1 }}" style="border: 1px solid var(--color-divider); border-radius: 999px; padding: 4px 11px; font-size: 11px; font-weight: 700; background: {{ sp1bg }}">1×</div>
+          <div onClick="{{ setSpeed2 }}" style="border: 1px solid var(--color-divider); border-radius: 999px; padding: 4px 11px; font-size: 11px; font-weight: 700; background: {{ sp2bg }}">2×</div>
+          <div onClick="{{ setSpeed4 }}" style="border: 1px solid var(--color-divider); border-radius: 999px; padding: 4px 11px; font-size: 11px; font-weight: 700; background: {{ sp4bg }}">4×</div>
+        </div>
+      </div>
+
+      <div style="padding: 0 14px">
+        <div onPointerDown="{{ gridDown }}" onPointerMove="{{ gridMove }}" onPointerUp="{{ gridUp }}" onPointerLeave="{{ gridUp }}" style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-accent-100); box-shadow: var(--shadow-md); display: grid; grid-template-columns: repeat({{ cols }}, 1fr); gap: 1px; padding: 5px; touch-action: none; border-radius: var(--radius-md)">
+          <sc-for list="{{ cells }}" as="c" hint-placeholder-count="143">
+            <div data-i="{{ c.i }}" style="aspect-ratio: 1; border-radius: 7px; background-color: {{ c.bg }}; background-image: {{ c.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat; box-shadow: {{ c.ring }}"></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding: 10px 14px 0; display: flex; gap: 8px; align-items: stretch">
+        <div onClick="{{ toggleRun }}" class="btn btn-primary" style="flex: 1; border-radius: 999px; padding: 13px 0; font-size: 15px" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">{{ runLabel }}</div>
+        <div onClick="{{ stepOnce }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 11px 14px; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">+1</div>
+        <div onClick="{{ resetWorld }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 11px 12px; font-size: 11px; font-weight: 800; display: flex; align-items: center" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">RECOMEÇAR</div>
+      </div>
+
+      <sc-if value="{{ showChart }}" hint-placeholder-val="{{ true }}">
+      <div style="padding: 14px 14px 0">
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin-bottom: 6px">POPULAÇÃO · POPULATION</div>
+        <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 6px">
+          <svg viewBox="0 0 300 84" preserveAspectRatio="none" style="width: 100%; height: 84px; display: block">
+            <line x1="0" y1="42" x2="300" y2="42" stroke="var(--color-text)" stroke-opacity=".12" stroke-width="1"></line>
+            <sc-for list="{{ series }}" as="s" hint-placeholder-count="3">
+              <polyline points="{{ s.points }}" fill="none" stroke="{{ s.color }}" stroke-width="2.5" stroke-linejoin="round"></polyline>
+            </sc-for>
+          </svg>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap; padding: 6px 2px 0">
+            <sc-for list="{{ series }}" as="s" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 600">
+                <div style="width: 10px; height: 10px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: {{ s.color }}"></div>{{ s.label }} <span style="color: var(--color-neutral-600)">{{ s.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      </sc-if>
+
+      <div style="padding: 14px 14px 0">
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin-bottom: 6px">AJUSTES DO AUTOR · AUTHOR DIALS</div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{ dials }}" as="d" hint-placeholder-count="4">
+            <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 8px 10px; display: flex; align-items: center; gap: 10px">
+              <div style="width: 22px; height: 22px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ d.bg }}; background-image: {{ d.img }}; background-size: 86% 86%; background-position: center; background-repeat: no-repeat; flex-shrink: 0"></div>
+              <div style="flex: 1; min-width: 0">
+                <div style="font-size: 11px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ d.label }}</div>
+                <input type="range" min="0" max="100" value="{{ d.value }}" onChange="{{ d.set }}" style="width: 100%; accent-color: var(--color-accent-700); margin: 2px 0 0; height: 20px" />
+              </div>
+              <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 12px; width: 34px; text-align: right">{{ d.value }}%</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="height: 26px"></div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isWorld }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; display: flex; flex-direction: column; overflow-y: auto">
+      <div style="padding: 12px 14px 6px; display: flex; align-items: baseline; justify-content: space-between">
+        <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 12px; letter-spacing: .5px">MUNDO <span style="color: var(--color-neutral-600)">/ WORLD</span></div>
+        <div style="font-size: 10px; color: var(--color-neutral-600); font-weight: 600; white-space: nowrap">pinte com o dedo</div>
+      </div>
+
+      <div style="padding: 0 14px">
+        <div onPointerDown="{{ gridDown }}" onPointerMove="{{ gridMove }}" onPointerUp="{{ gridUp }}" onPointerLeave="{{ gridUp }}" style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-accent-100); box-shadow: var(--shadow-md); display: grid; grid-template-columns: repeat({{ cols }}, 1fr); gap: 1px; padding: 5px; touch-action: none; border-radius: var(--radius-md)">
+          <sc-for list="{{ cells }}" as="c" hint-placeholder-count="143">
+            <div data-i="{{ c.i }}" style="aspect-ratio: 1; border-radius: 7px; background-color: {{ c.bg }}; background-image: {{ c.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat; box-shadow: {{ c.ring }}"></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding: 12px 0 0">
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin: 0 14px 6px">PINCEL · BRUSH</div>
+        <div style="display: flex; gap: 8px; overflow-x: auto; padding: 2px 14px 6px; scrollbar-width: none">
+          <sc-for list="{{ brushes }}" as="b" hint-placeholder-count="6">
+            <div onClick="{{ b.pick }}" style="flex: 0 0 auto; width: 62px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); box-shadow: {{ b.shadow }}; padding: 6px 4px; text-align: center; transform: {{ b.lift }}">
+              <div style="height: 34px; border: 1px solid var(--color-divider); border-radius: var(--radius-sm); background-color: {{ b.bg }}; background-image: {{ b.img }}; background-size: 72% 72%; background-position: center; background-repeat: no-repeat"></div>
+              <div style="font-size: 9px; font-weight: 800; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ b.label }}</div>
+            </div>
+          </sc-for>
+          <div onClick="{{ openNewType }}" style="flex: 0 0 auto; width: 62px; border: 1px dashed var(--color-neutral-400); border-radius: var(--radius-md); background: var(--color-bg); padding: 6px 4px; text-align: center">
+            <div style="height: 34px; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 20px; color: var(--color-accent-700)">+</div>
+            <div style="font-size: 9px; font-weight: 800; margin-top: 4px">NOVO</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding: 6px 14px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+        <div onClick="{{ setSeed }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-accent-2-400); box-shadow: var(--shadow-sm); padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 800" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">GUARDAR COMO INÍCIO<div style="font-size: 8px; font-weight: 600; color: var(--color-neutral-800)">SAVE AS START</div></div>
+        <div onClick="{{ scatter }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 800" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">ESPALHAR PINCEL<div style="font-size: 8px; font-weight: 600; color: var(--color-neutral-600)">SCATTER</div></div>
+        <div onClick="{{ clearWorld }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 800" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">LIMPAR<div style="font-size: 8px; font-weight: 600; color: var(--color-neutral-600)">CLEAR</div></div>
+        <div onClick="{{ goAgents }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 10px 6px; text-align: center; font-size: 11px; font-weight: 800" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">IR AOS AGENTES<div style="font-size: 8px; font-weight: 600; color: var(--color-neutral-600)">TO AGENTS</div></div>
+      </div>
+      <div style="height: 26px"></div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isAgents }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden">
+      <div style="padding: 12px 14px 6px; display: flex; align-items: baseline; justify-content: space-between">
+        <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 12px; letter-spacing: .5px">AGENTES <span style="color: var(--color-neutral-600)">/ CAST</span></div>
+        <div style="font-size: 10px; color: var(--color-neutral-600); font-weight: 600; white-space: nowrap">o elenco do mundo</div>
+      </div>
+
+      <div style="display: flex; gap: 8px; overflow-x: auto; padding: 2px 14px 8px; scrollbar-width: none">
+        <sc-for list="{{ cast }}" as="a" hint-placeholder-count="5">
+          <div onClick="{{ a.pick }}" style="flex: 0 0 auto; width: 56px; text-align: center">
+            <div style="height: 48px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ a.bg }}; background-image: {{ a.img }}; background-size: 68% 68%; background-position: center; background-repeat: no-repeat; box-shadow: {{ a.shadow }}; transform: {{ a.lift }}"></div>
+            <div style="font-size: 9px; font-weight: 800; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: {{ a.ink }}">{{ a.label }}</div>
+            <div style="font-size: 8px; color: var(--color-neutral-600)">{{ a.count }} no mundo</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 0 14px">
+        <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-sm)">
+          <div style="width: 44px; height: 44px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ agentBg }}; background-image: {{ agentImg }}; background-size: 74% 74%; background-position: center; background-repeat: no-repeat; flex-shrink: 0"></div>
+          <div style="flex: 1; min-width: 0">
+            <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px">{{ agentLabel }}</div>
+            <div style="font-size: 10px; color: var(--color-neutral-600); font-weight: 600">{{ agentEn }} · {{ agentRuleCount }} regras</div>
+          </div>
+          <div onClick="{{ openDemo }}" class="btn btn-primary" style="border-radius: 999px; padding: 10px 16px; flex-shrink: 0; white-space: nowrap">+ ensinar</div>
+        </div>
+
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin: 12px 0 6px">FICHA DO AGENTE · SLOTS</div>
+        <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-surface); padding: 4px 10px">
+          <sc-for list="{{ slots }}" as="k" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--color-divider)">
+              <div style="font-size: 11px; font-weight: 700; color: var(--color-neutral-700); width: 96px; flex-shrink: 0">{{ k.label }}</div>
+              <div style="flex: 1; min-width: 0; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ k.value }}</div>
+              <div style="width: 20px; height: 20px; border-radius: 6px; background-color: {{ k.bg }}; background-image: {{ k.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat; flex-shrink: 0"></div>
+            </div>
+          </sc-for>
+          <div onClick="{{ editLook }}" class="btn btn-ghost" style="padding: 9px 0; font-size: 12px; line-height: 1.4; white-space: nowrap">ajustar aparência</div>
+        </div>
+
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin: 12px 0 6px">COMPORTAMENTOS EM ORDEM · RULES IN ORDER</div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{ agentRules }}" as="r" hint-placeholder-count="4">
+            <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: {{ r.cardBg }}; padding: 9px 10px">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 11px; color: var(--color-neutral-600); width: 14px">{{ r.n }}</div>
+                <div style="flex: 1; min-width: 0">
+                  <div style="font-size: 12px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ r.label }}</div>
+                  <div style="font-size: 9px; color: var(--color-neutral-600); font-weight: 600">{{ r.en }} · {{ r.dirLabel }}</div>
+                </div>
+                <div onClick="{{ r.toggle }}" style="border: 1px solid var(--color-divider); border-radius: 999px; width: 38px; height: 22px; background: {{ r.swBg }}; display: flex; align-items: center; padding: 2px; box-sizing: border-box; justify-content: {{ r.swPos }}">
+                  <div style="width: 16px; height: 16px; border-radius: 999px; background: var(--color-text)"></div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px">
+                <div style="display: flex; gap: 2px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); padding: 2px; background: var(--color-accent-100)">
+                  <div style="width: 22px; height: 22px; background-color: {{ r.p0.bg }}; background-image: {{ r.p0.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+                  <div style="width: 22px; height: 22px; background-color: {{ r.p1.bg }}; background-image: {{ r.p1.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+                </div>
+                <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px; color: var(--color-accent-700)">&#8594;</div>
+                <div style="display: flex; gap: 2px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); padding: 2px; background: var(--color-accent-100)">
+                  <div style="width: 22px; height: 22px; background-color: {{ r.q0.bg }}; background-image: {{ r.q0.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+                  <div style="width: 22px; height: 22px; background-color: {{ r.q1.bg }}; background-image: {{ r.q1.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+                </div>
+                <div style="flex: 1"></div>
+                <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 10px; padding: 4px 5px">{{ r.prob }}%</div>
+                <div onClick="{{ r.up }}" style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 11px">&#9650;</div>
+                <div onClick="{{ r.down }}" style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 11px">&#9660;</div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px">
+                <input type="range" min="0" max="100" value="{{ r.prob }}" onChange="{{ r.setProb }}" style="flex: 1; accent-color: var(--color-accent-700); height: 20px" />
+                <div onClick="{{ r.test }}" style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 5px 8px; font-size: 10px; font-weight: 800">TESTAR</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height: 26px"></div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ sheetGallery }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position: absolute; inset: 0; background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent); display: flex; flex-direction: column; justify-content: flex-end">
+      <div onClick="{{ stop }}" style="background: var(--color-bg); border-top: 1px solid var(--color-divider); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 18px 16px; animation: cel-sheet .22s ease-out">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px">
+          <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px">GALERIA</div>
+          <div onClick="{{ closeSheet }}" style="font-size: 12px; font-weight: 800; color: var(--color-neutral-600)">FECHAR</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{ presets }}" as="g" hint-placeholder-count="3">
+            <div onClick="{{ g.load }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 10px; display: flex; align-items: center; gap: 10px" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">
+              <div style="display: flex; gap: 2px">
+                <div style="width: 26px; height: 26px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ g.c0.bg }}; background-image: {{ g.c0.img }}; background-size: 78% 78%; background-position: center; background-repeat: no-repeat"></div>
+                <div style="width: 26px; height: 26px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ g.c1.bg }}; background-image: {{ g.c1.img }}; background-size: 78% 78%; background-position: center; background-repeat: no-repeat"></div>
+              </div>
+              <div style="flex: 1; min-width: 0">
+                <div style="font-size: 13px; font-weight: 800">{{ g.name }}</div>
+                <div style="font-size: 10px; color: var(--color-neutral-600); font-weight: 600">{{ g.meta }}</div>
+              </div>
+              <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 11px; color: var(--color-accent-700)">ABRIR</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height: 8px"></div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ sheetType }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position: absolute; inset: 0; background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent); display: flex; flex-direction: column; justify-content: flex-end">
+      <div onClick="{{ stop }}" style="background: var(--color-bg); border-top: 1px solid var(--color-divider); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 18px 16px; animation: cel-sheet .22s ease-out">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px">
+          <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px">NOVO TIPO <span style="color: var(--color-neutral-600)">/ NEW TYPE</span></div>
+          <div onClick="{{ closeSheet }}" style="font-size: 12px; font-weight: 800; color: var(--color-neutral-600)">FECHAR</div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <div style="width: 66px; height: 66px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ ntBg }}; background-image: {{ ntImg }}; background-size: 72% 72%; background-position: center; background-repeat: no-repeat; flex-shrink: 0"></div>
+          <div style="flex: 1; min-width: 0">
+            <input value="{{ ntName }}" onChange="{{ setNtName }}" placeholder="nome do tipo" style="width: 100%; box-sizing: border-box; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 9px; font-family: var(--font-body); font-size: 13px; font-weight: 800" />
+            <div style="font-size: 10px; color: var(--color-neutral-600); font-weight: 600; margin-top: 6px">o desenho pode vir de uma imagem sua — toque em ESCOLHER IMAGEM</div>
+          </div>
+        </div>
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin: 12px 0 5px">DESENHO · SPRITE</div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap">
+          <sc-for list="{{ ntSprites }}" as="s" hint-placeholder-count="7">
+            <div onClick="{{ s.pick }}" style="width: 40px; height: 40px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: var(--color-neutral-100); background-image: {{ s.img }}; background-size: 72% 72%; background-position: center; background-repeat: no-repeat; box-shadow: {{ s.shadow }}"></div>
+          </sc-for>
+          <div style="width: 40px; height: 40px; border: 1px dashed var(--color-neutral-400); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; text-align: center; line-height: 1.1; color: var(--color-neutral-600)">IMA<br />GEM</div>
+        </div>
+        <div style="font-size: 10px; font-weight: 800; letter-spacing: .8px; color: var(--color-neutral-600); margin: 12px 0 5px">COR DO FUNDO · TILE COLOR</div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap">
+          <sc-for list="{{ ntColors }}" as="k" hint-placeholder-count="6">
+            <div onClick="{{ k.pick }}" style="width: 40px; height: 30px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: {{ k.bg }}; box-shadow: {{ k.shadow }}"></div>
+          </sc-for>
+        </div>
+        <div onClick="{{ createType }}" class="btn btn-primary" style="margin-top: 16px; border-radius: 999px; padding: 13px 0; width: 100%; font-size: 15px" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">{{ ntCta }}</div>
+        <div style="height: 8px"></div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ sheetDemo }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent); display: flex; flex-direction: column; justify-content: flex-end">
+      <div style="background: var(--color-bg); border-top: 1px solid var(--color-divider); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 18px 16px 14px; animation: cel-sheet .22s ease-out; max-height: 100%; overflow-y: auto">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
+          <div>
+            <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 20px; line-height: 1.05">Ensinar</div>
+            <div style="font-size: 11px; font-weight: 600; color: var(--color-neutral-600); white-space: nowrap">mostre um exemplo · by example</div>
+          </div>
+          <div onClick="{{ closeSheet }}" class="btn btn-secondary" style="border-radius: 999px; padding: 7px 14px; flex-shrink: 0">fechar</div>
+        </div>
+        <div style="display: flex; gap: 6px; margin: 10px 0 8px">
+          <div onClick="{{ demoPhaseBefore }}" style="flex: 1; border: 1px solid var(--color-divider); border-radius: 999px; background: {{ ph1bg }}; color: {{ ph1ink }}; padding: 7px; text-align: center; font-size: 11px; font-weight: 800">1 · ANTES <span style="font-weight: 600; opacity: .7">BEFORE</span></div>
+          <div onClick="{{ demoPhaseAfter }}" style="flex: 1; border: 1px solid var(--color-divider); border-radius: 999px; background: {{ ph2bg }}; color: {{ ph2ink }}; padding: 7px; text-align: center; font-size: 11px; font-weight: 800">2 · DEPOIS <span style="font-weight: 600; opacity: .7">AFTER</span></div>
+        </div>
+        <div style="font-size: 11px; font-weight: 600; color: var(--color-neutral-800); min-height: 30px; line-height: 1.35">{{ demoHint }}</div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-accent-100); padding: 5px; margin-top: 4px; max-width: 258px">
+          <sc-for list="{{ stage }}" as="s" hint-placeholder-count="9">
+            <div onClick="{{ s.tap }}" style="aspect-ratio: 1; border-radius: 7px; background-color: {{ s.bg }}; background-image: {{ s.img }}; background-size: 80% 80%; background-position: center; background-repeat: no-repeat; box-shadow: {{ s.ring }}; position: relative; display: flex; align-items: flex-start; justify-content: flex-end">
+              <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 9px; color: var(--color-text); opacity: .35; padding: 2px 3px">{{ s.tag }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 2px; scrollbar-width: none">
+          <sc-for list="{{ demoBrushes }}" as="b" hint-placeholder-count="6">
+            <div onClick="{{ b.pick }}" style="flex: 0 0 auto; width: 44px; height: 44px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background-color: {{ b.bg }}; background-image: {{ b.img }}; background-size: 70% 70%; background-position: center; background-repeat: no-repeat; box-shadow: {{ b.shadow }}"></div>
+          </sc-for>
+        </div>
+
+        <div style="border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 9px 10px; margin-top: 8px; display: flex; align-items: center; gap: 8px">
+          <div style="display: flex; gap: 2px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); padding: 2px; background: var(--color-accent-100)">
+            <div style="width: 24px; height: 24px; background-color: {{ dp0.bg }}; background-image: {{ dp0.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+            <div style="width: 24px; height: 24px; background-color: {{ dp1.bg }}; background-image: {{ dp1.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+          </div>
+          <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px; color: var(--color-accent-700)">&#8594;</div>
+          <div style="display: flex; gap: 2px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); padding: 2px; background: var(--color-accent-100)">
+            <div style="width: 24px; height: 24px; background-color: {{ dq0.bg }}; background-image: {{ dq0.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+            <div style="width: 24px; height: 24px; background-color: {{ dq1.bg }}; background-image: {{ dq1.img }}; background-size: 82% 82%; background-position: center; background-repeat: no-repeat"></div>
+          </div>
+          <div style="flex: 1; min-width: 0; font-size: 10px; font-weight: 700; color: var(--color-neutral-600); text-align: right">{{ demoStatus }}</div>
+        </div>
+
+        <div style="display: flex; gap: 6px; margin-top: 8px">
+          <div onClick="{{ demoAnyDir }}" style="flex: 1; border: 1px solid var(--color-divider); border-radius: 999px; background: {{ anyBg }}; padding: 8px; text-align: center; font-size: 10px; font-weight: 800">EM QUALQUER DIREÇÃO</div>
+          <div onClick="{{ demoOneDir }}" style="flex: 1; border: 1px solid var(--color-divider); border-radius: 999px; background: {{ oneBg }}; padding: 8px; text-align: center; font-size: 10px; font-weight: 800">SÓ NESSA DIREÇÃO</div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px">
+          <div style="font-size: 10px; font-weight: 800; color: var(--color-neutral-600); width: 74px">CHANCE<div style="font-size: 8px; font-weight: 600">HOW OFTEN</div></div>
+          <input type="range" min="0" max="100" value="{{ demoProb }}" onChange="{{ setDemoProb }}" style="flex: 1; accent-color: var(--color-accent-700); height: 20px" />
+          <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 12px; width: 36px; text-align: right">{{ demoProb }}%</div>
+        </div>
+
+        <input value="{{ demoName }}" onChange="{{ setDemoName }}" placeholder="nome da regra (ex: coelho pula)" style="width: 100%; box-sizing: border-box; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-neutral-100); padding: 9px; margin-top: 10px; font-family: var(--font-body); font-size: 12px; font-weight: 700" />
+
+        <div style="display: flex; gap: 8px; margin-top: 10px">
+          <div onClick="{{ demoReset }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 11px 12px; font-size: 11px; font-weight: 800" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">REFAZER</div>
+          <div onClick="{{ demoSave }}" style="flex: 1; border-radius: 999px; background: {{ saveBg }}; color: var(--color-bg); box-shadow: var(--shadow-sm); padding: 13px 0; text-align: center; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 15px" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">GUARDAR REGRA</div>
+        </div>
+        <div style="height: 8px"></div>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ sheetTest }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position: absolute; inset: 0; background: color-mix(in srgb, var(--color-neutral-900) 45%, transparent); display: flex; flex-direction: column; justify-content: flex-end">
+      <div onClick="{{ stop }}" style="background: var(--color-bg); border-top: 1px solid var(--color-divider); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 18px 16px; animation: cel-sheet .22s ease-out">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px">
+          <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 13px">ENSAIO DA REGRA</div>
+          <div onClick="{{ closeSheet }}" style="font-size: 12px; font-weight: 800; color: var(--color-neutral-600)">FECHAR</div>
+        </div>
+        <div style="font-size: 11px; font-weight: 700; color: var(--color-neutral-800); margin-bottom: 8px">{{ testLabel }} — só esta regra roda aqui.</div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: var(--color-accent-100); padding: 3px">
+          <sc-for list="{{ testCells }}" as="c" hint-placeholder-count="49">
+            <div style="aspect-ratio: 1; border-radius: 7px; background-color: {{ c.bg }}; background-image: {{ c.img }}; background-size: 84% 84%; background-position: center; background-repeat: no-repeat; box-shadow: {{ c.ring }}"></div>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px">
+          <div onClick="{{ testStep }}" class="btn btn-primary" style="flex: 1; border-radius: 999px; padding: 13px 0; font-size: 15px" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">+1 CICLO</div>
+          <div onClick="{{ testReset }}" style="border: 1px solid var(--color-divider); border-radius: 999px; background: var(--color-neutral-100); box-shadow: var(--shadow-sm); padding: 11px 12px; font-size: 11px; font-weight: 800" style-active="transform: translate(2px,2px); box-shadow: var(--shadow-sm)">REFAZER</div>
+        </div>
+        <div style="height: 8px"></div>
+      </div>
+    </div>
+    </sc-if>
+
+  </div>
+
+  <div style="border-top: 1px solid var(--color-divider); background: var(--color-neutral-100); display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 6px 6px 30px">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+      <div onClick="{{ t.go }}" style="text-align: center; padding: 8px 0; border-radius: 999px; background: {{ t.bg }}">
+        <div style="font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 11px; letter-spacing: .3px; color: {{ t.ink }}">{{ t.label }}</div>
+        <div style="font-size: 8px; font-weight: 600; letter-spacing: .5px; color: {{ t.subInk }}; margin-top: 2px">{{ t.en }}</div>
+      </div>
+    </sc-for>
+  </div>
+
+</div>
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:450,&quot;height&quot;:930},&quot;simulation&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ecologia&quot;,&quot;rochas&quot;,&quot;ampulheta&quot;],&quot;default&quot;:&quot;ecologia&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Conteúdo&quot;},&quot;startTab&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;play&quot;,&quot;world&quot;,&quot;agents&quot;],&quot;default&quot;:&quot;world&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Conteúdo&quot;},&quot;showChart&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Jogar&quot;},&quot;tickMs&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:120,&quot;max&quot;:1200,&quot;step&quot;:40,&quot;default&quot;:520,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Jogar&quot;}}">
+const SPR = {
+  p: ['..x..', '.xxx.', 'x.x.x', '..x..', '..x..'],
+  w: ['xxxxx', 'x.xxx', 'xxxxx', 'xxx.x', 'xxxxx'],
+  r: ['.....', '.xxx.', 'xxxxx', 'xxxxx', '.....'],
+  h: ['x....', 'xx.x.', 'xxxxx', '.xxx.', '.x.x.'],
+  c: ['..x..', '.xxx.', 'xxxxx', 'x.x.x', '.x.x.'],
+  s: ['.x.x.', 'xxxxx', 'x.x.x', 'xxxxx', '.x.x.'],
+  g: ['.....', '.xxx.', 'xxxxx', 'xxxxx', '.....'],
+  f: ['..x..', '.x.x.', 'xxxxx', '.xxx.', '..x..']
+}
+
+const RING = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
+
+// the real DCC cell library (harena-lab/dcc → playground/images/cell)
+const ART = {
+  p: 'plant01.svg',
+  w: 'waves.svg',
+  r: 'rock01.svg',
+  h: 'brontosaurus.svg',
+  c: 'carnivorous-dinosaur.svg',
+  s: 'sand.svg',
+  g: 'glass.svg',
+  f: 'tree01.svg'
+}
+
+function spriteURI (key, ink) {
+  if (ART[key]) return `url("playground/images/cell/${ART[key]}")`
+  const rows = SPR[key]
+  if (!rows) return 'none'
+  let r = ''
+  for (let y = 0; y < rows.length; y++)
+    for (let x = 0; x < rows[y].length; x++)
+      if (rows[y][x] === 'x') r += `<rect x="${x}" y="${y}" width="1" height="1"/>`
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5 5" fill="${ink}" shape-rendering="crispEdges">${r}</svg>`
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
+}
+
+const PRESETS = {
+  ecologia: {
+    name: 'Ecologia',
+    cols: 11,
+    rows: 13,
+    types: [
+      { t: 'w', label: 'água', en: 'water', bg: '#bfe0dd', spr: 'w', ink: '#2e6b66' },
+      { t: 'r', label: 'rocha', en: 'rock', bg: 'var(--color-neutral-300)', spr: 'r', ink: '#3f4f4c' },
+      { t: 'p', label: 'planta', en: 'plant', bg: 'var(--color-accent-300)', spr: 'p', ink: '#1e6b52' },
+      { t: 'h', label: 'herbívoro', en: 'herbivore', bg: 'var(--color-accent-2-200)', spr: 'h', ink: '#b04a3a' },
+      { t: 'c', label: 'carnívoro', en: 'carnivore', bg: 'var(--color-accent-2-300)', spr: 'c', ink: '#6e2418' }
+    ],
+    rules: [
+      { id: 'pr', a: 'p', label: 'planta se espalha', en: 'plant spreads', transition: 'p_>pp', mask: 'ring', prob: 70, on: true, dial: true },
+      { id: 'pd', a: 'p', label: 'planta morre', en: 'plant dies', transition: 'pp>__', mask: 'self', prob: 12, on: true, dial: true },
+      { id: 'he', a: 'h', label: 'herbívoro come e nasce', en: 'herbivore eats & breeds', transition: 'hp>hh', mask: 'ring', prob: 26, on: true, dial: true },
+      { id: 'hm', a: 'h', label: 'herbívoro anda', en: 'herbivore moves', transition: 'h_>_h', mask: 'ring', prob: 55, on: true },
+      { id: 'hd', a: 'h', label: 'herbívoro morre', en: 'herbivore dies', transition: 'hh>__', mask: 'self', prob: 10, on: true },
+      { id: 'ce', a: 'c', label: 'carnívoro caça', en: 'carnivore hunts', transition: 'ch>cc', mask: 'ring', prob: 24, on: true, dial: true },
+      { id: 'cm', a: 'c', label: 'carnívoro anda', en: 'carnivore moves', transition: 'c_>_c', mask: 'ring', prob: 55, on: true },
+      { id: 'cp', a: 'c', label: 'carnívoro pisa na planta', en: 'carnivore steps on plant', transition: 'cp>pc', mask: 'ring', prob: 40, on: true },
+      { id: 'cd', a: 'c', label: 'carnívoro morre', en: 'carnivore dies', transition: 'cc>__', mask: 'self', prob: 11, on: true }
+    ],
+    world: [
+      '________h__', '____p______', '____p_____h', '___p___p___', '_c__w______',
+      'h__pwwww_p_', '__p_wwwww__', '___h__wwpp_', '__p_c_wwr__', '_______p___',
+      '_h___r__c_h', '___ppp_____', '____p______'
+    ]
+  },
+  rochas: {
+    name: 'Rochas caindo',
+    cols: 11,
+    rows: 13,
+    types: [
+      { t: 'r', label: 'rocha', en: 'rock', bg: 'var(--color-neutral-300)', spr: 'r', ink: '#3f4f4c' },
+      { t: 'f', label: 'árvore', en: 'tree', bg: 'var(--color-accent-200)', spr: 'f', ink: '#114a3c' },
+      { t: 'p', label: 'grama', en: 'grass', bg: 'var(--color-accent-300)', spr: 'p', ink: '#1e6b52' }
+    ],
+    rules: [
+      { id: 'fall', a: 'r', label: 'rocha cai', en: 'rock falls', transition: 'r_>_r', mask: [[1, 0]], prob: 100, on: true, dial: true },
+      { id: 'roll', a: 'r', label: 'rocha escorrega', en: 'rock slides', transition: 'r_>_r', mask: [[1, -1], [1, 1]], prob: 40, on: true, dial: true },
+      { id: 'crush', a: 'r', label: 'rocha derruba a árvore', en: 'rock knocks the tree', transition: 'rf>_r', mask: [[1, 0]], prob: 100, on: true }
+    ],
+    world: [
+      'r__r_r__r__', '__r_r___r_r', '_r____r____', '___________', '____r______',
+      '___________', '___________', '___________', '___________', '___________',
+      '___________', '_f__f___f__', 'pppppppppppp'
+    ]
+  },
+  ampulheta: {
+    name: 'Ampulheta',
+    cols: 11,
+    rows: 13,
+    types: [
+      { t: 's', label: 'areia', en: 'sand', bg: 'var(--color-accent-2-200)', spr: 's', ink: '#a06a2f' },
+      { t: 'r', label: 'vidro', en: 'glass', bg: '#dcecea', spr: 'g', ink: '#2e6b66' }
+    ],
+    rules: [
+      { id: 'sf', a: 's', label: 'areia cai', en: 'sand falls', transition: 's_>_s', mask: [[1, 0]], prob: 100, on: true, dial: true },
+      { id: 'ss', a: 's', label: 'areia espalha', en: 'sand spreads', transition: 's_>_s', mask: [[1, -1], [1, 1]], prob: 60, on: true, dial: true }
+    ],
+    world: [
+      'rrrrrrrrrrr', 'rsssssssssr', 'r_sssssss_r', 'r__sssss__r', 'r___sss___r',
+      'r____s____r', 'rr___r___rr', 'r____r____r', 'r_________r', 'r_________r',
+      'r_________r', 'r_________r', 'rrrrrrrrrrr'
+    ]
+  }
+}
+
+class Component extends DCLogic {
+  constructor (props) {
+    super(props)
+    const key = PRESETS[props.simulation] ? props.simulation : 'ecologia'
+    const p = PRESETS[key]
+    this.state = {
+      tab: props.startTab || 'play',
+      preset: key,
+      simName: p.name,
+      cols: p.cols,
+      rows: p.rows,
+      types: p.types.map(t => ({ ...t })),
+      rules: p.rules.map(r => ({ ...r })),
+      grid: p.world.map(r => r.split('')),
+      seed: p.world.map(r => r.split('')),
+      running: false,
+      speed: 1,
+      tick: 0,
+      hist: [],
+      paint: p.types[2].t,
+      sheet: null,
+      agent: 'h',
+      demo: null,
+      brushOn: false
+    }
+    this._timer = null
+  }
+
+  componentDidMount () { this._arm() }
+  componentWillUnmount () { clearInterval(this._timer) }
+
+  _arm () {
+    clearInterval(this._timer)
+    if (this.state.running)
+      this._timer = setInterval(() => this.step(), Math.round((this.props.tickMs ?? 520) / this.state.speed))
+  }
+
+  typeOf (t) { return this.state.types.find(x => x.t === t) }
+
+  maskList (mask) { return mask === 'ring' ? RING : (mask === 'self' ? [[0, 0]] : mask) }
+
+  stepGrid (grid, rules, cols, rows) {
+    const g = grid.map(r => r.slice())
+    const done = g.map(r => r.map(() => false))
+    const order = []
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) order.push([y, x])
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)); const t = order[i]; order[i] = order[j]; order[j] = t
+    }
+    for (const [y, x] of order) {
+      if (done[y][x]) continue
+      for (const rule of rules) {
+        if (!rule.on) continue
+        const tr = rule.transition
+        if (g[y][x] !== tr[0]) continue
+        if (Math.random() > rule.prob / 100) continue
+        const nb = this.maskList(rule.mask).slice()
+        let fired = false
+        while (nb.length && !fired) {
+          const k = Math.floor(Math.random() * nb.length)
+          const ny = y + nb[k][0]; const nx = x + nb[k][1]
+          nb.splice(k, 1)
+          if (ny < 0 || nx < 0 || ny >= rows || nx >= cols) continue
+          if (done[ny][nx] && !(ny === y && nx === x)) continue
+          if (g[ny][nx] !== tr[1]) continue
+          g[y][x] = tr[3]
+          g[ny][nx] = tr[4]
+          done[y][x] = true; done[ny][nx] = true
+          fired = true
+        }
+        if (fired) break
+      }
+    }
+    return g
+  }
+
+  step () {
+    const s = this.state
+    const g = this.stepGrid(s.grid, s.rules, s.cols, s.rows)
+    const counts = {}
+    for (const row of g) for (const c of row) if (c !== '_') counts[c] = (counts[c] || 0) + 1
+    this.setState({ grid: g, tick: s.tick + 1, hist: [...s.hist, counts].slice(-60) })
+  }
+
+  paintAt (i) {
+    const s = this.state
+    const y = Math.floor(i / s.cols); const x = i % s.cols
+    if (s.grid[y][x] === s.paint) return
+    const g = s.grid.map(r => r.slice())
+    g[y][x] = s.paint
+    this.setState({ grid: g })
+  }
+
+  cellsVals () {
+    const s = this.state
+    const out = []
+    for (let y = 0; y < s.rows; y++) for (let x = 0; x < s.cols; x++) {
+      const ch = s.grid[y][x]
+      const ty = ch === '_' ? null : this.typeOf(ch)
+      out.push({
+        i: y * s.cols + x,
+        bg: ty ? ty.bg : 'color-mix(in srgb, var(--color-neutral-100) 55%, transparent)',
+        img: ty ? spriteURI(ty.spr, ty.ink) : 'none',
+        ring: ty ? 'inset 0 0 0 1px color-mix(in srgb, var(--color-text) 20%, transparent)' : 'inset 0 0 0 1px color-mix(in srgb, var(--color-text) 8%, transparent)'
+      })
+    }
+    return out
+  }
+
+  seriesVals () {
+    const s = this.state
+    const h = s.hist.length ? s.hist : [{}]
+    const max = Math.max(4, ...h.map(c => Math.max(0, ...Object.values(c))))
+    const live = s.types.filter(t => 'phcsf'.includes(t.t))
+    const n = Math.max(2, h.length)
+    return live.map(t => ({
+      label: t.label,
+      color: t.ink,
+      count: h[h.length - 1][t.t] || 0,
+      points: h.map((c, i) => `${(i / (n - 1) * 300).toFixed(1)},${(80 - (c[t.t] || 0) / max * 76).toFixed(1)}`).join(' ')
+    }))
+  }
+
+  dialVals () {
+    return this.state.rules.filter(r => r.dial).map(r => {
+      const ty = this.typeOf(r.a)
+      return {
+        label: r.label,
+        value: r.prob,
+        bg: ty ? ty.bg : 'var(--color-neutral-100)',
+        img: ty ? spriteURI(ty.spr, ty.ink) : 'none',
+        set: e => {
+          const v = parseInt(e.target.value)
+          this.setState(st => ({ rules: st.rules.map(x => x.id === r.id ? { ...x, prob: v } : x) }))
+        }
+      }
+    })
+  }
+
+  loadPreset (key) {
+    const p = PRESETS[key]
+    clearInterval(this._timer)
+    this.setState({
+      preset: key, simName: p.name, cols: p.cols, rows: p.rows,
+      types: p.types.map(t => ({ ...t })), rules: p.rules.map(r => ({ ...r })),
+      grid: p.world.map(r => r.split('')), seed: p.world.map(r => r.split('')),
+      tick: 0, hist: [], running: false, paint: p.types[p.types.length - 1].t,
+      agent: p.rules[0].a, sheet: null, demo: null
+    }, () => this._arm())
+  }
+
+  renderVals () {
+    const s = this.state
+    const tabDef = [['world', 'MUNDO', 'WORLD'], ['agents', 'AGENTES', 'AGENTS'], ['play', 'JOGAR', 'PLAY']]
+    const gridIdx = e => {
+      const el = document.elementFromPoint(e.clientX, e.clientY)
+      const i = el && el.dataset ? el.dataset.i : null
+      return i == null ? null : parseInt(i)
+    }
+    return {
+      simName: s.simName,
+      tickLabel: `ciclo ${s.tick}`,
+      cols: s.cols,
+      isPlay: s.tab === 'play',
+      isWorld: s.tab === 'world',
+      isAgents: s.tab === 'agents',
+      showChart: this.props.showChart !== false,
+      cells: this.cellsVals(),
+      series: this.seriesVals(),
+      dials: this.dialVals(),
+      runLabel: s.running ? 'PAUSAR' : 'JOGAR',
+      sp1bg: s.speed === 1 ? 'var(--color-accent)' : 'var(--color-neutral-100)',
+      sp2bg: s.speed === 2 ? 'var(--color-accent)' : 'var(--color-neutral-100)',
+      sp4bg: s.speed === 4 ? 'var(--color-accent)' : 'var(--color-neutral-100)',
+      setSpeed1: () => this.setState({ speed: 1 }, () => this._arm()),
+      setSpeed2: () => this.setState({ speed: 2 }, () => this._arm()),
+      setSpeed4: () => this.setState({ speed: 4 }, () => this._arm()),
+      toggleRun: () => this.setState(st => ({ running: !st.running }), () => this._arm()),
+      stepOnce: () => { this.setState({ running: false }, () => { this._arm(); this.step() }) },
+      resetWorld: () => this.setState(st => ({ grid: st.seed.map(r => r.slice()), tick: 0, hist: [], running: false }), () => this._arm()),
+      openGallery: () => this.setState({ sheet: 'gallery', running: false }, () => this._arm()),
+      gridDown: e => { const i = gridIdx(e); this.setState({ brushOn: true }); if (i != null) this.paintAt(i) },
+      gridMove: e => { if (this.state.brushOn) { const i = gridIdx(e); if (i != null) this.paintAt(i) } },
+      gridUp: () => this.setState({ brushOn: false }),
+      tabs: tabDef.map(([k, label, en]) => ({
+        label, en,
+        bg: s.tab === k ? 'var(--color-text)' : 'transparent',
+        ink: s.tab === k ? 'var(--color-bg)' : 'var(--color-text)',
+        subInk: s.tab === k ? 'var(--color-neutral-300)' : 'var(--color-neutral-600)',
+        border: s.tab === k ? 'var(--color-text)' : 'transparent',
+        go: () => this.setState({ tab: k, sheet: null, demo: null })
+      })),
+      ...(this.editorVals ? this.editorVals() : {})
+    }
+  }
+
+  tile (ch) {
+    const ty = (ch && ch !== '_') ? this.typeOf(ch) : null
+    return ty
+      ? { bg: ty.bg, img: spriteURI(ty.spr, ty.ink) }
+      : { bg: 'color-mix(in srgb, var(--color-neutral-100) 70%, transparent)', img: 'none' }
+  }
+
+  dirName (off) {
+    const [dy, dx] = off
+    if (dy === 1 && dx === 0) return 'para baixo'
+    if (dy === -1 && dx === 0) return 'para cima'
+    if (dy === 0 && dx === -1) return 'à esquerda'
+    if (dy === 0 && dx === 1) return 'à direita'
+    return 'na diagonal'
+  }
+
+  dirLabel (mask) {
+    if (mask === 'ring') return 'em qualquer direção'
+    if (mask === 'self') return 'no próprio lugar'
+    return mask.length === 1 ? this.dirName(mask[0]) : `em ${mask.length} direções`
+  }
+
+  moveRule (id, d) {
+    this.setState(st => {
+      const rs = st.rules.slice()
+      const i = rs.findIndex(r => r.id === id)
+      const j = i + d
+      if (i < 0 || j < 0 || j >= rs.length) return {}
+      const t = rs[i]; rs[i] = rs[j]; rs[j] = t
+      return { rules: rs }
+    })
+  }
+
+  seedTest (rule) {
+    const g = []
+    for (let y = 0; y < 7; y++) g.push('_______'.split(''))
+    const a = rule.transition[0]; const b = rule.transition[1]
+    if (b !== '_' && b !== '?') {
+      for (let y = 4; y < 7; y++) for (let x = 0; x < 7; x++) if ((x + y) % 2 === 0) g[y][x] = b
+      g[3][3] = b
+    }
+    for (const [y, x] of [[0, 1], [0, 4], [1, 2], [2, 5]]) g[y][x] = a
+    if (rule.mask === 'self') { g[3][1] = a; g[4][2] = a }
+    return g
+  }
+
+  demoInfer () {
+    const d = this.state.demo
+    if (!d) return { ok: false, msg: '' }
+    if (d.phase === 'before') return { ok: false, msg: 'monte a cena e toque em DEPOIS' }
+    const ch = []
+    for (let i = 0; i < 9; i++) if (d.before[i] !== d.stage[i]) ch.push(i)
+    if (!ch.length) return { ok: false, msg: 'nada mudou ainda' }
+    if (!ch.includes(4)) return { ok: false, msg: 'o agente do centro precisa mudar' }
+    if (ch.length === 1)
+      return {
+        ok: true,
+        nb: 4,
+        transition: d.before[4] + d.before[4] + '>' + d.stage[4] + d.stage[4],
+        mask: 'self',
+        msg: 'no próprio lugar'
+      }
+    if (ch.length === 2) {
+      const nb = ch[0] === 4 ? ch[1] : ch[0]
+      const off = [Math.floor(nb / 3) - 1, nb % 3 - 1]
+      return {
+        ok: true,
+        nb,
+        transition: d.before[4] + d.before[nb] + '>' + d.stage[4] + d.stage[nb],
+        mask: d.anyDir ? 'ring' : [off],
+        msg: d.anyDir ? 'em qualquer direção' : this.dirName(off)
+      }
+    }
+    return { ok: false, msg: 'mude só o agente e uma vizinha' }
+  }
+
+  editorVals () {
+    const s = this.state
+    const inf = this.demoInfer()
+    const d = s.demo
+    const nt = s.nt || { name: '', spr: 'f', bg: 'var(--color-accent-100)' }
+    const counts = {}
+    for (const row of s.grid) for (const c of row) counts[c] = (counts[c] || 0) + 1
+    const ag = this.typeOf(s.agent) || s.types[0]
+    const sel = ch => ({
+      shadow: s.paint === ch ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+      lift: s.paint === ch ? 'translate(-1px,-1px)' : 'none'
+    })
+    const pre = inf.ok ? [d.before[4], inf.mask === 'self' ? d.before[4] : d.before[inf.nb]] : ['_', '_']
+    const post = inf.ok ? [d.stage[4], inf.mask === 'self' ? d.stage[4] : d.stage[inf.nb]] : ['_', '_']
+
+    return {
+      brushes: [...s.types.map(t => ({ label: t.label, bg: t.bg, img: spriteURI(t.spr, t.ink), pick: () => this.setState({ paint: t.t }), ...sel(t.t) })),
+        { label: 'vazio', bg: 'color-mix(in srgb, var(--color-neutral-100) 70%, transparent)', img: 'none', pick: () => this.setState({ paint: '_' }), ...sel('_') }],
+      cast: s.types.map(t => ({
+        label: t.label, bg: t.bg, img: spriteURI(t.spr, t.ink), count: counts[t.t] || 0,
+        ink: s.agent === t.t ? 'var(--color-text)' : 'var(--color-neutral-600)',
+        shadow: s.agent === t.t ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+        lift: s.agent === t.t ? 'translate(-1px,-1px)' : 'none',
+        pick: () => this.setState({ agent: t.t })
+      })),
+      agentBg: ag.bg,
+      agentImg: spriteURI(ag.spr, ag.ink),
+      agentLabel: ag.label,
+      agentEn: ag.en,
+      agentRuleCount: s.rules.filter(r => r.a === s.agent).length,
+      agentRules: s.rules.filter(r => r.a === s.agent).map((r, k) => {
+        const tr = r.transition
+        return {
+          n: k + 1, label: r.label, en: r.en, prob: r.prob,
+          dirLabel: this.dirLabel(r.mask),
+          cardBg: r.on ? 'var(--color-neutral-100)' : 'var(--color-neutral-200)',
+          swBg: r.on ? 'var(--color-accent-2-400)' : 'var(--color-neutral-300)',
+          swPos: r.on ? 'flex-end' : 'flex-start',
+          p0: this.tile(tr[0]), p1: this.tile(tr[1]), q0: this.tile(tr[3]), q1: this.tile(tr[4]),
+          toggle: () => this.setState(st => ({ rules: st.rules.map(x => x.id === r.id ? { ...x, on: !x.on } : x) })),
+          up: () => this.moveRule(r.id, -1),
+          down: () => this.moveRule(r.id, 1),
+          setProb: e => { const v = parseInt(e.target.value); this.setState(st => ({ rules: st.rules.map(x => x.id === r.id ? { ...x, prob: v } : x) })) },
+          test: () => this.setState({ sheet: 'test', test: { rule: r, grid: this.seedTest(r) } })
+        }
+      }),
+      slots: [
+        { label: 'nome', value: ag.label, bg: 'transparent', img: 'none' },
+        { label: 'desenho', value: ART[ag.spr] || ('sprite ' + ag.spr), bg: ag.bg, img: spriteURI(ag.spr, ag.ink) },
+        { label: 'no mundo', value: (counts[ag.t] || 0) + ' células', bg: 'transparent', img: 'none' },
+        { label: 'comportamentos', value: s.rules.filter(r => r.a === ag.t).length + ' regras', bg: 'transparent', img: 'none' },
+        { label: 'letra no mapa', value: `"${ag.t}" — usada no arquivo da simulação`, bg: 'transparent', img: 'none' }
+      ],
+      editLook: () => this.setState({ sheet: 'type', nt: { name: ag.label, spr: ag.spr, bg: ag.bg, edit: ag.t } }),
+      ntCta: (s.nt && s.nt.edit) ? 'GUARDAR AGENTE' : 'CRIAR TIPO',
+      sheetGallery: s.sheet === 'gallery',
+      sheetType: s.sheet === 'type',
+      sheetDemo: s.sheet === 'demo',
+      sheetTest: s.sheet === 'test',
+      closeSheet: () => this.setState({ sheet: null }),
+      stop: e => e.stopPropagation(),
+      openNewType: () => this.setState({ sheet: 'type', nt: { name: '', spr: 'f', bg: 'var(--color-accent-100)' } }),
+      goAgents: () => this.setState({ tab: 'agents' }),
+      setSeed: () => this.setState(st => ({ seed: st.grid.map(r => r.slice()), tick: 0, hist: [] })),
+      clearWorld: () => this.setState(st => ({ grid: st.grid.map(r => r.map(() => '_')), hist: [] })),
+      scatter: () => this.setState(st => ({
+        grid: st.grid.map(r => r.map(c => (Math.random() < 0.12 ? st.paint : c)))
+      })),
+      presets: Object.keys(PRESETS).map(k => {
+        const p = PRESETS[k]
+        const t0 = p.types[p.types.length - 1]; const t1 = p.types[0]
+        return {
+          name: p.name,
+          meta: `${p.types.length} tipos · ${p.rules.length} regras`,
+          c0: { bg: t0.bg, img: spriteURI(t0.spr, t0.ink) },
+          c1: { bg: t1.bg, img: spriteURI(t1.spr, t1.ink) },
+          load: () => this.loadPreset(k)
+        }
+      }),
+      ntName: nt.name,
+      ntBg: nt.bg,
+      ntImg: spriteURI(nt.spr, '#2b3835'),
+      setNtName: e => { const v = e.target.value; this.setState(st => ({ nt: { ...st.nt, name: v } })) },
+      ntSprites: Object.keys(SPR).map(k => ({
+        img: spriteURI(k, 'var(--color-text)'),
+        shadow: nt.spr === k ? 'var(--shadow-md)' : 'none',
+        pick: () => this.setState(st => ({ nt: { ...st.nt, spr: k } }))
+      })),
+      ntColors: ['var(--color-accent-100)', 'var(--color-accent-2-200)', '#dcecea', 'var(--color-accent-300)', 'var(--color-neutral-200)', 'var(--color-neutral-300)'].map(bg => ({
+        bg,
+        shadow: nt.bg === bg ? 'var(--shadow-md)' : 'none',
+        pick: () => this.setState(st => ({ nt: { ...st.nt, bg } }))
+      })),
+      createType: () => {
+        if (this.state.nt && this.state.nt.edit) {
+          const e = this.state.nt
+          this.setState(st => ({
+            types: st.types.map(t => t.t === e.edit ? { ...t, label: e.name || t.label, spr: e.spr, bg: e.bg } : t),
+            sheet: null
+          }))
+          return
+        }
+        const used = this.state.types.map(t => t.t).join('')
+        const free = 'abdefgijklmnoqtuvxyz'.split('').find(c => !used.includes(c)) || 'z'
+        const ty = { t: free, label: (this.state.nt.name || 'novo tipo'), en: '', bg: this.state.nt.bg, spr: this.state.nt.spr, ink: '#3f4f4c' }
+        this.setState(st => ({ types: [...st.types, ty], paint: free, sheet: null }))
+      },
+      openDemo: () => this.setState({
+        sheet: 'demo',
+        running: false,
+        demo: {
+          phase: 'before',
+          before: ['_', '_', '_', '_', s.agent, '_', '_', '_', '_'],
+          stage: ['_', '_', '_', '_', s.agent, '_', '_', '_', '_'],
+          sel: 4, anyDir: true, prob: 50, name: ''
+        }
+      }, () => this._arm()),
+      stage: (d ? d.stage : ['_', '_', '_', '_', s.agent, '_', '_', '_', '_']).map((ch, i) => {
+        const t = this.tile(ch)
+        const selected = d && d.sel === i
+        return {
+          bg: t.bg, img: t.img,
+          tag: i === 4 ? 'centro' : '',
+          ring: selected ? 'inset 0 0 0 3px var(--color-accent)' : 'inset 0 0 0 1px color-mix(in srgb, var(--color-text) 16%, transparent)',
+          tap: () => this.setState(st => {
+            const dd = st.demo
+            if (!dd) return {}
+            if (dd.phase === 'after' && dd.sel != null && dd.sel !== i && dd.stage[dd.sel] !== '_') {
+              const g = dd.stage.slice()
+              g[i] = g[dd.sel]; g[dd.sel] = '_'
+              return { demo: { ...dd, stage: g, sel: i } }
+            }
+            return { demo: { ...dd, sel: i } }
+          })
+        }
+      }),
+      demoBrushes: [...s.types.map(t => ({
+        bg: t.bg, img: spriteURI(t.spr, t.ink),
+        shadow: 'var(--shadow-sm)',
+        pick: () => this.setState(st => {
+          const dd = st.demo
+          if (!dd || dd.sel == null) return {}
+          const g = dd.stage.slice(); g[dd.sel] = t.t
+          return { demo: { ...dd, stage: g, before: dd.phase === 'before' ? g.slice() : dd.before } }
+        })
+      })), {
+        bg: 'color-mix(in srgb, var(--color-neutral-100) 70%, transparent)', img: 'none', shadow: 'var(--shadow-sm)',
+        pick: () => this.setState(st => {
+          const dd = st.demo
+          if (!dd || dd.sel == null) return {}
+          const g = dd.stage.slice(); g[dd.sel] = '_'
+          return { demo: { ...dd, stage: g, before: dd.phase === 'before' ? g.slice() : dd.before } }
+        })
+      }],
+      demoHint: d && d.phase === 'before'
+        ? 'Toque numa casa e escolha quem fica lá. O centro é o agente. Isto é o ANTES.'
+        : 'Agora faça acontecer: toque no agente e depois na casa de destino, ou troque quem está numa casa. O app lê a sua demonstração.',
+      demoPhaseBefore: () => this.setState(st => ({ demo: { ...st.demo, phase: 'before', stage: st.demo.before.slice(), sel: 4 } })),
+      demoPhaseAfter: () => this.setState(st => ({ demo: { ...st.demo, phase: 'after', before: st.demo.stage.slice(), sel: null } })),
+      ph1bg: d && d.phase === 'before' ? 'var(--color-accent)' : 'var(--color-neutral-100)',
+      ph1ink: 'var(--color-text)',
+      ph2bg: d && d.phase === 'after' ? 'var(--color-accent)' : 'var(--color-neutral-100)',
+      ph2ink: 'var(--color-text)',
+      dp0: this.tile(pre[0]), dp1: this.tile(pre[1]), dq0: this.tile(post[0]), dq1: this.tile(post[1]),
+      demoStatus: inf.ok ? inf.msg : inf.msg,
+      anyBg: d && d.anyDir ? 'var(--color-accent-2-400)' : 'var(--color-neutral-100)',
+      oneBg: d && !d.anyDir ? 'var(--color-accent-2-400)' : 'var(--color-neutral-100)',
+      demoAnyDir: () => this.setState(st => ({ demo: { ...st.demo, anyDir: true } })),
+      demoOneDir: () => this.setState(st => ({ demo: { ...st.demo, anyDir: false } })),
+      demoProb: d ? d.prob : 50,
+      setDemoProb: e => { const v = parseInt(e.target.value); this.setState(st => ({ demo: { ...st.demo, prob: v } })) },
+      demoName: d ? d.name : '',
+      setDemoName: e => { const v = e.target.value; this.setState(st => ({ demo: { ...st.demo, name: v } })) },
+      saveBg: inf.ok ? 'var(--color-accent-2-400)' : 'var(--color-neutral-300)',
+      demoReset: () => this.setState(st => ({
+        demo: { ...st.demo, phase: 'before', before: ['_', '_', '_', '_', st.agent, '_', '_', '_', '_'], stage: ['_', '_', '_', '_', st.agent, '_', '_', '_', '_'], sel: 4 }
+      })),
+      demoSave: () => {
+        const i2 = this.demoInfer()
+        if (!i2.ok) return
+        const dd = this.state.demo
+        const rule = {
+          id: 'u' + Date.now(),
+          a: dd.before[4],
+          label: dd.name || 'regra nova',
+          en: 'taught by example',
+          transition: i2.transition,
+          mask: i2.mask,
+          prob: dd.prob,
+          on: true,
+          dial: true
+        }
+        this.setState(st => ({ rules: [...st.rules, rule], sheet: null, demo: null, agent: rule.a }))
+      },
+      testLabel: s.test ? s.test.rule.label : '',
+      testCells: (s.test ? s.test.grid : []).flat().map((ch, i) => {
+        const t = this.tile(ch)
+        return { bg: t.bg, img: t.img, ring: ch === '_' ? 'inset 0 0 0 1px color-mix(in srgb, var(--color-text) 8%, transparent)' : 'inset 0 0 0 1px color-mix(in srgb, var(--color-text) 20%, transparent)' }
+      }),
+      testStep: () => this.setState(st => ({ test: { ...st.test, grid: this.stepGrid(st.test.grid, [st.test.rule], 7, 7) } })),
+      testReset: () => this.setState(st => ({ test: { ...st.test, grid: this.seedTest(st.test.rule) } }))
+    }
+  }
+}
+</script>
+</body>
+</html>

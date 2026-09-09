@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#04121b;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
+*{box-sizing:border-box}
+.dv-turn{padding:40px 44px 34px;border-bottom:1px solid rgba(121,220,196,.12)}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 22px}
+.dv-tid{font:800 10px ui-monospace,Menlo,monospace;padding:4px 8px;background:#79dcc4;color:#07303a;border-radius:5px}
+.dv-tname{font-family:'Baloo 2',cursive;font-weight:700;font-size:16px;color:#eafaf6}
+.dv-opts{display:flex;flex-wrap:wrap;gap:30px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:800 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(121,220,196,.16);color:#9fe8d4;border-radius:5px}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:600 11.5px/1.35 Nunito,sans-serif;color:rgba(223,243,251,.5);max-width:340px}
+.dv-card{background:#08202c;border:1px solid rgba(121,220,196,.16);border-radius:20px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.dv-opt:target .dv-oid{background:#79dcc4;color:#07303a}
+.dv-next{margin:24px 0 0;font:600 12px/1.6 Nunito,sans-serif;color:rgba(223,243,251,.42)}
+.hd{font:800 9.5px ui-monospace,Menlo,monospace;letter-spacing:1.1px;color:rgba(223,243,251,.42)}
+.blk{display:flex;align-items:center;gap:7px;padding:9px 11px;border-radius:11px;font:800 11.5px Nunito,sans-serif;color:#f2fdfa}
+.pill{padding:6px 10px;border-radius:10px;font:800 11px Nunito,sans-serif}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Cellula — rule editor, stage look, app shell</span></div>
+
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Node graph — sensors on the left, actions on the right, wires between. Shipped in the prototype.</div>
+<div class="dv-card" style="width:330px;padding:16px">
+<div style="display:flex;justify-content:space-between;padding-bottom:10px"><span class="hd" style="color:#8fe4cf">SENSORS</span><span class="hd" style="color:#f0a63c">ACTIONS</span></div>
+<div style="position:relative;height:212px">
+<svg viewBox="0 0 296 212" style="position:absolute;inset:0;width:100%;height:100%">
+<path d="M124 22 C 156 22, 152 68, 184 68" fill="none" stroke="#79dcc4cc" stroke-width="2.4" stroke-linecap="round"></path>
+<path d="M124 70 C 156 70, 152 22, 184 22" fill="none" stroke="#79dcc4cc" stroke-width="2.4" stroke-linecap="round"></path>
+<path d="M124 118 C 156 118, 152 116, 184 116" fill="none" stroke="#79dcc4cc" stroke-width="2.4" stroke-linecap="round"></path>
+<path d="M124 166 C 156 166, 152 164, 184 164" fill="none" stroke="#f0a63caa" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="5 5"></path>
+</svg>
+<div class="blk" style="position:absolute;left:0;top:8px;width:124px;background:rgba(255,255,255,.07);border:1px solid #79dcc455"><span style="width:9px;height:9px;border-radius:50%;background:#79dcc4;box-shadow:0 0 8px #79dcc499"></span>front is free</div>
+<div class="blk" style="position:absolute;left:0;top:56px;width:124px;background:rgba(255,255,255,.07);border:1px solid #79dcc455"><span style="width:9px;height:9px;border-radius:50%;background:#79dcc4;box-shadow:0 0 8px #79dcc499"></span>sees food</div>
+<div class="blk" style="position:absolute;left:0;top:104px;width:124px;background:rgba(255,255,255,.07);border:1px solid #79dcc455"><span style="width:9px;height:9px;border-radius:50%;background:#79dcc4"></span>touching wall</div>
+<div class="blk" style="position:absolute;left:0;top:152px;width:124px;background:#79dcc433;border:1px solid #79dcc4;box-shadow:0 0 0 3px #79dcc422"><span style="width:9px;height:9px;border-radius:50%;background:#79dcc4"></span>energy is low</div>
+<div class="blk" style="position:absolute;right:0;top:8px;width:124px;flex-direction:row-reverse;background:rgba(255,255,255,.07);border:1px solid #f0a63c55"><span style="width:9px;height:9px;border-radius:50%;background:#f0a63c"></span>move forward</div>
+<div class="blk" style="position:absolute;right:0;top:56px;width:124px;flex-direction:row-reverse;background:rgba(255,255,255,.07);border:1px solid #f0a63c55"><span style="width:9px;height:9px;border-radius:50%;background:#f0a63c"></span>eat it</div>
+<div class="blk" style="position:absolute;right:0;top:104px;width:124px;flex-direction:row-reverse;background:rgba(255,255,255,.07);border:1px solid #f0a63c55"><span style="width:9px;height:9px;border-radius:50%;background:#f0a63c"></span>turn away</div>
+<div class="blk" style="position:absolute;right:0;top:152px;width:124px;flex-direction:row-reverse;background:rgba(255,255,255,.03);border:1px dashed #f0a63c66;color:rgba(223,243,251,.55)"><span style="width:9px;height:9px;border-radius:50%;background:rgba(223,243,251,.3)"></span>divide in two</div>
+</div>
+<div style="margin-top:6px;padding:9px 11px;border-radius:12px;background:rgba(121,220,196,.1);font:700 11.5px Nunito;color:#9fe8d4">Tap an action to finish “energy is low →”</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Creature strip — the agent's brain reads as a comic strip of sense→do panels, dragged from a tray. Youngest-friendly.</div>
+<div class="dv-card" style="width:330px;padding:16px">
+<div class="hd" style="margin-bottom:10px">CILIATE'S BRAIN</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:16px;background:rgba(121,220,196,.09);border:1px solid rgba(121,220,196,.28)">
+<div style="flex:none;width:52px;height:52px;border-radius:14px;background:radial-gradient(circle at 60% 40%,rgba(232,247,242,.55),transparent 62%),#0d3b46;position:relative;overflow:hidden"><div style="position:absolute;left:8px;top:20px;width:14px;height:11px;border-radius:50%;background:#79dcc4"></div><div style="position:absolute;left:26px;top:18px;width:18px;height:14px;background:linear-gradient(90deg,#e8f7f288,transparent);clip-path:polygon(0 50%,100% 0,100% 100%)"></div></div>
+<div style="flex:1"><div style="font:800 12.5px Nunito;color:#f2fdfa">I see food ahead</div><div style="font:600 11px Nunito;color:rgba(223,243,251,.5)">within 3 body lengths</div></div>
+<div style="font-size:18px;color:#f0a63c">→</div>
+<div style="flex:none;width:52px;height:52px;border-radius:14px;background:rgba(240,166,60,.16);border:1px solid rgba(240,166,60,.4);display:flex;align-items:center;justify-content:center"><div style="width:0;height:0;border-left:14px solid #f0a63c;border-top:9px solid transparent;border-bottom:9px solid transparent"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:16px;background:rgba(121,220,196,.09);border:1px solid rgba(121,220,196,.28)">
+<div style="flex:none;width:52px;height:52px;border-radius:14px;background:#0d3b46;position:relative;overflow:hidden"><div style="position:absolute;right:0;top:0;bottom:0;width:16px;background:linear-gradient(#46656f,#16323c)"></div><div style="position:absolute;left:8px;top:20px;width:14px;height:11px;border-radius:50%;background:#79dcc4"></div></div>
+<div style="flex:1"><div style="font:800 12.5px Nunito;color:#f2fdfa">A wall is in front</div><div style="font:600 11px Nunito;color:rgba(223,243,251,.5)">bumped this tick</div></div>
+<div style="font-size:18px;color:#f0a63c">→</div>
+<div style="flex:none;width:52px;height:52px;border-radius:14px;background:rgba(240,166,60,.16);border:1px solid rgba(240,166,60,.4);display:flex;align-items:center;justify-content:center;font:800 20px Nunito;color:#f0a63c">↻</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:16px;border:1.5px dashed rgba(121,220,196,.32);font:800 12px Nunito;color:rgba(223,243,251,.45)">＋ drag a new panel here</div>
+</div>
+<div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">
+<span class="pill" style="background:rgba(121,220,196,.14);color:#9fe8d4">smells trail</span>
+<span class="pill" style="background:rgba(121,220,196,.14);color:#9fe8d4">is hungry</span>
+<span class="pill" style="background:rgba(240,166,60,.14);color:#f0a63c">divide</span>
+<span class="pill" style="background:rgba(240,166,60,.14);color:#f0a63c">leave trail</span>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Priority ladder — rules in a list you reorder; the top one that fires wins. Teaches conflict + precedence explicitly.</div>
+<div class="dv-card" style="width:310px;padding:16px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px"><span class="hd">CHECKED TOP TO BOTTOM</span><span class="hd" style="color:#79dcc4">▲▼ drag</span></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;align-items:center;gap:9px;padding:11px;border-radius:13px;background:rgba(255,255,255,.06);border-left:3px solid #79dcc4">
+<span style="font:800 11px ui-monospace;color:#79dcc4">1</span>
+<span style="flex:1;font:700 12px Nunito;color:#f2fdfa">sees food → <b style="color:#f0a63c">move forward</b></span>
+<span style="font:800 14px Nunito;color:rgba(223,243,251,.3)">⋮⋮</span>
+</div>
+<div style="display:flex;align-items:center;gap:9px;padding:11px;border-radius:13px;background:rgba(255,255,255,.06);border-left:3px solid #79dcc4">
+<span style="font:800 11px ui-monospace;color:#79dcc4">2</span>
+<span style="flex:1;font:700 12px Nunito;color:#f2fdfa">touching food → <b style="color:#f0a63c">eat it</b></span>
+<span style="font:800 14px Nunito;color:rgba(223,243,251,.3)">⋮⋮</span>
+</div>
+<div style="display:flex;align-items:center;gap:9px;padding:11px;border-radius:13px;background:rgba(240,166,60,.12);border-left:3px solid #f0a63c;box-shadow:0 0 0 1px rgba(240,166,60,.3)">
+<span style="font:800 11px ui-monospace;color:#f0a63c">3</span>
+<span style="flex:1;font:700 12px Nunito;color:#f2fdfa">touching wall → <b style="color:#f0a63c">turn away</b></span>
+<span style="font:800 9.5px Nunito;color:#f0a63c">FIRING</span>
+</div>
+<div style="display:flex;align-items:center;gap:9px;padding:11px;border-radius:13px;background:rgba(255,255,255,.03);border-left:3px solid rgba(223,243,251,.15);opacity:.6">
+<span style="font:800 11px ui-monospace;color:rgba(223,243,251,.4)">4</span>
+<span style="flex:1;font:700 12px Nunito;color:rgba(223,243,251,.6)">otherwise → <b>turn a random way</b></span>
+</div>
+</div>
+<div style="margin-top:12px;padding:10px;border-radius:12px;background:rgba(121,220,196,.09);font:600 11.5px/1.45 Nunito;color:rgba(223,243,251,.62);text-wrap:pretty">Rule 3 beat rule 4 this tick. Drag it lower and your ciliate will wander into walls instead.</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Painterly aquatic stage — depth-lit water, glowing bodies, vision cones. Shipped look.</div>
+<div class="dv-card" style="width:262px">
+<div style="position:relative;height:340px;background:radial-gradient(75% 55% at 62% 22%,#2b8f86 0%,#146069 42%,#0a3542 72%,#062632 100%)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 26px)"></div>
+<div style="position:absolute;left:18%;top:46%;width:26px;height:26px;border-radius:26%;background:radial-gradient(circle at 40% 35%,#46656f,#16323c);box-shadow:inset 0 0 10px rgba(0,0,0,.5)"></div>
+<div style="position:absolute;left:62%;top:70%;width:26px;height:26px;border-radius:26%;background:radial-gradient(circle at 40% 35%,#46656f,#16323c)"></div>
+<div style="position:absolute;left:34%;top:22%;width:44px;height:32px;background:linear-gradient(90deg,#79dcc4aa,transparent);clip-path:polygon(0 50%,100% 4%,100% 96%);opacity:.32"></div>
+<div style="position:absolute;left:36%;top:30%;width:20px;height:15px;border-radius:48% 52% 55% 45% / 58% 42% 58% 42%;background:radial-gradient(circle at 34% 30%,#ffffffcc,#79dcc4dd 34%,#79dcc455 78%);box-shadow:0 0 10px #79dcc466"></div>
+<div style="position:absolute;left:70%;top:34%;width:28px;height:22px;border-radius:44%;background:radial-gradient(circle at 34% 30%,#ffffffcc,#f0a63cdd 34%,#f0a63c44 80%);box-shadow:0 0 12px #f0a63c55"></div>
+<div style="position:absolute;left:20%;top:74%;width:16px;height:12px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffffffcc,#a8cf4cdd 40%,#a8cf4c44 80%);box-shadow:0 0 9px #a8cf4c66"></div>
+<div style="position:absolute;left:48%;top:60%;width:16px;height:12px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffffffcc,#a8cf4cdd 40%,#a8cf4c44 80%)"></div>
+<div style="position:absolute;left:80%;top:14%;width:5px;height:5px;border-radius:50%;background:rgba(232,247,242,.6);box-shadow:0 0 6px rgba(232,247,242,.6)"></div>
+<div style="position:absolute;left:56%;top:86%;width:5px;height:5px;border-radius:50%;background:rgba(232,247,242,.6)"></div>
+<div style="position:absolute;left:10px;top:10px;display:flex;flex-direction:column;gap:5px">
+<div style="display:flex;align-items:center;gap:6px;padding:4px 9px 4px 6px;border-radius:11px;background:rgba(4,18,27,.5)"><span style="width:9px;height:9px;border-radius:50%;background:#a8cf4c"></span><span style="font:800 11px Nunito;color:#eafaf6">21</span><span style="font:700 10.5px Nunito;color:rgba(223,243,251,.55)">Alga</span></div>
+<div style="display:flex;align-items:center;gap:6px;padding:4px 9px 4px 6px;border-radius:11px;background:rgba(4,18,27,.5)"><span style="width:9px;height:9px;border-radius:50%;background:#79dcc4"></span><span style="font:800 11px Nunito;color:#eafaf6">12</span><span style="font:700 10.5px Nunito;color:rgba(223,243,251,.55)">Ciliate</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1e">
+<div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Lab-slide stage — same sim on a bright microscope slide, cell grid visible, agents as flat tokens with heading ticks. Easier to read for measurement work.</div>
+<div class="dv-card" style="width:262px">
+<div style="position:relative;height:340px;background:#e9f4f0;background-image:linear-gradient(rgba(20,96,105,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(20,96,105,.13) 1px,transparent 1px);background-size:26px 26px">
+<div style="position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 40%,transparent,rgba(20,96,105,.14))"></div>
+<div style="position:absolute;left:22%;top:40%;width:26px;height:26px;background:#2c4a53;border-radius:4px"></div>
+<div style="position:absolute;left:60%;top:66%;width:26px;height:26px;background:#2c4a53;border-radius:4px"></div>
+<div style="position:absolute;left:38%;top:28%;width:22px;height:22px;border-radius:50%;background:#17646b;border:2px solid #0c3a48"></div>
+<div style="position:absolute;left:57%;top:29%;width:11px;height:3px;background:#0c3a48;border-radius:2px"></div>
+<div style="position:absolute;left:70%;top:36%;width:28px;height:28px;border-radius:50%;background:#f0a63c;border:2px solid #a2622a"></div>
+<div style="position:absolute;left:24%;top:72%;width:15px;height:15px;border-radius:50%;background:#7fa62c;border:2px solid #4c6b1c"></div>
+<div style="position:absolute;left:48%;top:58%;width:15px;height:15px;border-radius:50%;background:#7fa62c;border:2px solid #4c6b1c"></div>
+<div style="position:absolute;left:10px;top:10px;display:flex;gap:6px">
+<span class="pill" style="background:#17646b;color:#eafaf6">12 ciliate</span>
+<span class="pill" style="background:#7fa62c;color:#0d2410">21 alga</span>
+</div>
+<div style="position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:7px;font:800 10px ui-monospace;color:#17646b"><span style="width:52px;height:3px;background:#17646b;display:block"></span>50 µm</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1f">
+<div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Phone shell — six-tab bottom bar, one screen at a time. Shipped in the prototype.</div>
+<div class="dv-card" style="width:250px;padding:0">
+<div style="height:300px;display:flex;flex-direction:column;background:radial-gradient(90% 55% at 30% 12%,#1d6f6b,#0f4450 45%,#08202c)">
+<div style="padding:14px 14px 8px"><div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6">Pond Drop</div><div style="font:600 11px Nunito;color:rgba(223,243,251,.5)">a living drop of pond water</div></div>
+<div style="flex:1;margin:0 12px;border-radius:16px;background:radial-gradient(70% 50% at 60% 25%,#2b8f86,#0a3542);border:1px solid rgba(121,220,196,.22);position:relative">
+<div style="position:absolute;left:32%;top:36%;width:18px;height:14px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff,#79dcc4 40%);box-shadow:0 0 10px #79dcc466"></div>
+<div style="position:absolute;left:64%;top:58%;width:24px;height:19px;border-radius:44%;background:radial-gradient(circle at 34% 30%,#fff,#f0a63c 45%)"></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:2px;padding:8px 6px 12px;margin-top:10px;background:rgba(4,18,27,.55);border-top:1px solid rgba(121,220,196,.14)">
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px;font:800 8px Nunito;color:rgba(223,243,251,.5)"><span style="width:10px;height:10px;border-radius:3px;background:rgba(223,243,251,.5)"></span>Worlds</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;border-radius:10px;background:#79dcc4;font:800 8px Nunito;color:#0a2f3a"><span style="width:10px;height:10px;border-radius:50%;background:#0a2f3a"></span>Stage</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px;font:800 8px Nunito;color:rgba(223,243,251,.5)"><span style="width:10px;height:10px;background:rgba(223,243,251,.5);transform:rotate(45deg)"></span>Rules</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px;font:800 8px Nunito;color:rgba(223,243,251,.5)"><span style="width:10px;height:10px;border-radius:40% 60% 55% 45%;background:rgba(223,243,251,.5)"></span>Species</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px;font:800 8px Nunito;color:rgba(223,243,251,.5)"><span style="width:10px;height:10px;background:rgba(223,243,251,.5)"></span>Build</div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:3px;font:800 8px Nunito;color:rgba(223,243,251,.5)"><span style="width:10px;height:10px;border-radius:2px;background:rgba(223,243,251,.5)"></span>Data</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="dv-opt" id="1g">
+<div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Tablet shell — stage always visible on the left, editors slide in on the right. Edit a rule and see it change behaviour instantly.</div>
+<div class="dv-card" style="width:520px;padding:0">
+<div style="height:300px;display:flex;background:radial-gradient(90% 60% at 20% 10%,#1d6f6b,#0f4450 45%,#08202c)">
+<div style="flex:1.25;margin:12px;border-radius:18px;position:relative;background:radial-gradient(70% 55% at 55% 25%,#2b8f86,#0a3542 70%,#062632);border:1px solid rgba(121,220,196,.22);overflow:hidden">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 2px,transparent 2px 26px)"></div>
+<div style="position:absolute;left:30%;top:30%;width:46px;height:34px;background:linear-gradient(90deg,#79dcc4aa,transparent);clip-path:polygon(0 50%,100% 4%,100% 96%);opacity:.3"></div>
+<div style="position:absolute;left:32%;top:38%;width:20px;height:16px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff,#79dcc4 40%);box-shadow:0 0 10px #79dcc466"></div>
+<div style="position:absolute;left:66%;top:56%;width:26px;height:20px;border-radius:44%;background:radial-gradient(circle at 34% 30%,#fff,#f0a63c 45%)"></div>
+<div style="position:absolute;left:20%;top:70%;width:15px;height:12px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff,#a8cf4c 45%)"></div>
+<div style="position:absolute;left:10px;top:10px;display:flex;gap:6px">
+<span class="pill" style="background:rgba(4,18,27,.5);color:#a8cf4c">21</span>
+<span class="pill" style="background:rgba(4,18,27,.5);color:#79dcc4">12</span>
+<span class="pill" style="background:rgba(4,18,27,.5);color:#f0a63c">3</span>
+</div>
+<div style="position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:8px">
+<span style="width:34px;height:34px;border-radius:12px;background:#79dcc4;display:flex;align-items:center;justify-content:center;font:800 12px Nunito;color:#07303a">❙❙</span>
+<span class="pill" style="background:rgba(4,18,27,.5);color:#9fe8d4">1.5×</span>
+</div>
+</div>
+<div style="flex:1;margin:12px 12px 12px 0;border-radius:18px;background:rgba(4,18,27,.42);border:1px solid rgba(121,220,196,.16);padding:12px;display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;gap:6px">
+<span class="pill" style="background:#79dcc4;color:#07303a">Ciliate</span>
+<span class="pill" style="background:rgba(255,255,255,.05);color:rgba(223,243,251,.55)">Alga</span>
+<span class="pill" style="background:rgba(255,255,255,.05);color:rgba(223,243,251,.55)">Amoeba</span>
+</div>
+<div class="hd">RULES</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:11px;background:rgba(255,255,255,.06);font:700 11px Nunito;color:#f2fdfa">sees food <span style="color:#f0a63c">→</span> move forward</div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:11px;background:rgba(255,255,255,.06);font:700 11px Nunito;color:#f2fdfa">touching wall <span style="color:#f0a63c">→</span> turn away</div>
+<div style="display:flex;align-items:center;gap:7px;padding:9px 10px;border-radius:11px;background:rgba(121,220,196,.14);border:1px solid rgba(121,220,196,.4);font:700 11px Nunito;color:#f2fdfa">energy low <span style="color:#f0a63c">→</span> divide in two</div>
+</div>
+<div style="margin-top:auto;padding:9px 10px;border-radius:12px;background:rgba(240,166,60,.12);font:600 10.5px/1.4 Nunito;color:rgba(240,247,243,.8)">Live: this rule fired 14 times in the last 5 seconds.</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “build <a class="dv-oid" href="#1b">1b</a> as the real editor” · “put <a class="dv-oid" href="#1c">1c</a> under the graph as a second view” · “make the tablet shell <a class="dv-oid" href="#1g">1g</a> interactive” · “new directions for the stage”</p>
+</section>
+
+</x-dc>
+</body>
+</html>
