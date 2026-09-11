@@ -449,13 +449,18 @@ nunca o aquário, então o capítulo 1 e o capítulo 3 são o mesmo problema res
 </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:1010},&quot;skin&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;pond&quot;,&quot;lab&quot;,&quot;meadow&quot;],&quot;default&quot;:&quot;pond&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ambiente&quot;},&quot;gridLens&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Ambiente&quot;},&quot;tickMs&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:140,&quot;max&quot;:900,&quot;step&quot;:20,&quot;default&quot;:420,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Ambiente&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:1010},&quot;skin&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;pond&quot;,&quot;lab&quot;,&quot;meadow&quot;,&quot;slide&quot;],&quot;default&quot;:&quot;pond&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ambiente&quot;},&quot;gridLens&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Ambiente&quot;},&quot;tickMs&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:140,&quot;max&quot;:900,&quot;step&quot;:20,&quot;default&quot;:420,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Ambiente&quot;}}">
 const COLS = 11, ROWS = 9;
 
 const ART = {
   s:'art/sand.svg', r:'art/rock01.svg', p:'art/plant01.svg', g:'art/glass.svg',
   a:'art/cyanobacteria.svg', w:'art/waves.svg',
   '>':'art/fish-right.svg', '<':'art/fish-left.svg'
+};
+// flat-token palette: used by any skin with flat:true (no cell art, diagram reading)
+const TOKENS = {
+  w:'#cfe3ec', s:'#e3c079', r:'#94a6b0', g:'#4aa7c4', p:'#5da53f', a:'#2fa58c',
+  '>':'#e2662c', '<':'#e2662c'
 };
 const TYPES = {
   '_':{pt:'vazio', en:'empty'},
@@ -600,7 +605,13 @@ const SKINS = {
     water:'linear-gradient(170deg,#f8fef6 0%,#e3f4dd 60%,#cde9c5 100%)',
     ink:'#1c3a1c', soft:'rgba(28,58,28,.62)', faint:'rgba(28,58,28,.45)',
     panel:'#ffffff', panel2:'rgba(28,58,28,.05)', line:'rgba(28,58,28,.14)',
-    a1:'#4f9e57', a2:'#e08c2a', a3:'#8ab534', onA1:'#ffffff', bar:'rgba(255,255,255,.86)', dark:false}
+    a1:'#4f9e57', a2:'#e08c2a', a3:'#8ab534', onA1:'#ffffff', bar:'rgba(255,255,255,.86)', dark:false},
+  slide:{name:'Slide', flat:true, page:'linear-gradient(170deg,#eef3f4 0%,#e4ecee 100%)',
+    bezel:'linear-gradient(160deg,#ffffff,#c8d6da)', shell:'#ffffff',
+    field:'#ffffff', water:'#f4f8f9',
+    ink:'#14313a', soft:'rgba(20,49,58,.6)', faint:'rgba(20,49,58,.42)',
+    panel:'#ffffff', panel2:'rgba(20,49,58,.05)', line:'rgba(20,49,58,.16)',
+    a1:'#146069', a2:'#c2641d', a3:'#4f7c22', onA1:'#ffffff', bar:'rgba(255,255,255,.9)', dark:false}
 };
 
 const TITLES = {
@@ -853,7 +864,24 @@ class Component extends DCLogic {
     return 'ciclos · ticks: ' + this.tick;
   }
 
+  tokenFace(t, T, color){
+    const c = color || TOKENS[t] || T.soft;
+    if(t === '>' || t === '<')
+      return 'radial-gradient(circle at ' + (t === '<' ? '16%' : '84%') + ' 50%,' + T.ink + ' 0 13%,transparent 14%),' +
+             'radial-gradient(circle at 50% 50%,' + c + ' 0 40%,transparent 41%)';
+    if(t === 'g') return 'repeating-linear-gradient(135deg,' + c + '66 0 3px,transparent 3px 7px)';
+    if(t === 'p' || t === 'a') return 'radial-gradient(circle at 50% 50%,' + c + ' 0 42%,transparent 43%)';
+    return c;
+  }
+
   cellStyle(t, T){
+    if(T.flat){
+      const f = {borderRadius:'3px'};
+      if(t === '_'){ f.background = 'transparent'; return f; }
+      f.background = this.tokenFace(t, T);
+      if(t === 'g') f.boxShadow = 'inset 0 0 0 1px ' + TOKENS.g;
+      return f;
+    }
     const st = {borderRadius:'6px'};
     if(t === '_') { st.background = 'transparent'; return st; }
     if(ART[t]){
@@ -1079,13 +1107,15 @@ class Component extends DCLogic {
     const arena = {position:'relative', width:'100%', aspectRatio:COLS + '/' + ROWS, borderRadius:'20px',
       overflow:'hidden', border:'1px solid ' + T.line, background:T.water,
       display:'grid', gridTemplateColumns:'repeat(' + COLS + ',1fr)', gridTemplateRows:'repeat(' + ROWS + ',1fr)',
-      gap:'2px', padding:'3px',
-      boxShadow:T.dark ? 'inset 0 0 60px rgba(4,18,27,.6)' : 'inset 0 0 40px rgba(18,55,66,.12)'};
+      gap:T.flat ? '1px' : '2px', padding:'3px',
+      boxShadow:T.flat ? 'none' : (T.dark ? 'inset 0 0 60px rgba(4,18,27,.6)' : 'inset 0 0 40px rgba(18,55,66,.12)')};
+    if(T.flat) arena.borderRadius = '8px';
     v.arenaStyle = arena;
-    v.arenaTexture = {position:'absolute', inset:0, pointerEvents:'none',
+    v.arenaTexture = T.flat ? {display:'none'} : {position:'absolute', inset:0, pointerEvents:'none',
       background:'repeating-linear-gradient(115deg,' + (T.dark ? 'rgba(255,255,255,.04)' : 'rgba(18,55,66,.045)') + ' 0 2px,transparent 2px 26px)'};
+    const lensA = T.flat ? '40' : '2e';
     v.lensOverlay = s.lens ? {position:'absolute', inset:'3px', pointerEvents:'none', borderRadius:'16px',
-      backgroundImage:'linear-gradient(90deg,' + T.a1 + '2e 1px,transparent 1px),linear-gradient(180deg,' + T.a1 + '2e 1px,transparent 1px)',
+      backgroundImage:'linear-gradient(90deg,' + T.a1 + lensA + ' 1px,transparent 1px),linear-gradient(180deg,' + T.a1 + lensA + ' 1px,transparent 1px)',
       backgroundSize:'calc(100%/' + COLS + ') calc(100%/' + ROWS + ')'} : {display:'none'};
 
     if(sc === 'sim'){
@@ -1101,7 +1131,9 @@ class Component extends DCLogic {
         cones:(PRESETS[s.preset].f.body ? s.mounts : []).map((m,i)=>({
           style:Object.assign(this.coneStyle(i===s.mountIdx ? T.a2 : T.a1, A.h + m.a, m.r*26, m.f, .3),
             {left:'50%', top:'50%'})})),
-        body:{position:'absolute', inset:'8%',
+        body:T.flat ? {position:'absolute', inset:'10%', borderRadius:'3px',
+          background:this.tokenFace('>', T, T.a2),
+          transform:'rotate(' + A.h + 'deg)', transition:'transform .16s linear'} : {position:'absolute', inset:'8%',
           backgroundImage:'url("' + (Math.cos(A.h*Math.PI/180) < 0 ? ART['<'] : ART['>']) + '")',
           backgroundSize:'contain', backgroundPosition:'center', backgroundRepeat:'no-repeat',
           transform:'rotate(' + (Math.abs(Math.cos(A.h*Math.PI/180)) < .5 ? (Math.sin(A.h*Math.PI/180) > 0 ? 55 : -55) : 0) + 'deg)',
@@ -1246,9 +1278,12 @@ class Component extends DCLogic {
         v.mountCones = mounts.map((m,i)=>({style:Object.assign(
           this.coneStyle(i===mi ? T.a2 : T.a1, m.a - 90, m.r*28, m.f, i===mi ? .42 : .16),
           {left:'50%', top:'50%'})}));
-        v.bodySprite = {position:'relative', width:'70px', height:'70px',
-          backgroundImage:'url("' + ART['>'] + '")', backgroundSize:'contain', backgroundPosition:'center',
-          backgroundRepeat:'no-repeat', transform:'rotate(-90deg)'};
+        v.bodySprite = T.flat
+          ? {position:'relative', width:'62px', height:'62px', borderRadius:'4px',
+             background:this.tokenFace('>', T, T.a2), transform:'rotate(-90deg)'}
+          : {position:'relative', width:'70px', height:'70px',
+             backgroundImage:'url("' + ART['>'] + '")', backgroundSize:'contain', backgroundPosition:'center',
+             backgroundRepeat:'no-repeat', transform:'rotate(-90deg)'};
         const slots = s.advanced
           ? mounts.map((m,i)=>({angle:m.a, i, label:(SENSORS.find(x=>x[0]===m.s) || [,'?'])[1].split(' ')[0]}))
           : [0,90,180,270].map(ang=>{
