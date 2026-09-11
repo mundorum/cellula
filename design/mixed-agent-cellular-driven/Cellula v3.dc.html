@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a1a22;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#79dcc4}a:hover{color:#a8ead9}
+*{box-sizing:border-box}
+input[type=range]{-webkit-appearance:none;appearance:none;height:22px;background:transparent;width:100%}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:currentColor;opacity:.28}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:currentColor;border:3px solid rgba(0,0,0,.25);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+@keyframes toastIn{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes sheetIn{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+
+<div style="{{ pageStyle }}">
+
+<div style="display:flex;align-items:center;gap:12px">
+<div style="{{ logoStyle }}"></div>
+<div>
+<div style="{{ brandStyle }}">Cellula</div>
+<div style="{{ brandSubStyle }}">células e agentes no mesmo mundo · cells and agents, one world</div>
+</div>
+</div>
+
+<div style="{{ frameStyle }}">
+<div style="{{ innerStyle }}">
+<div style="{{ fieldStyle }}"></div>
+
+<div style="{{ statusStyle }}">
+<span>9:41</span>
+<div style="display:flex;align-items:center;gap:5px">
+<span style="{{ battOutline }}"></span><span style="{{ battFill }}"></span>
+</div>
+</div>
+
+<div style="position:relative;flex:none;padding:2px 16px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+<div style="min-width:0">
+<div style="{{ titleStyle }}">{{ title }}</div>
+<div style="{{ subStyle }}">{{ subtitle }}</div>
+</div>
+<div style="flex:none;display:flex;align-items:center;gap:7px">
+<div onClick="{{ openPresets }}" style="{{ levelChip }}">{{ levelLabel }}<span style="{{ levelSub }}">{{ levelSubLabel }}</span></div>
+<div style="display:flex;align-items:center;gap:5px;padding:5px;border-radius:13px;background:{{ skinTray }}">
+<sc-for list="{{ skins }}" as="s" hint-placeholder-count="3">
+<div onClick="{{ s.onTap }}" style="{{ s.style }}"></div>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div style="position:relative;flex:1;min-height:0;overflow-y:auto;padding:0 16px 14px">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+
+<div style="{{ heroStyle }}">
+<div style="{{ heroBlob }}"></div>
+<div style="position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+<div style="min-width:0">
+<div style="{{ heroKicker }}">CONTINUAR · CONTINUE</div>
+<div style="{{ heroTitle }}">{{ heroPt }}</div>
+<div style="{{ heroBody }}">{{ heroEn }}</div>
+</div>
+<div onClick="{{ goCreate }}" style="{{ createBtn }}">CRIAR<span style="{{ createSub }}">CREATE</span></div>
+</div>
+<div onClick="{{ playHero }}" style="{{ heroBtn }}"><span style="{{ heroBtnTri }}"></span>Jogar <span style="{{ heroBtnEn }}">play</span></div>
+</div>
+
+<div style="{{ sectionLabel }}">CAPÍTULOS · CHAPTERS</div>
+<sc-for list="{{ chapters }}" as="c" hint-placeholder-count="7">
+<div onClick="{{ c.onTap }}" style="{{ c.row }}">
+<div style="{{ c.badge }}">{{ c.n }}</div>
+<div style="flex:1;min-width:0">
+<div style="{{ c.nameStyle }}">{{ c.pt }}</div>
+<div style="{{ c.descStyle }}">{{ c.en }}</div>
+<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
+<span style="{{ c.modeChip }}">{{ c.modeLabel }}</span>
+<span style="{{ c.goalChip }}">{{ c.goalLabel }}</span>
+</div>
+</div>
+<div style="{{ c.stateStyle }}">{{ c.state }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isWorld }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="{{ helpLine }}">Pinte com o dedo. <span style="{{ enInline }}">paint the world with your finger</span></div>
+<div style="{{ arenaStyle }}">
+<div style="{{ arenaTexture }}"></div>
+<sc-for list="{{ paintCells }}" as="c" hint-placeholder-count="99">
+<div onClick="{{ c.onTap }}" style="{{ c.style }}"></div>
+</sc-for>
+<div style="{{ lensOverlay }}"></div>
+</div>
+<div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px">
+<sc-for list="{{ brushes }}" as="b" hint-placeholder-count="7">
+<div onClick="{{ b.onTap }}" style="{{ b.style }}">
+<div style="{{ b.tile }}"></div>
+<div style="{{ b.cap }}">{{ b.pt }}</div>
+<div style="{{ b.capEn }}">{{ b.en }}</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:10px">
+<div onClick="{{ clearWorld }}" style="{{ secondaryBtn }}">Limpar <span style="{{ enInline }}">clear</span></div>
+<div onClick="{{ goSim }}" style="{{ primaryBtnWide }}">Ir simular <span style="{{ enOnAccent }}">simulate</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSim }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+
+<sc-if value="{{ canSwitch }}" hint-placeholder-val="{{ true }}">
+<div style="{{ segTray }}">
+<sc-for list="{{ modeTabs }}" as="m" hint-placeholder-count="2">
+<div onClick="{{ m.onTap }}" style="{{ m.style }}">{{ m.pt }}<span style="{{ m.sub }}">{{ m.en }}</span></div>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="{{ arenaStyle }}">
+<div style="{{ arenaTexture }}"></div>
+<sc-for list="{{ simCells }}" as="c" hint-placeholder-count="99"><div style="{{ c.style }}"></div></sc-for>
+<div style="{{ lensOverlay }}"></div>
+<sc-for list="{{ agentViews }}" as="a" hint-placeholder-count="1">
+<div style="{{ a.wrap }}">
+<sc-for list="{{ a.cones }}" as="c" hint-placeholder-count="2"><div style="{{ c.style }}"></div></sc-for>
+<div style="{{ a.body }}"></div>
+</div>
+</sc-for>
+<div style="{{ clockChip }}">{{ clockLabel }}</div>
+<div style="{{ engineChip }}">{{ engineLabel }}</div>
+</div>
+
+<div style="{{ goalCard }}">
+<div style="{{ goalKicker }}">{{ goalKickerLabel }}</div>
+<div style="{{ noteBody }}">{{ goalPt }}</div>
+<div style="{{ goalEnStyle }}">{{ goalEn }}</div>
+<div style="{{ goalProgStyle }}">{{ goalProgress }}</div>
+</div>
+
+<div style="{{ cardRow }}">
+<div onClick="{{ toggleRun }}" style="{{ playStyle }}">{{ playIcon }}</div>
+<div onClick="{{ stepOnce }}" style="{{ ghostBtn }}">+1</div>
+<div onClick="{{ resetRun }}" style="{{ ghostBtn }}">↻</div>
+<div style="flex:1"></div>
+<sc-for list="{{ speeds }}" as="sp" hint-placeholder-count="3">
+<div onClick="{{ sp.onTap }}" style="{{ sp.style }}">{{ sp.label }}</div>
+</sc-for>
+</div>
+
+<div style="display:flex;gap:10px">
+<div onClick="{{ toggleLens }}" style="{{ lensBtn }}">{{ lensLabel }} <span style="{{ enInline }}">grid lens</span></div>
+<div onClick="{{ goLab }}" style="{{ primaryBtnWide }}">{{ editLabel }} <span style="{{ enOnAccent }}">{{ editLabelEn }}</span></div>
+</div>
+
+<sc-if value="{{ showData }}" hint-placeholder-val="{{ false }}">
+<div style="{{ chartCard }}">
+<div style="{{ sectionLabel }}">POPULAÇÃO · POPULATION</div>
+<svg viewBox="0 0 300 110" preserveAspectRatio="none" style="width:100%;height:96px;display:block;margin-top:6px">
+<line x1="0" y1="104" x2="300" y2="104" stroke="{{ axis }}" stroke-width="1"></line>
+<sc-for list="{{ series }}" as="s" hint-placeholder-count="2">
+<polyline points="{{ s.points }}" fill="none" stroke="{{ s.color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+</sc-for>
+</svg>
+<div style="display:flex;gap:14px;padding-top:6px">
+<sc-for list="{{ series }}" as="s" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:6px"><span style="{{ s.dot }}"></span><span style="{{ s.legend }}">{{ s.label }} {{ s.count }}</span></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLab }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+
+<sc-if value="{{ canSwitch }}" hint-placeholder-val="{{ true }}">
+<div style="{{ segTray }}">
+<sc-for list="{{ modeTabs }}" as="m" hint-placeholder-count="2">
+<div onClick="{{ m.onTap }}" style="{{ m.style }}">{{ m.pt }}<span style="{{ m.sub }}">{{ m.en }}</span></div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCaMode }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="{{ helpLine }}">Uma regra troca um par de células por outro par. <span style="{{ enInline }}">a rule swaps one pair of cells for another</span></div>
+
+<sc-for list="{{ caRules }}" as="r" hint-placeholder-count="4">
+<div style="{{ r.card }}">
+<div style="display:flex;align-items:center;gap:8px">
+<div style="{{ r.num }}">{{ r.n }}</div>
+<div style="flex:1;min-width:0">
+<div style="{{ r.nameStyle }}">{{ r.pt }}</div>
+<div style="{{ r.enStyle }}">{{ r.en }}</div>
+</div>
+<div onClick="{{ r.toggle }}" style="{{ r.sw }}"><div style="{{ r.knob }}"></div></div>
+</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap">
+<div style="{{ r.pairBox }}"><div style="{{ r.b0 }}"></div><div style="{{ r.b1 }}"></div></div>
+<div style="{{ r.arrow }}">→</div>
+<div style="{{ r.pairBox }}"><div style="{{ r.a0 }}"></div><div style="{{ r.a1 }}"></div></div>
+<div style="{{ r.dirChip }}">{{ r.dirLabel }}</div>
+<div style="flex:1"></div>
+<div onClick="{{ r.remove }}" style="{{ r.del }}">×</div>
+</div>
+<div style="display:flex;align-items:center;gap:9px;margin-top:8px;color:{{ a1 }}">
+<span style="{{ r.probTag }}">CHANCE</span>
+<input type="range" min="5" max="100" step="5" value="{{ r.prob }}" onChange="{{ r.setProb }}">
+<span style="{{ r.probVal }}">{{ r.prob }}%</span>
+</div>
+</div>
+</sc-for>
+
+<div style="{{ teachCard }}">
+<div style="{{ sectionLabel }}">ENSINAR UMA REGRA · TEACH A RULE</div>
+<div style="{{ teachHint }}">Toque nas células para trocar o que estava e o que vira.</div>
+<div style="display:flex;align-items:center;gap:9px;margin-top:10px;flex-wrap:wrap">
+<div style="{{ teachPairBox }}">
+<div onClick="{{ cycleB0 }}" style="{{ tb0 }}"></div><div onClick="{{ cycleB1 }}" style="{{ tb1 }}"></div>
+</div>
+<div style="{{ teachArrow }}">→</div>
+<div style="{{ teachPairBox }}">
+<div onClick="{{ cycleA0 }}" style="{{ ta0 }}"></div><div onClick="{{ cycleA1 }}" style="{{ ta1 }}"></div>
+</div>
+</div>
+<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+<sc-for list="{{ dirPicks }}" as="d" hint-placeholder-count="5">
+<div onClick="{{ d.onTap }}" style="{{ d.style }}">{{ d.label }}</div>
+</sc-for>
+</div>
+<div onClick="{{ addRule }}" style="{{ primaryBtn }}">Guardar regra <span style="{{ enOnAccent }}">save rule</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAgentMode }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+
+<div style="{{ segTray }}">
+<sc-for list="{{ labTabs }}" as="s" hint-placeholder-count="3">
+<div onClick="{{ s.onTap }}" style="{{ s.style }}">{{ s.pt }}<span style="{{ s.sub }}">{{ s.en }}</span></div>
+</sc-for>
+</div>
+
+<sc-if value="{{ isBody }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="{{ helpLine }}">{{ bodyHelp }}</div>
+<div style="{{ bodyStage }}">
+<div style="{{ bodyRing }}"></div>
+<div style="{{ headingMark }}">frente · front</div>
+<sc-for list="{{ mountCones }}" as="c" hint-placeholder-count="2"><div style="{{ c.style }}"></div></sc-for>
+<div style="{{ bodySprite }}"></div>
+<sc-for list="{{ mountPins }}" as="p" hint-placeholder-count="4">
+<div onClick="{{ p.onTap }}" style="{{ p.style }}">{{ p.label }}</div>
+</sc-for>
+</div>
+<div style="{{ cardBox }}">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+<div style="{{ sectionLabel }}">{{ mountTitle }}</div>
+<sc-if value="{{ canAdvanced }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ toggleAdvanced }}" style="{{ advBtn }}">{{ advLabel }}</div>
+</sc-if>
+</div>
+<sc-if value="{{ hasMount }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ sensorPick }}" as="c" hint-placeholder-count="6"><div onClick="{{ c.onTap }}" style="{{ c.style }}">{{ c.label }}</div></sc-for>
+</div>
+<sc-for list="{{ mountSliders }}" as="s" hint-placeholder-count="2">
+<div style="color:{{ a1 }}">
+<div style="{{ meterLabel }}"><span>{{ s.label }}</span><span>{{ s.value }}</span></div>
+<input type="range" min="{{ s.min }}" max="{{ s.max }}" step="{{ s.step }}" value="{{ s.raw }}" onChange="{{ s.onChange }}">
+</div>
+</sc-for>
+<div onClick="{{ removeMount }}" style="{{ dangerBtn }}">Tirar este sensor · remove</div>
+</div>
+</sc-if>
+<sc-if value="{{ noMount }}" hint-placeholder-val="{{ false }}">
+<div style="{{ emptyNote }}">Toque num lugar vazio do corpo para montar um sensor ali.</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isWiring }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="{{ helpLine }}">{{ wireHelp }}</div>
+<div style="{{ graphCard }}">
+<div style="display:flex;justify-content:space-between;padding:0 4px 8px">
+<span style="{{ colLabelA }}">SENSORES</span><span style="{{ colLabelB }}">AÇÕES ⚙</span>
+</div>
+<div style="{{ graphBox }}">
+<div style="{{ colStack }}">
+<sc-for list="{{ sensorNodes }}" as="n" hint-placeholder-count="6">
+<div onClick="{{ n.onTap }}" style="{{ n.style }}">
+<span style="{{ n.pin }}"></span>
+<span style="{{ n.text }}">{{ n.label }}</span>
+</div>
+</sc-for>
+</div>
+<svg viewBox="{{ graphView }}" preserveAspectRatio="none" style="{{ wireSvg }}">
+<sc-for list="{{ wires }}" as="w" hint-placeholder-count="3">
+<path d="{{ w.d }}" fill="none" stroke="{{ w.stroke }}" stroke-width="2.4" stroke-linecap="round"></path>
+</sc-for>
+</svg>
+<div style="{{ colStack }}">
+<sc-for list="{{ actionNodes }}" as="n" hint-placeholder-count="5">
+<div onClick="{{ n.onTap }}" style="{{ n.style }}">
+<span onClick="{{ n.onOpen }}" style="{{ n.openBtn }}">{{ n.blockCount }}</span>
+<span style="{{ n.text }}">{{ n.label }}</span>
+<span style="{{ n.pin }}"></span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="{{ sectionLabel }}">LÊ-SE ASSIM · READS AS</div>
+<sc-for list="{{ ruleLines }}" as="r" hint-placeholder-count="3">
+<div style="{{ r.style }}"><span style="{{ r.kicker }}">QUANDO</span>{{ r.when }}<span style="{{ r.arrow }}">→</span>{{ r.then }}</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBlocks }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="{{ progHeader }}">
+<div style="min-width:0">
+<div style="{{ sectionLabel }}">{{ progKicker }}</div>
+<div style="{{ progName }}">{{ progTitle }}</div>
+</div>
+<sc-if value="{{ hasWiring }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ goWiring }}" style="{{ advBtn }}">← ligações</div>
+</sc-if>
+</div>
+<div style="{{ helpLine }}">{{ blockHelp }}</div>
+
+<div style="{{ stripMain }}">
+<div style="{{ stripTag }}">PRINCIPAL · MAIN</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;min-height:56px">
+<sc-for list="{{ mainBlocks }}" as="b" hint-placeholder-count="3">
+<div onClick="{{ b.onTap }}" style="{{ b.style }}">{{ b.glyph }}</div>
+</sc-for>
+<sc-if value="{{ mainEmpty }}" hint-placeholder-val="{{ false }}"><div style="{{ emptySlot }}">toque num bloco abaixo</div></sc-if>
+</div>
+</div>
+
+<sc-if value="{{ canP1 }}" hint-placeholder-val="{{ false }}">
+<div style="{{ stripProc }}">
+<div style="{{ stripTagB }}">P1 · ATALHO</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px;min-height:56px">
+<sc-for list="{{ procBlocks }}" as="b" hint-placeholder-count="2">
+<div onClick="{{ b.onTap }}" style="{{ b.style }}">{{ b.glyph }}</div>
+</sc-for>
+<sc-if value="{{ procEmpty }}" hint-placeholder-val="{{ true }}"><div style="{{ emptySlot }}">um atalho que MAIN pode chamar</div></sc-if>
+</div>
+</div>
+<div style="{{ segTray }}">
+<sc-for list="{{ slotTabs }}" as="s" hint-placeholder-count="2">
+<div onClick="{{ s.onTap }}" style="{{ s.style }}">{{ s.name }}</div>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="{{ cardBox }}">
+<div style="{{ sectionLabel }}">BLOCOS · BLOCKS</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+<sc-for list="{{ palette }}" as="b" hint-placeholder-count="5">
+<div onClick="{{ b.onTap }}" style="{{ b.style }}"><span style="{{ b.glyphStyle }}">{{ b.glyph }}</span><span style="{{ b.capStyle }}">{{ b.pt }}</span><span style="{{ b.capEnStyle }}">{{ b.en }}</span></div>
+</sc-for>
+</div>
+</div>
+
+<div onClick="{{ goSim }}" style="{{ primaryBtn }}">Ver no aquário <span style="{{ enOnAccent }}">run it in the tank</span></div>
+</div>
+</sc-if>
+
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+</div>
+
+<div style="{{ tabBar }}">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<div onClick="{{ t.onTap }}" style="{{ t.style }}"><span style="{{ t.glyph }}"></span>{{ t.pt }}<span style="{{ t.sub }}">{{ t.en }}</span></div>
+</sc-for>
+</div>
+
+<sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+<div style="{{ toastWrap }}">
+<div style="{{ toastCard }}">
+<div style="{{ toastPt }}">{{ toastPtText }}</div>
+<div style="{{ toastEn }}">{{ toastEnText }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ presetSheet }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeSheet }}" style="{{ scrimStyle }}">
+<div style="{{ sheetStyle }}">
+<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+<div style="{{ progName }}">Níveis do ambiente</div>
+<div onClick="{{ closeSheet }}" style="{{ sheetClose }}">FECHAR</div>
+</div>
+<div style="{{ teachHint }}">Cada nível liga só as ferramentas daquele degrau. · each level exposes only its own tools</div>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+<sc-for list="{{ presetRows }}" as="p" hint-placeholder-count="7">
+<div onClick="{{ p.onTap }}" style="{{ p.row }}">
+<div style="{{ p.dot }}"></div>
+<div style="flex:1;min-width:0">
+<div style="{{ p.nameStyle }}">{{ p.pt }}</div>
+<div style="{{ p.enStyle }}">{{ p.en }}</div>
+</div>
+<div style="{{ p.toolStyle }}">{{ p.tools }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+<div style="{{ footNote }}">
+Um só mundo: o <b>espaço é contínuo</b> e a grade é uma <b>lente</b> por cima dele — as regras de células
+leem a grade, os agentes andam livres sobre ela. O botão <b>CÉLULAS ⇄ AGENTE</b> troca só o cérebro do peixe,
+nunca o aquário, então o capítulo 1 e o capítulo 3 são o mesmo problema resolvido de dois jeitos.
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:1010},&quot;skin&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;pond&quot;,&quot;lab&quot;,&quot;meadow&quot;],&quot;default&quot;:&quot;pond&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ambiente&quot;},&quot;gridLens&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Ambiente&quot;},&quot;tickMs&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:140,&quot;max&quot;:900,&quot;step&quot;:20,&quot;default&quot;:420,&quot;unit&quot;:&quot;ms&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Ambiente&quot;}}">
+const COLS = 11, ROWS = 9;
+
+const ART = {
+  s:'art/sand.svg', r:'art/rock01.svg', p:'art/plant01.svg', g:'art/glass.svg',
+  a:'art/cyanobacteria.svg', w:'art/waves.svg',
+  '>':'art/fish-right.svg', '<':'art/fish-left.svg'
+};
+const TYPES = {
+  '_':{pt:'vazio', en:'empty'},
+  'w':{pt:'água',  en:'water'},
+  's':{pt:'areia', en:'sand'},
+  'r':{pt:'pedra', en:'rock', solid:true},
+  'g':{pt:'vidro', en:'glass', solid:true},
+  'p':{pt:'planta',en:'plant'},
+  'a':{pt:'alga',  en:'algae'},
+  '>':{pt:'peixe →', en:'fish right'},
+  '<':{pt:'peixe ←', en:'fish left'}
+};
+const BRUSH_ORDER = ['_','g','r','s','p','a','>'];
+const CYCLE = ['_','g','r','s','p','a','>','<'];
+
+const DIRS = {right:[1,0], left:[-1,0], up:[0,-1], down:[0,1], any:null};
+const DIR_LABEL = {right:'→ direita', left:'← esquerda', up:'↑ cima', down:'↓ baixo', any:'✳ qualquer'};
+
+const SENSORS = [
+  ['free', 'frente livre', 'front is free'],
+  ['wall', 'parede à frente', 'wall ahead'],
+  ['food', 'vê comida', 'sees food'],
+  ['plant','vê planta', 'sees a plant'],
+  ['floor','tocou a areia', 'at the sand'],
+  ['dice', '1 em 4', '1 in 4']
+];
+const ACTIONS = [
+  ['fwd','nadar','swim'], ['turn','dar meia-volta','turn around'],
+  ['rand','virar ao acaso','random turn'], ['eat','comer','eat'], ['wait','esperar','wait']
+];
+const BLOCKS = {
+  step:{glyph:'↑', pt:'passo', en:'step'},
+  left:{glyph:'↺', pt:'esquerda', en:'left'},
+  right:{glyph:'↻', pt:'direita', en:'right'},
+  act:{glyph:'◉', pt:'agir', en:'act'},
+  wait:{glyph:'❙❙', pt:'esperar', en:'wait'},
+  p1:{glyph:'P1', pt:'chamar P1', en:'call P1'}
+};
+const DEFAULT_PROGRAMS = {
+  fwd:{main:['step'], p1:[]}, turn:{main:['left','left'], p1:[]},
+  rand:{main:['right'], p1:[]}, eat:{main:['act'], p1:[]}, wait:{main:['wait'], p1:[]}
+};
+const DEFAULT_WIRES = [['wall','turn'],['free','fwd'],['food','eat']];
+const DEFAULT_MOUNTS = [{s:'wall', a:0, r:1.1, f:44},{s:'food', a:0, r:3, f:70}];
+
+const PRESETS = {
+  ca:      {pt:'Só células', en:'Cells only', modes:['ca'], paint:true,
+            f:{}, tools:'regras'},
+  steps:   {pt:'Agente: só passos', en:'Agent: steps only', modes:['agent'], paint:false,
+            f:{blocks:true}, tools:'blocos'},
+  fixed:   {pt:'Agente: sensores fixos', en:'Agent: fixed sensors', modes:['agent'], paint:false,
+            f:{blocks:true, body:true, wiring:true}, tools:'corpo · ligações · blocos'},
+  free:    {pt:'Agente: sensores livres', en:'Agent: free sensors', modes:['agent'], paint:true,
+            f:{blocks:true, body:true, wiring:true, advanced:true}, tools:'+ ângulo e alcance'},
+  proc:    {pt:'Agente: blocos e P1', en:'Agent: blocks & P1', modes:['agent'], paint:true,
+            f:{blocks:true, body:true, wiring:true, advanced:true, p1:true}, tools:'+ procedimentos'},
+  mix:     {pt:'Misto: células + agentes', en:'CA + agents together', modes:['ca','agent'], paint:true,
+            f:{blocks:true, body:true, wiring:true, advanced:true, p1:true, ca:true}, data:true, tools:'tudo em camadas'},
+  sandbox: {pt:'Bancada livre', en:'Free sandbox', modes:['ca','agent'], paint:true,
+            f:{blocks:true, body:true, wiring:true, advanced:true, p1:true, ca:true}, data:true, tools:'tudo destravado'}
+};
+
+const TANK = [
+  'g_________g',
+  'g_________g',
+  'g_________g',
+  'g_>_______g',
+  'g_________g',
+  'g_________g',
+  'g_________g',
+  'g__p____p_g',
+  'gsssssssssg'
+];
+function world(edits){
+  const g = TANK.map(r=>r.split(''));
+  (edits||[]).forEach(([x,y,t])=>{ g[y][x] = t; });
+  return g.map(r=>r.join(''));
+}
+
+const SWIM = [
+  {id:'sr', pt:'peixe → nada', en:'fish swims right', b:['>','_'], a:['_','>'], dir:'right', prob:100, on:true},
+  {id:'tr', pt:'peixe → bate e volta', en:'fish right hits glass', b:['>','g'], a:['<','g'], dir:'right', prob:100, on:true},
+  {id:'sl', pt:'peixe ← nada', en:'fish swims left', b:['<','_'], a:['_','<'], dir:'left', prob:100, on:true},
+  {id:'tl', pt:'peixe ← bate e volta', en:'fish left hits glass', b:['<','g'], a:['>','g'], dir:'left', prob:100, on:true}
+];
+const GROW = [
+  {id:'pg', pt:'planta se espalha', en:'plant spreads', b:['p','_'], a:['p','p'], dir:'any', prob:14, on:true},
+  {id:'pd', pt:'planta morre', en:'plant dies', b:['p','p'], a:['p','_'], dir:'any', prob:10, on:true},
+  {id:'ag', pt:'alga aparece', en:'algae appears', b:['s','_'], a:['s','a'], dir:'up', prob:8, on:true}
+];
+function rules(list){ return JSON.parse(JSON.stringify(list)); }
+
+const CHAPTERS = [
+  {id:'c1', preset:'ca', mode:'ca', pt:'O peixe que vai e volta', en:'The fish that turns around',
+   goalPt:'Faça o peixe tocar as duas paredes de vidro — só com regras de células.',
+   goalEn:'Make the fish reach both glass walls using cell rules only.',
+   goal:'bounce', grid:world([]), caRules:rules(SWIM), goalTag:'A→B'},
+  {id:'c2', preset:'steps', mode:'agent', pt:'Um agente que anda', en:'An agent that walks',
+   goalPt:'Leve o peixe até a planta usando só blocos de passo e giro.',
+   goalEn:'Walk the fish to the plant with step and turn blocks only.',
+   goal:'reach', target:[8,7], grid:world([[3,3,'_'],[2,3,'>']]), caRules:[], goalTag:'A→B'},
+  {id:'c3', preset:'fixed', mode:'agent', pt:'O mesmo peixe, outro cérebro', en:'Same fish, another brain',
+   goalPt:'Mesmo problema do capítulo 1 — agora com um sensor de parede ligado a “dar meia-volta”.',
+   goalEn:'Chapter 1 again — now with a wall sensor wired to “turn around”.',
+   goal:'bounce', grid:world([]), caRules:[], twin:'c1', goalTag:'mesmo problema'},
+  {id:'c4', preset:'free', mode:'agent', pt:'Olhos que giram', en:'Eyes that turn',
+   goalPt:'Coma as 2 algas. Elas estão fora da linha de frente: gire o sensor e abra o campo de visão.',
+   goalEn:'Eat both algae. They sit off the fish\u2019s line — turn the sensor and widen its view.',
+   goal:'collect', need:2, grid:world([[6,1,'a'],[4,6,'a']]), caRules:[], goalTag:'coletar'},
+  {id:'c5', preset:'proc', mode:'agent', pt:'Atalhos que se repetem', en:'Shortcuts that repeat',
+   goalPt:'Coma as 4 algas usando no máximo 6 blocos ao todo. Guarde o trecho repetido em P1.',
+   goalEn:'Eat all 4 algae with at most 6 blocks. Put the repeated part in P1.',
+   goal:'efficient', need:4, budget:6, grid:world([[4,2,'a'],[7,2,'a'],[4,5,'a'],[7,5,'a']]), caRules:[], goalTag:'menos blocos'},
+  {id:'c6', preset:'mix', mode:'agent', pt:'Aquário vivo', en:'A living aquarium',
+   goalPt:'As plantas crescem por regras de células enquanto o peixe nada por blocos. Segure 30 ciclos com planta viva.',
+   goalEn:'Plants grow by cell rules while the fish swims by blocks. Hold 30 ticks with plants alive.',
+   goal:'alive', ticks:30, grid:world([[5,7,'p'],[8,5,'a']]), caRules:rules(GROW), goalTag:'sobreviver'},
+  {id:'c7', preset:'sandbox', mode:'ca', pt:'Bancada livre', en:'Free bench',
+   goalPt:'Sem objetivo. Pinte, escreva regras, monte sensores, misture os dois motores.',
+   goalEn:'No goal. Paint, write rules, mount sensors, mix both engines.',
+   goal:'none', grid:world([[5,7,'p'],[6,2,'a']]), caRules:rules(SWIM).concat(rules(GROW)), goalTag:'livre'}
+];
+
+const SKINS = {
+  pond:{name:'Pond', page:'radial-gradient(120% 80% at 20% 0%,#0d3a44 0%,#071c28 55%,#04121b 100%)',
+    bezel:'linear-gradient(160deg,#20505c,#0a2028)', shell:'#08202c',
+    field:'radial-gradient(90% 55% at 30% 12%,#1d6f6b 0%,#0f4450 45%,#08202c 100%)',
+    water:'radial-gradient(75% 55% at 62% 22%,#2b8f86 0%,#146069 42%,#0a3542 72%,#062632 100%)',
+    ink:'#eafaf6', soft:'rgba(223,243,251,.55)', faint:'rgba(223,243,251,.4)',
+    panel:'rgba(255,255,255,.05)', panel2:'rgba(255,255,255,.035)', line:'rgba(121,220,196,.16)',
+    a1:'#79dcc4', a2:'#f0a63c', a3:'#a8cf4c', onA1:'#07303a', bar:'rgba(4,18,27,.55)', dark:true},
+  lab:{name:'Lab', page:'linear-gradient(170deg,#dceef6 0%,#cfe6f0 100%)',
+    bezel:'linear-gradient(160deg,#ffffff,#bcd9e4)', shell:'#f2fafd',
+    field:'linear-gradient(170deg,#f4fbfe 0%,#e2f1f8 70%,#d7ebf4 100%)',
+    water:'linear-gradient(170deg,#f7fdff 0%,#dcf0f7 60%,#c9e6f1 100%)',
+    ink:'#123742', soft:'rgba(18,55,66,.62)', faint:'rgba(18,55,66,.45)',
+    panel:'#ffffff', panel2:'rgba(18,55,66,.045)', line:'rgba(18,55,66,.14)',
+    a1:'#2fa8bf', a2:'#e8a021', a3:'#6fae2f', onA1:'#ffffff', bar:'rgba(255,255,255,.86)', dark:false},
+  meadow:{name:'Meadow', page:'linear-gradient(170deg,#e2f3dc 0%,#cfe9c8 100%)',
+    bezel:'linear-gradient(160deg,#ffffff,#bcd9b4)', shell:'#f4fcf1',
+    field:'linear-gradient(170deg,#f6fdf3 0%,#e6f5e0 70%,#d8eed1 100%)',
+    water:'linear-gradient(170deg,#f8fef6 0%,#e3f4dd 60%,#cde9c5 100%)',
+    ink:'#1c3a1c', soft:'rgba(28,58,28,.62)', faint:'rgba(28,58,28,.45)',
+    panel:'#ffffff', panel2:'rgba(28,58,28,.05)', line:'rgba(28,58,28,.14)',
+    a1:'#4f9e57', a2:'#e08c2a', a3:'#8ab534', onA1:'#ffffff', bar:'rgba(255,255,255,.86)', dark:false}
+};
+
+const TITLES = {
+  home:['Cellula','capítulos e bancada livre'],
+  world:['Mundo','pinte o aquário'],
+  sim:['Simular','o mesmo mundo, dois motores'],
+  lab:['Oficina','escreva as regras ou o cérebro']
+};
+
+class Component extends DCLogic {
+  state = {
+    screen:'home', skin:(SKINS[this.props.skin]?this.props.skin:'pond'),
+    chapter:'c1', preset:'ca', mode:'ca',
+    running:false, speed:1, lens:this.props.gridLens!==false,
+    labTab:'blocks', sel:null, prog:'fwd', slot:'main', mountIdx:0,
+    advanced:false, presetSheet:false, toast:null, done:{},
+    wires:JSON.parse(JSON.stringify(DEFAULT_WIRES)),
+    mounts:JSON.parse(JSON.stringify(DEFAULT_MOUNTS)),
+    programs:JSON.parse(JSON.stringify(DEFAULT_PROGRAMS)),
+    caRules:rules(SWIM),
+    teach:{b:['>','_'], a:['_','>'], dir:'right'},
+    frame:0
+  };
+
+  componentDidMount(){ this.load('c1'); this.last = performance.now(); this.loop(); }
+  componentWillUnmount(){ cancelAnimationFrame(this.raf); }
+
+  chapter(id){ return CHAPTERS.find(c=>c.id===(id||this.state.chapter)) || CHAPTERS[0]; }
+
+  load(id, keepEditors){
+    const ch = this.chapter(id), P = PRESETS[ch.preset];
+    this.grid = ch.grid.map(r=>r.split(''));
+    this.tick = 0; this.hist = []; this.eaten = 0; this.hitL = false; this.hitR = false;
+    this.aliveFor = 0;
+    this.agent = null;
+    const patch = {chapter:id, preset:ch.preset, mode:ch.mode, running:false, sel:null,
+      caRules:rules(ch.caRules), advanced:!!(P.f.advanced && ch.preset!=='fixed'),
+      labTab:P.f.wiring ? (ch.mode==='agent' ? 'blocks' : 'blocks') : 'blocks'};
+    if(!keepEditors){
+      patch.wires = JSON.parse(JSON.stringify(DEFAULT_WIRES));
+      patch.mounts = JSON.parse(JSON.stringify(DEFAULT_MOUNTS));
+      patch.programs = JSON.parse(JSON.stringify(DEFAULT_PROGRAMS));
+      if(ch.id==='c2') patch.programs = Object.assign(JSON.parse(JSON.stringify(DEFAULT_PROGRAMS)), {fwd:{main:['step'], p1:[]}});
+    }
+    this.setState(patch, ()=>{ if(ch.mode==='agent') this.spawnAgent(); });
+  }
+
+  resetRun = ()=>{ this.load(this.state.chapter, true); };
+
+  cell(x,y){
+    if(x<0||y<0||x>=COLS||y>=ROWS) return 'g';
+    return this.grid[y][x];
+  }
+  setCell(x,y,t){ if(x>=0&&y>=0&&x<COLS&&y<ROWS) this.grid[y][x] = t; }
+  passable(t){ return !(TYPES[t] && TYPES[t].solid); }
+
+  spawnAgent(){
+    let fx = 2, fy = 3, h = 0;
+    for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+      const c = this.grid[y][x];
+      if(c==='>'||c==='<'){ fx = x; fy = y; h = c==='>'?0:180; this.grid[y][x] = '_'; }
+    }
+    this.agent = {x:fx, y:fy, h, act:null, stack:[{list:'main', i:0}], blocks:0};
+  }
+  absorbAgent(){
+    if(!this.agent) return;
+    const x = Math.round(this.agent.x), y = Math.round(this.agent.y);
+    const dir = Math.cos(this.agent.h*Math.PI/180) < 0 ? '<' : '>';
+    if(this.passable(this.cell(x,y))) this.setCell(x,y,dir);
+    this.agent = null;
+  }
+
+  setMode = (m)=>{
+    if(m===this.state.mode) return;
+    if(m==='agent') this.spawnAgent(); else this.absorbAgent();
+    this.setState({mode:m, running:false});
+    this.say(m==='agent' ? 'O mesmo peixe — agora o cérebro é dele.' : 'O mesmo peixe — agora quem manda são as regras do mundo.',
+      m==='agent' ? 'same fish, now it has its own brain' : 'same fish, now the world\u2019s rules move it');
+  };
+
+  say(pt,en){
+    this.setState({toast:{pt,en}});
+    clearTimeout(this.toastT);
+    this.toastT = setTimeout(()=>this.setState({toast:null}), 2600);
+  }
+
+  loop = ()=>{
+    this.raf = requestAnimationFrame(this.loop);
+    const now = performance.now(), dt = now - this.last; this.last = now;
+    const ms = (this.props.tickMs || 420) / this.state.speed;
+    if(this.state.running && this.state.screen!=='home'){
+      this.acc = (this.acc||0) + dt;
+      while(this.acc >= ms){ this.acc -= ms; this.stepWorld(); }
+    } else this.acc = 0;
+    this.setState(s=>({frame:s.frame+1}));
+  };
+
+  stepOnce = ()=>{ this.stepWorld(); };
+
+  stepWorld(){
+    const P = PRESETS[this.state.preset];
+    if(this.state.mode==='ca' || P.f.ca) this.caTick();
+    if(this.state.mode==='agent' && this.agent) this.agentTick();
+    this.tick++;
+    if(this.tick % 4 === 0){
+      let p = 0, a = 0;
+      for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+        const c = this.grid[y][x]; if(c==='p') p++; if(c==='a') a++;
+      }
+      this.hist.push({p, a}); if(this.hist.length>40) this.hist.shift();
+    }
+    this.checkGoal();
+  }
+
+  caTick(){
+    const used = {};
+    const list = this.state.caRules.filter(r=>r.on);
+    const order = [];
+    for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) order.push([x,y]);
+    for(let i=order.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const t = order[i]; order[i] = order[j]; order[j] = t; }
+    for(const [x,y] of order){
+      if(used[x+','+y]) continue;
+      for(const r of list){
+        if(this.grid[y][x] !== r.b[0]) continue;
+        const d = r.dir==='any'
+          ? [[1,0],[-1,0],[0,1],[0,-1]][Math.floor(Math.random()*4)]
+          : DIRS[r.dir];
+        const nx = x + d[0], ny = y + d[1];
+        if(nx<0||ny<0||nx>=COLS||ny>=ROWS) continue;
+        if(used[nx+','+ny]) continue;
+        if(this.grid[ny][nx] !== r.b[1]) continue;
+        if(Math.random()*100 > r.prob) continue;
+        this.grid[y][x] = r.a[0]; this.grid[ny][nx] = r.a[1];
+        used[x+','+y] = 1; used[nx+','+ny] = 1;
+        if(r.b[1]==='g' && (r.a[0]==='<'||r.a[0]==='>')){
+          if(d[0] > 0) this.hitR = true; else if(d[0] < 0) this.hitL = true;
+        }
+        break;
+      }
+    }
+  }
+
+  ahead(dist){
+    const A = this.agent, rad = A.h*Math.PI/180;
+    return [Math.round(A.x + Math.cos(rad)*dist), Math.round(A.y + Math.sin(rad)*dist)];
+  }
+
+  sees(kind, mount){
+    const A = this.agent, range = mount ? mount.r : 1, fov = mount ? mount.f : 40;
+    const base = A.h + (mount ? mount.a : 0);
+    for(let d=1; d<=Math.ceil(range); d++){
+      for(let o=-fov/2; o<=fov/2; o+=Math.max(15, fov/4)){
+        const rad = (base+o)*Math.PI/180;
+        const x = Math.round(A.x + Math.cos(rad)*d), y = Math.round(A.y + Math.sin(rad)*d);
+        if(this.cell(x,y) === kind) return [x,y];
+      }
+    }
+    return null;
+  }
+
+  sensorTrue(id){
+    const A = this.agent, P = PRESETS[this.state.preset];
+    const mount = P.f.body ? (this.state.mounts.find(m=>m.s===id) || null) : null;
+    if(id==='free'){ const [x,y] = this.ahead(1); return this.passable(this.cell(x,y)); }
+    if(id==='wall'){ const [x,y] = this.ahead(mount ? Math.max(1,mount.r) : 1); return !this.passable(this.cell(x,y)); }
+    if(id==='food') return !!this.sees('a', mount);
+    if(id==='plant') return !!this.sees('p', mount);
+    if(id==='floor'){ const [x,y] = this.ahead(1); return this.cell(x, y+1)==='s' || this.cell(x,y)==='s'; }
+    if(id==='dice') return Math.random() < 0.25;
+    return false;
+  }
+
+  agentTick(){
+    const A = this.agent, s = this.state, P = PRESETS[s.preset];
+    const cur = A.act ? (s.programs[A.act] || {main:[], p1:[]}) : null;
+    // an action runs to the end of its program before sensors are read again,
+    // so a two-block "turn around" is never preempted halfway
+    const busy = !!cur && A.stack.some(fr=>fr.i < (cur[fr.list] || []).length);
+    if(!busy){
+      let actId = 'fwd';
+      if(P.f.wiring){
+        const hit = s.wires.find(([sen])=>this.sensorTrue(sen));
+        actId = hit ? hit[1] : 'fwd';
+      }
+      A.act = actId; A.stack = [{list:'main', i:0}];
+    }
+    const prog = s.programs[A.act] || {main:[], p1:[]};
+    let guard = 0;
+    while(guard++ < 8){
+      if(!A.stack.length){ A.stack = [{list:'main', i:0}]; if(!(prog.main||[]).length) return; }
+      const fr = A.stack[A.stack.length-1], list = prog[fr.list] || [];
+      if(fr.i >= list.length){ A.stack.pop(); continue; }
+      const b = list[fr.i++];
+      if(b === 'p1'){ if(A.stack.length < 4) A.stack.push({list:'p1', i:0}); continue; }
+      this.execBlock(b);
+      return;
+    }
+  }
+
+  execBlock(b){
+    const A = this.agent, rad = A.h*Math.PI/180;
+    if(b === 'step'){
+      const nx = A.x + Math.cos(rad), ny = A.y + Math.sin(rad);
+      if(this.passable(this.cell(Math.round(nx), Math.round(ny)))){ A.x = nx; A.y = ny; }
+      else { if(Math.cos(rad) > .5) this.hitR = true; if(Math.cos(rad) < -.5) this.hitL = true; }
+    } else if(b === 'left'){
+      A.h = (A.h + 270) % 360;
+      if(A.act === 'turn'){ if(Math.cos(rad) > .5) this.hitR = true; if(Math.cos(rad) < -.5) this.hitL = true; }
+    } else if(b === 'right'){
+      A.h = (A.h + 90) % 360;
+      if(A.act === 'turn'){ if(Math.cos(rad) > .5) this.hitR = true; if(Math.cos(rad) < -.5) this.hitL = true; }
+    } else if(b === 'act'){
+      const here = [Math.round(A.x), Math.round(A.y)], fr = this.ahead(1);
+      [here, fr].forEach(([x,y])=>{ if(this.cell(x,y)==='a'){ this.setCell(x,y,'_'); this.eaten++; } });
+    }
+  }
+
+  blockCount(){
+    const p = this.state.programs;
+    return Object.keys(p).reduce((n,k)=>n + p[k].main.length + p[k].p1.length, 0);
+  }
+
+  checkGoal(){
+    const ch = this.chapter();
+    let ok = false;
+    if(ch.goal === 'bounce') ok = this.hitL && this.hitR;
+    else if(ch.goal === 'reach' && this.agent)
+      ok = Math.abs(this.agent.x - ch.target[0]) < .7 && Math.abs(this.agent.y - ch.target[1]) < 1.2;
+    else if(ch.goal === 'collect') ok = this.eaten >= ch.need;
+    else if(ch.goal === 'efficient') ok = this.eaten >= ch.need && this.blockCount() <= ch.budget;
+    else if(ch.goal === 'alive'){
+      let p = 0; for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(this.grid[y][x]==='p') p++;
+      if(p > 0) this.aliveFor++; else this.aliveFor = 0;
+      ok = this.aliveFor >= ch.ticks;
+    }
+    if(ok && !this.state.done[ch.id]){
+      this.setState(s=>({done:Object.assign({}, s.done, {[ch.id]:true}), running:false}));
+      this.say('Conseguiu! ' + ch.pt, 'solved — ' + ch.en);
+    }
+  }
+
+  goalProgress(){
+    const ch = this.chapter();
+    if(this.state.done[ch.id]) return '✓ resolvido · solved';
+    if(ch.goal === 'bounce') return 'paredes tocadas · walls hit: ' + ((this.hitL?1:0) + (this.hitR?1:0)) + '/2';
+    if(ch.goal === 'reach') return 'ciclos · ticks: ' + this.tick;
+    if(ch.goal === 'collect') return 'algas · algae: ' + this.eaten + '/' + ch.need;
+    if(ch.goal === 'efficient') return 'algas ' + this.eaten + '/' + ch.need + ' · blocos ' + this.blockCount() + '/' + ch.budget;
+    if(ch.goal === 'alive') return 'ciclos com planta viva: ' + this.aliveFor + '/' + ch.ticks;
+    return 'ciclos · ticks: ' + this.tick;
+  }
+
+  cellStyle(t, T){
+    const st = {borderRadius:'6px'};
+    if(t === '_') { st.background = 'transparent'; return st; }
+    if(ART[t]){
+      st.backgroundImage = 'url("' + ART[t] + '")';
+      st.backgroundSize = (t==='s'||t==='g') ? '100% 100%' : '82% 82%';
+      st.backgroundPosition = 'center'; st.backgroundRepeat = 'no-repeat';
+    }
+    if(t === 'g') st.background = 'linear-gradient(180deg,' + T.a1 + '2e,' + T.a1 + '10)';
+    if(t === 's') st.background = T.dark ? 'rgba(240,166,60,.22)' : 'rgba(232,160,33,.25)';
+    return st;
+  }
+
+  coneStyle(color, angle, rangePx, fov, op){
+    const h = Math.max(10, rangePx*2*Math.tan(Math.min(80,fov)/2*Math.PI/180));
+    return {position:'absolute', left:'0', top:'0', width:rangePx+'px', height:h+'px',
+      marginTop:-(h/2)+'px', opacity:op, pointerEvents:'none',
+      transform:'rotate(' + angle + 'deg)', transformOrigin:'0 50%',
+      background:'linear-gradient(90deg,' + color + 'cc,' + color + '11 88%,transparent)',
+      clipPath:'polygon(0% 50%,100% 0%,100% 100%)'};
+  }
+
+  renderVals(){
+    const s = this.state, T = SKINS[s.skin], sc = s.screen, ch = this.chapter(), P = PRESETS[s.preset];
+    const t = TITLES[sc] || TITLES.home;
+    const card = {padding:'14px', borderRadius:'20px', background:T.panel,
+      border:'1px solid ' + T.line, boxShadow:T.dark ? 'none' : '0 4px 14px rgba(18,55,66,.07)'};
+    const label = {fontSize:'11px', fontWeight:800, letterSpacing:'1.1px', color:T.faint};
+    const enTiny = {fontSize:'8.5px', fontWeight:700, letterSpacing:'.6px', color:T.faint, display:'block'};
+    const grid = this.grid || TANK.map(r=>r.split(''));
+
+    const v = {
+      a1:T.a1, axis:T.dark ? 'rgba(223,243,251,.18)' : 'rgba(18,55,66,.22)',
+      title:t[0], subtitle:t[1],
+      isHome:sc==='home', isWorld:sc==='world', isSim:sc==='sim', isLab:sc==='lab',
+      isCaMode:s.mode==='ca', isAgentMode:s.mode==='agent',
+      isBody:s.labTab==='body', isWiring:s.labTab==='wiring', isBlocks:s.labTab==='blocks',
+      canSwitch:P.modes.length > 1,
+      canP1:!!P.f.p1, canAdvanced:!!P.f.advanced, hasWiring:!!P.f.wiring,
+      showData:!!P.data,
+      pageStyle:{minHeight:'100vh', padding:'28px 16px 40px', display:'flex', flexDirection:'column',
+        alignItems:'center', gap:'18px', background:T.page},
+      logoStyle:{width:'34px', height:'34px', borderRadius:'12px',
+        background:'radial-gradient(circle at 32% 28%,#8ff0d6,' + T.a1 + ' 55%,' + (T.dark?'#14555c':'#1b6c7d') + ')',
+        boxShadow:'0 4px 14px ' + T.a1 + '55'},
+      brandStyle:{fontFamily:"'Baloo 2',cursive", fontWeight:800, fontSize:'22px', lineHeight:1, color:T.ink},
+      brandSubStyle:{fontSize:'11px', fontWeight:600, color:T.soft},
+      frameStyle:{position:'relative', width:'390px', maxWidth:'100%', height:'844px', borderRadius:'44px',
+        padding:'10px', background:T.bezel,
+        boxShadow:'0 30px 70px rgba(0,0,0,' + (T.dark?'.55':'.22') + '), 0 0 0 1px ' + T.line},
+      innerStyle:{position:'relative', width:'100%', height:'100%', borderRadius:'35px', overflow:'hidden',
+        background:T.shell, display:'flex', flexDirection:'column'},
+      fieldStyle:{position:'absolute', inset:0, background:T.field, pointerEvents:'none'},
+      statusStyle:{position:'relative', flex:'none', height:'44px', display:'flex', alignItems:'center',
+        justifyContent:'space-between', padding:'0 22px', color:T.ink, fontSize:'13px', fontWeight:700},
+      battOutline:{width:'15px', height:'9px', borderRadius:'2px', border:'1.5px solid ' + T.soft, display:'block'},
+      battFill:{width:'16px', height:'10px', borderRadius:'2px', background:T.soft, display:'block'},
+      titleStyle:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'23px', color:T.ink, lineHeight:1.1},
+      subStyle:{fontSize:'11.5px', fontWeight:600, color:T.soft},
+      sectionLabel:label, enInline:{fontSize:'10px', fontWeight:700, color:T.faint},
+      enOnAccent:{fontSize:'10px', fontWeight:700, opacity:.75},
+      skinTray:T.panel2,
+      levelChip:{padding:'6px 10px', borderRadius:'12px', cursor:'pointer', textAlign:'right',
+        background:T.a1 + '1e', border:'1px solid ' + T.a1 + '55', color:T.a1,
+        fontSize:'10.5px', fontWeight:800, lineHeight:1.15, maxWidth:'130px'},
+      levelSub:enTiny, levelLabel:P.pt, levelSubLabel:P.en,
+      openPresets:()=>this.setState({presetSheet:true}),
+      closeSheet:()=>this.setState({presetSheet:false}),
+      presetSheet:s.presetSheet,
+      skins:Object.keys(SKINS).map(k=>({onTap:()=>this.setState({skin:k}),
+        style:{width:'16px', height:'16px', borderRadius:'50%', cursor:'pointer', background:SKINS[k].a1,
+          border:'2px solid ' + (s.skin===k ? T.ink : 'transparent'),
+          boxShadow:'inset 0 0 0 2px ' + SKINS[k].shell}})),
+      meterLabel:{display:'flex', justifyContent:'space-between', fontSize:'10.5px', fontWeight:800,
+        letterSpacing:'.6px', color:T.soft},
+      helpLine:{fontSize:'12px', fontWeight:700, color:T.soft, textWrap:'pretty'},
+      cardBox:card,
+      cardRow:Object.assign({}, card, {display:'flex', alignItems:'center', gap:'8px', padding:'10px 12px'}),
+      graphCard:Object.assign({}, card, {padding:'10px', background:T.panel2}),
+      chartCard:Object.assign({}, card, {padding:'13px 14px 9px'}),
+      teachCard:Object.assign({}, card, {background:T.a1 + '14', border:'1px solid ' + T.a1 + '3a'}),
+      teachHint:{fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty', marginTop:'4px'},
+      progHeader:{display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:'10px'},
+      progName:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'17px', color:T.ink, lineHeight:1.2},
+      colLabelA:{fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.a1},
+      colLabelB:{fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.a2},
+      noteBody:{fontSize:'12.5px', fontWeight:700, color:T.ink, textWrap:'pretty'},
+      emptyNote:{marginTop:'10px', fontSize:'12px', fontWeight:600, color:T.soft, textWrap:'pretty'},
+      footNote:{maxWidth:'390px', fontSize:'11.5px', fontWeight:600, lineHeight:1.6, color:T.soft, textWrap:'pretty'},
+      segTray:{display:'flex', gap:'6px', padding:'5px', borderRadius:'15px', background:T.panel2},
+      advBtn:{flex:'none', padding:'7px 11px', borderRadius:'11px', cursor:'pointer', fontSize:'11px',
+        fontWeight:800, background:T.panel2, border:'1px solid ' + T.line, color:T.a1},
+      dangerBtn:{textAlign:'center', padding:'10px', borderRadius:'12px', cursor:'pointer', fontSize:'12px',
+        fontWeight:800, color:T.a2, background:T.a2 + '1e', border:'1px solid ' + T.a2 + '55'},
+      primaryBtn:{marginTop:'12px', textAlign:'center', padding:'13px', borderRadius:'15px', cursor:'pointer',
+        fontSize:'13.5px', fontWeight:800, background:T.a1, color:T.onA1, boxShadow:'0 6px 18px ' + T.a1 + '44'},
+      primaryBtnWide:{flex:2, textAlign:'center', padding:'12px', borderRadius:'15px', cursor:'pointer',
+        fontSize:'12.5px', fontWeight:800, background:T.a1, color:T.onA1, boxShadow:'0 6px 18px ' + T.a1 + '44'},
+      secondaryBtn:{flex:1, textAlign:'center', padding:'12px', borderRadius:'15px', cursor:'pointer',
+        fontSize:'12.5px', fontWeight:800, background:T.panel2, border:'1px solid ' + T.line, color:T.a1},
+      playIcon:s.running ? '❙❙' : '▶',
+      toggleRun:()=>this.setState({running:!s.running}),
+      stepOnce:this.stepOnce, resetRun:this.resetRun,
+      goSim:()=>this.setState({screen:'sim'}),
+      goLab:()=>this.setState({screen:'lab'}),
+      goWiring:()=>this.setState({labTab:'wiring'}),
+      goCreate:()=>{ this.load('c7'); this.setState({screen:'world'}); this.say('Bancada livre destravada.','free sandbox unlocked'); },
+      playStyle:{flex:'none', width:'42px', height:'42px', borderRadius:'14px', display:'flex',
+        alignItems:'center', justifyContent:'center', cursor:'pointer', fontSize:'14px', fontWeight:800,
+        background:s.running ? T.panel2 : T.a1, color:s.running ? T.a1 : T.onA1, border:'1px solid ' + T.line},
+      ghostBtn:{flex:'none', minWidth:'42px', height:'42px', padding:'0 10px', borderRadius:'14px', display:'flex',
+        alignItems:'center', justifyContent:'center', cursor:'pointer', fontSize:'14px', fontWeight:800,
+        background:T.panel2, border:'1px solid ' + T.line, color:T.a1},
+      speeds:[1,2,4].map(n=>({label:n + '×', onTap:()=>this.setState({speed:n}),
+        style:{padding:'9px 10px', borderRadius:'12px', cursor:'pointer', fontSize:'11.5px', fontWeight:800,
+          color:s.speed===n ? T.onA1 : T.soft, background:s.speed===n ? T.a1 : T.panel2,
+          border:'1px solid ' + T.line}})),
+      lensLabel:s.lens ? 'Lente ligada' : 'Lente desligada',
+      toggleLens:()=>this.setState({lens:!s.lens}),
+      lensBtn:{flex:1, textAlign:'center', padding:'12px 8px', borderRadius:'15px', cursor:'pointer',
+        fontSize:'12px', fontWeight:800, color:s.lens ? T.a1 : T.soft,
+        background:s.lens ? T.a1 + '1c' : T.panel2, border:'1px solid ' + (s.lens ? T.a1 + '55' : T.line)},
+      editLabel:s.mode==='ca' ? 'Escrever regras' : 'Programar o peixe',
+      editLabelEn:s.mode==='ca' ? 'rules' : 'blocks',
+      tabBar:{position:'relative', flex:'none', display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'3px',
+        padding:'8px 8px 20px', background:T.bar, borderTop:'1px solid ' + T.line, backdropFilter:'blur(10px)'},
+      toastOn:!!s.toast,
+      toastPtText:s.toast ? s.toast.pt : '', toastEnText:s.toast ? s.toast.en : '',
+      toastWrap:{position:'absolute', left:'14px', right:'14px', bottom:'92px', pointerEvents:'none'},
+      toastCard:{padding:'11px 14px', borderRadius:'16px', background:T.dark ? 'rgba(6,32,42,.94)' : 'rgba(255,255,255,.96)',
+        border:'1px solid ' + T.a1 + '66', boxShadow:'0 14px 30px rgba(0,0,0,.3)', animation:'toastIn .2s ease-out'},
+      toastPt:{fontSize:'12.5px', fontWeight:800, color:T.ink, textWrap:'pretty'},
+      toastEn:{fontSize:'10px', fontWeight:700, color:T.faint, marginTop:'2px'},
+      scrimStyle:{position:'absolute', inset:0, background:'rgba(3,16,22,.5)', display:'flex',
+        flexDirection:'column', justifyContent:'flex-end', zIndex:5},
+      sheetStyle:{background:T.shell, borderTop:'1px solid ' + T.line, borderRadius:'26px 26px 0 0',
+        padding:'18px 16px 26px', animation:'sheetIn .22s ease-out'},
+      sheetClose:{fontSize:'11px', fontWeight:800, color:T.soft, cursor:'pointer'}
+    };
+
+    const tabDefs = [['home','Início','home'],['world','Mundo','world'],['sim','Simular','play'],['lab','Oficina','lab']];
+    v.tabs = tabDefs.filter(d=>d[0]!=='world' || P.paint).map(([id,pt,en],i)=>{
+      const on = sc===id;
+      return {pt, en, onTap:()=>this.setState({screen:id}),
+        style:{display:'flex', flexDirection:'column', alignItems:'center', gap:'3px', padding:'6px 2px',
+          borderRadius:'12px', cursor:'pointer', fontSize:'10.5px', fontWeight:800,
+          color:on ? T.onA1 : T.soft, background:on ? T.a1 : 'transparent'},
+        sub:{fontSize:'8px', fontWeight:700, letterSpacing:'.5px', opacity:.8},
+        glyph:{width:'11px', height:'11px', display:'block', background:on ? T.onA1 : T.soft,
+          borderRadius:['3px','2px','50%','40% 60% 55% 45%'][i]}};
+    });
+
+    v.modeTabs = [['ca','Células','cells'],['agent','Agente','agent']].map(([id,pt,en])=>{
+      const on = s.mode===id, allowed = P.modes.indexOf(id) >= 0;
+      return {pt, en, onTap:()=>{ if(allowed) this.setMode(id); },
+        style:{flex:1, textAlign:'center', padding:'9px 4px', borderRadius:'11px',
+          cursor:allowed ? 'pointer' : 'default', opacity:allowed ? 1 : .35,
+          fontSize:'12px', fontWeight:800, color:on ? T.onA1 : T.soft, background:on ? T.a1 : 'transparent'},
+        sub:{fontSize:'8.5px', fontWeight:700, display:'block', opacity:.8}};
+    });
+
+    v.presetRows = Object.keys(PRESETS).map(k=>{
+      const p = PRESETS[k], on = s.preset===k;
+      return {pt:p.pt, en:p.en, tools:p.tools,
+        onTap:()=>{ this.setState({preset:k, presetSheet:false, mode:p.modes[0],
+            advanced:!!p.f.advanced, labTab:p.f.wiring ? 'blocks' : 'blocks'},
+            ()=>{ if(p.modes[0]==='agent' && !this.agent) this.spawnAgent();
+                  if(p.modes[0]==='ca' && this.agent) this.absorbAgent(); });
+          this.say('Nível: ' + p.pt, p.en); },
+        row:{display:'flex', alignItems:'center', gap:'11px', padding:'11px 12px', borderRadius:'16px',
+          cursor:'pointer', background:on ? T.a1 + '1c' : T.panel,
+          border:'1px solid ' + (on ? T.a1 + '66' : T.line)},
+        dot:{flex:'none', width:'12px', height:'12px', borderRadius:'50%',
+          background:on ? T.a1 : T.faint, boxShadow:on ? '0 0 0 4px ' + T.a1 + '22' : 'none'},
+        nameStyle:{fontSize:'12.5px', fontWeight:800, color:T.ink},
+        enStyle:{fontSize:'10px', fontWeight:700, color:T.soft},
+        toolStyle:{flex:'none', maxWidth:'96px', textAlign:'right', fontSize:'9.5px', fontWeight:700, color:T.faint}};
+    });
+
+    if(sc === 'home'){
+      const cur = this.chapter();
+      v.heroStyle = {position:'relative', borderRadius:'22px', overflow:'hidden', padding:'16px',
+        background:T.dark ? 'linear-gradient(135deg,#17646b,#0c3a48)' : 'linear-gradient(135deg,' + T.a1 + '2e,' + T.a1 + '12)',
+        border:'1px solid ' + T.line};
+      v.heroBlob = {position:'absolute', right:'-26px', top:'-20px', width:'130px', height:'130px',
+        borderRadius:'50%', background:'radial-gradient(circle at 34% 30%,' + T.a3 + '99,' + T.a1 + '22 60%,transparent 70%)'};
+      v.heroKicker = {fontSize:'10px', fontWeight:800, letterSpacing:'1.2px', color:T.a1};
+      v.heroTitle = {fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'23px', color:T.ink, lineHeight:1.12};
+      v.heroBody = {fontSize:'11.5px', fontWeight:600, color:T.soft, textWrap:'pretty'};
+      v.heroPt = cur.pt; v.heroEn = cur.en;
+      v.createBtn = {flex:'none', padding:'9px 12px', borderRadius:'13px', cursor:'pointer', textAlign:'center',
+        background:T.panel, border:'1px solid ' + T.line, color:T.a1, fontSize:'11px', fontWeight:800, lineHeight:1.1};
+      v.createSub = enTiny;
+      v.heroBtn = {position:'relative', marginTop:'14px', display:'inline-flex', alignItems:'center', gap:'8px',
+        padding:'11px 18px', borderRadius:'14px', background:T.a1, color:T.onA1, fontWeight:800,
+        fontSize:'14px', cursor:'pointer', boxShadow:'0 6px 18px ' + T.a1 + '55'};
+      v.heroBtnTri = {width:0, height:0, borderLeft:'9px solid ' + T.onA1, borderTop:'6px solid transparent',
+        borderBottom:'6px solid transparent'};
+      v.heroBtnEn = {fontSize:'10px', fontWeight:700, opacity:.75};
+      v.playHero = ()=>{ this.load(s.chapter, true); this.setState({screen:'sim'}); };
+      v.chapters = CHAPTERS.map((c,i)=>{
+        const on = s.chapter===c.id, done = !!s.done[c.id];
+        return {n:i+1, pt:c.pt, en:c.en,
+          modeLabel:c.mode==='ca' ? 'células' : 'agente',
+          goalLabel:c.goalTag,
+          state:done ? '✓' : on ? '●' : '',
+          onTap:()=>{ this.load(c.id); this.setState({screen:'sim'}); },
+          row:{display:'flex', gap:'12px', alignItems:'flex-start', padding:'12px', borderRadius:'18px',
+            cursor:'pointer', background:on ? T.a1 + '14' : T.panel,
+            border:'1px solid ' + (on ? T.a1 + '55' : T.line)},
+          badge:{flex:'none', width:'30px', height:'30px', borderRadius:'11px', display:'flex',
+            alignItems:'center', justifyContent:'center', fontFamily:"'Baloo 2',cursive", fontWeight:700,
+            fontSize:'15px', color:done ? T.onA1 : T.a1, background:done ? T.a1 : T.a1 + '22'},
+          nameStyle:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'16px', color:T.ink, lineHeight:1.2},
+          descStyle:{fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty'},
+          modeChip:{fontSize:'9.5px', fontWeight:800, padding:'3px 8px', borderRadius:'8px',
+            background:c.mode==='ca' ? T.a3 + '2a' : T.a2 + '26', color:c.mode==='ca' ? T.a3 : T.a2},
+          goalChip:{fontSize:'9.5px', fontWeight:800, padding:'3px 8px', borderRadius:'8px',
+            background:T.panel2, color:T.soft},
+          stateStyle:{flex:'none', fontSize:'14px', fontWeight:800, color:done ? T.a3 : T.a1}};
+      });
+    }
+
+    const arena = {position:'relative', width:'100%', aspectRatio:COLS + '/' + ROWS, borderRadius:'20px',
+      overflow:'hidden', border:'1px solid ' + T.line, background:T.water,
+      display:'grid', gridTemplateColumns:'repeat(' + COLS + ',1fr)', gridTemplateRows:'repeat(' + ROWS + ',1fr)',
+      gap:'2px', padding:'3px',
+      boxShadow:T.dark ? 'inset 0 0 60px rgba(4,18,27,.6)' : 'inset 0 0 40px rgba(18,55,66,.12)'};
+    v.arenaStyle = arena;
+    v.arenaTexture = {position:'absolute', inset:0, pointerEvents:'none',
+      background:'repeating-linear-gradient(115deg,' + (T.dark ? 'rgba(255,255,255,.04)' : 'rgba(18,55,66,.045)') + ' 0 2px,transparent 2px 26px)'};
+    v.lensOverlay = s.lens ? {position:'absolute', inset:'3px', pointerEvents:'none', borderRadius:'16px',
+      backgroundImage:'linear-gradient(90deg,' + T.a1 + '2e 1px,transparent 1px),linear-gradient(180deg,' + T.a1 + '2e 1px,transparent 1px)',
+      backgroundSize:'calc(100%/' + COLS + ') calc(100%/' + ROWS + ')'} : {display:'none'};
+
+    if(sc === 'sim'){
+      v.simCells = [];
+      for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++)
+        v.simCells.push({style:this.cellStyle(grid[y][x], T)});
+      const A = this.agent;
+      v.agentViews = (s.mode==='agent' && A) ? [{
+        wrap:{position:'absolute', left:'3px', top:'3px',
+          width:'calc((100% - 6px)/' + COLS + ')', height:'calc((100% - 6px)/' + ROWS + ')',
+          transform:'translate(' + (A.x*100) + '%,' + (A.y*100) + '%)',
+          transition:'transform .16s linear', pointerEvents:'none', zIndex:2},
+        cones:(PRESETS[s.preset].f.body ? s.mounts : []).map((m,i)=>({
+          style:Object.assign(this.coneStyle(i===s.mountIdx ? T.a2 : T.a1, A.h + m.a, m.r*26, m.f, .3),
+            {left:'50%', top:'50%'})})),
+        body:{position:'absolute', inset:'8%',
+          backgroundImage:'url("' + (Math.cos(A.h*Math.PI/180) < 0 ? ART['<'] : ART['>']) + '")',
+          backgroundSize:'contain', backgroundPosition:'center', backgroundRepeat:'no-repeat',
+          transform:'rotate(' + (Math.abs(Math.cos(A.h*Math.PI/180)) < .5 ? (Math.sin(A.h*Math.PI/180) > 0 ? 55 : -55) : 0) + 'deg)',
+          filter:'drop-shadow(0 3px 6px rgba(0,0,0,.35))'}
+      }] : [];
+      v.clockChip = {position:'absolute', right:'8px', top:'8px', padding:'4px 9px', borderRadius:'11px',
+        background:T.bar, fontSize:'10.5px', fontWeight:800, color:T.a1, zIndex:3};
+      v.clockLabel = 'ciclo ' + this.tick;
+      v.engineChip = {position:'absolute', left:'8px', top:'8px', padding:'4px 9px', borderRadius:'11px',
+        background:T.bar, fontSize:'10.5px', fontWeight:800, zIndex:3,
+        color:s.mode==='ca' ? T.a3 : T.a2};
+      v.engineLabel = s.mode==='ca' ? 'motor: células' : 'motor: agente';
+      const done = !!s.done[ch.id];
+      v.goalCard = {padding:'12px 14px', borderRadius:'18px',
+        background:done ? T.a3 + '1e' : T.a2 + '18', border:'1px solid ' + (done ? T.a3 + '55' : T.a2 + '44')};
+      v.goalKicker = {fontSize:'10px', fontWeight:800, letterSpacing:'1px', color:done ? T.a3 : T.a2};
+      v.goalKickerLabel = done ? 'RESOLVIDO · SOLVED' : 'OBJETIVO · GOAL';
+      v.goalPt = ch.goalPt; v.goalEn = ch.goalEn;
+      v.goalEnStyle = {fontSize:'10.5px', fontWeight:700, color:T.soft, marginTop:'3px', textWrap:'pretty'};
+      v.goalProgStyle = {marginTop:'7px', fontSize:'11px', fontWeight:800, color:done ? T.a3 : T.a1};
+      v.goalProgress = this.goalProgress();
+      const h = this.hist || [];
+      const max = Math.max(6, ...h.map(p=>Math.max(p.p, p.a)));
+      const line = key=>h.map((p,i)=>
+        (h.length<2 ? 0 : (i/(h.length-1))*300).toFixed(1) + ',' + (104 - (p[key]/max)*96).toFixed(1)).join(' ');
+      const lastPt = h.length ? h[h.length-1] : {p:0, a:0};
+      v.series = [
+        {points:line('p'), color:T.a3, label:'plantas', count:lastPt.p,
+          dot:{width:'9px', height:'9px', borderRadius:'50%', display:'block', background:T.a3},
+          legend:{fontSize:'11px', fontWeight:700, color:T.soft}},
+        {points:line('a'), color:T.a1, label:'algas', count:lastPt.a,
+          dot:{width:'9px', height:'9px', borderRadius:'50%', display:'block', background:T.a1},
+          legend:{fontSize:'11px', fontWeight:700, color:T.soft}}
+      ];
+    }
+
+    if(sc === 'world'){
+      v.paintCells = [];
+      for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+        const cx = x, cy = y;
+        v.paintCells.push({
+          onTap:()=>{ this.setCell(cx, cy, this.grid[cy][cx]===s.brushT ? '_' : (s.brushT || 'p'));
+            if(s.mode==='agent') this.spawnAgent(); this.forceUpdate(); },
+          style:Object.assign(this.cellStyle(grid[y][x], T), {cursor:'pointer'})});
+      }
+      v.brushes = BRUSH_ORDER.map(k=>{
+        const on = (s.brushT || 'p') === k;
+        return {pt:TYPES[k].pt, en:TYPES[k].en, onTap:()=>this.setState({brushT:k}),
+          style:{flex:'none', width:'62px', padding:'7px 5px', borderRadius:'14px', cursor:'pointer',
+            textAlign:'center', background:on ? T.a1 + '1e' : T.panel,
+            border:'1px solid ' + (on ? T.a1 + '66' : T.line)},
+          tile:Object.assign({height:'32px', borderRadius:'9px', background:T.panel2},
+            this.cellStyle(k, T)),
+          cap:{fontSize:'9.5px', fontWeight:800, color:T.ink, marginTop:'4px'},
+          capEn:{fontSize:'8px', fontWeight:700, color:T.faint}};
+      });
+      v.clearWorld = ()=>{
+        for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++)
+          if(x>0 && x<COLS-1 && y<ROWS-1) this.grid[y][x] = '_';
+        this.forceUpdate();
+      };
+    }
+
+    if(sc === 'lab' && s.mode === 'ca'){
+      const tile = k=>Object.assign({width:'26px', height:'26px', borderRadius:'7px',
+        background:T.panel2, cursor:'pointer'}, this.cellStyle(k, T));
+      v.caRules = s.caRules.map((r,i)=>({
+        n:i+1, pt:r.pt, en:r.en, prob:r.prob,
+        card:{padding:'11px 12px', borderRadius:'18px', background:T.panel, border:'1px solid ' + T.line},
+        num:{flex:'none', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'13px', color:T.faint, width:'14px'},
+        nameStyle:{fontSize:'12.5px', fontWeight:800, color:T.ink},
+        enStyle:{fontSize:'9.5px', fontWeight:700, color:T.soft},
+        sw:{flex:'none', width:'38px', height:'22px', borderRadius:'99px', cursor:'pointer', padding:'2px',
+          display:'flex', alignItems:'center', justifyContent:r.on ? 'flex-end' : 'flex-start',
+          background:r.on ? T.a1 : T.panel2, border:'1px solid ' + T.line},
+        knob:{width:'16px', height:'16px', borderRadius:'50%', background:r.on ? T.onA1 : T.soft},
+        toggle:()=>{ const cr = JSON.parse(JSON.stringify(s.caRules)); cr[i].on = !cr[i].on; this.setState({caRules:cr}); },
+        pairBox:{display:'flex', gap:'3px', padding:'3px', borderRadius:'10px', background:T.panel2},
+        b0:tile(r.b[0]), b1:tile(r.b[1]), a0:tile(r.a[0]), a1:tile(r.a[1]),
+        arrow:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'15px', color:T.a2},
+        dirChip:{fontSize:'9.5px', fontWeight:800, padding:'4px 8px', borderRadius:'9px',
+          background:T.panel2, color:T.soft}, dirLabel:DIR_LABEL[r.dir],
+        del:{width:'26px', height:'26px', borderRadius:'9px', cursor:'pointer', display:'flex',
+          alignItems:'center', justifyContent:'center', fontSize:'15px', fontWeight:800,
+          color:T.a2, background:T.a2 + '18'},
+        remove:()=>{ const cr = JSON.parse(JSON.stringify(s.caRules)); cr.splice(i,1); this.setState({caRules:cr}); },
+        probTag:{fontSize:'9.5px', fontWeight:800, letterSpacing:'.8px', color:T.soft, flex:'none'},
+        probVal:{fontSize:'11px', fontWeight:800, color:T.ink, width:'36px', textAlign:'right', flex:'none'},
+        setProb:e=>{ const cr = JSON.parse(JSON.stringify(s.caRules));
+          cr[i].prob = parseInt(e.target.value, 10); this.setState({caRules:cr}); }
+      }));
+      const bigTile = k=>Object.assign({width:'40px', height:'40px', borderRadius:'10px',
+        background:T.panel2, cursor:'pointer', border:'1px solid ' + T.line}, this.cellStyle(k, T));
+      const cyc = (side, idx)=>()=>{
+        const te = JSON.parse(JSON.stringify(s.teach));
+        te[side][idx] = CYCLE[(CYCLE.indexOf(te[side][idx]) + 1) % CYCLE.length];
+        this.setState({teach:te});
+      };
+      v.teachPairBox = {display:'flex', gap:'5px', padding:'5px', borderRadius:'13px', background:T.panel2};
+      v.teachArrow = {fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'19px', color:T.a2};
+      v.tb0 = bigTile(s.teach.b[0]); v.tb1 = bigTile(s.teach.b[1]);
+      v.ta0 = bigTile(s.teach.a[0]); v.ta1 = bigTile(s.teach.a[1]);
+      v.cycleB0 = cyc('b',0); v.cycleB1 = cyc('b',1); v.cycleA0 = cyc('a',0); v.cycleA1 = cyc('a',1);
+      v.dirPicks = Object.keys(DIRS).map(d=>({label:DIR_LABEL[d],
+        onTap:()=>this.setState({teach:Object.assign({}, s.teach, {dir:d})}),
+        style:{padding:'7px 10px', borderRadius:'11px', cursor:'pointer', fontSize:'10.5px', fontWeight:800,
+          color:s.teach.dir===d ? T.onA1 : T.soft, background:s.teach.dir===d ? T.a1 : T.panel2,
+          border:'1px solid ' + T.line}}));
+      v.addRule = ()=>{
+        const te = s.teach;
+        const nm = TYPES[te.b[0]].pt + ' + ' + TYPES[te.b[1]].pt + ' vira ' + TYPES[te.a[0]].pt + ' + ' + TYPES[te.a[1]].pt;
+        const cr = JSON.parse(JSON.stringify(s.caRules));
+        cr.push({id:'u' + Date.now(), pt:nm, en:'your rule', b:te.b.slice(), a:te.a.slice(),
+          dir:te.dir, prob:60, on:true});
+        this.setState({caRules:cr});
+        this.say('Regra guardada.', 'rule saved');
+      };
+    }
+
+    if(sc === 'lab' && s.mode === 'agent'){
+      v.labTabs = [['body','Corpo','body'],['wiring','Ligações','wiring'],['blocks','Blocos','blocks']]
+        .filter(([id])=>id==='blocks' || P.f[id])
+        .map(([id,pt,en])=>{
+          const on = s.labTab===id;
+          return {pt, en, onTap:()=>this.setState({labTab:id}),
+            style:{flex:1, textAlign:'center', padding:'9px 4px', borderRadius:'11px', cursor:'pointer',
+              fontSize:'12px', fontWeight:800, color:on ? T.onA1 : T.soft, background:on ? T.a1 : 'transparent'},
+            sub:{fontSize:'8.5px', fontWeight:700, display:'block', opacity:.8}};
+        });
+
+      if(s.labTab === 'body' && P.f.body){
+        const mounts = s.mounts, mi = Math.min(s.mountIdx, Math.max(0, mounts.length-1)), R = 78;
+        v.bodyHelp = s.advanced
+          ? 'Avançado: gire o sensor, ajuste alcance e abertura. · free placement'
+          : 'Toque em frente, direita, trás ou esquerda para montar um sensor. · fixed slots';
+        v.bodyStage = {position:'relative', height:'226px', borderRadius:'20px', overflow:'hidden',
+          background:T.panel2, border:'1px solid ' + T.line, display:'flex', alignItems:'center', justifyContent:'center'};
+        v.bodyRing = {position:'absolute', left:'50%', top:'50%', width:(R*2) + 'px', height:(R*2) + 'px',
+          marginLeft:-R + 'px', marginTop:-R + 'px', borderRadius:'50%', border:'1px dashed ' + T.line};
+        v.headingMark = {position:'absolute', left:'50%', top:'10px', transform:'translateX(-50%)',
+          fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.faint};
+        v.mountCones = mounts.map((m,i)=>({style:Object.assign(
+          this.coneStyle(i===mi ? T.a2 : T.a1, m.a - 90, m.r*28, m.f, i===mi ? .42 : .16),
+          {left:'50%', top:'50%'})}));
+        v.bodySprite = {position:'relative', width:'70px', height:'70px',
+          backgroundImage:'url("' + ART['>'] + '")', backgroundSize:'contain', backgroundPosition:'center',
+          backgroundRepeat:'no-repeat', transform:'rotate(-90deg)'};
+        const slots = s.advanced
+          ? mounts.map((m,i)=>({angle:m.a, i, label:(SENSORS.find(x=>x[0]===m.s) || [,'?'])[1].split(' ')[0]}))
+          : [0,90,180,270].map(ang=>{
+              const i = mounts.findIndex(m=>Math.round(m.a)===ang);
+              return {angle:ang, i, label:i<0 ? '+' : (SENSORS.find(x=>x[0]===mounts[i].s) || [,'?'])[1].split(' ')[0]};
+            });
+        v.mountPins = slots.map(sl=>{
+          const rad = (sl.angle - 90)*Math.PI/180, on = sl.i===mi && sl.i>=0;
+          return {label:sl.label,
+            onTap:()=>{
+              if(sl.i >= 0){ this.setState({mountIdx:sl.i}); return; }
+              const ms = JSON.parse(JSON.stringify(s.mounts));
+              ms.push({s:'wall', a:sl.angle, r:1.5, f:50});
+              this.setState({mounts:ms, mountIdx:ms.length-1});
+            },
+            style:{position:'absolute', left:'50%', top:'50%', cursor:'pointer',
+              transform:'translate(-50%,-50%) translate(' + (Math.cos(rad)*R) + 'px,' + (Math.sin(rad)*R) + 'px)',
+              minWidth:'40px', padding:'7px 9px', borderRadius:'11px', textAlign:'center',
+              fontSize:'10.5px', fontWeight:800, whiteSpace:'nowrap',
+              background:on ? T.a2 : T.panel, color:on ? '#07303a' : T.soft,
+              border:'1px solid ' + (on ? T.a2 : T.line),
+              boxShadow:on ? '0 0 0 3px ' + T.a2 + '33' : '0 2px 8px rgba(0,0,0,.12)'}};
+        });
+        v.hasMount = mounts.length > 0; v.noMount = mounts.length === 0;
+        v.mountTitle = mounts.length ? 'SENSOR A ' + Math.round(mounts[mi].a) + '°' : 'NENHUM SENSOR';
+        v.toggleAdvanced = ()=>this.setState({advanced:!s.advanced});
+        v.advLabel = s.advanced ? 'avançado' : 'básico';
+        const upd = (key,val)=>{ const ms = JSON.parse(JSON.stringify(s.mounts));
+          ms[mi][key] = val; this.setState({mounts:ms}); };
+        v.sensorPick = SENSORS.map(([id,pt])=>({label:pt, onTap:()=>upd('s', id),
+          style:{padding:'7px 10px', borderRadius:'11px', cursor:'pointer', fontSize:'11px', fontWeight:800,
+            color:mounts[mi] && mounts[mi].s===id ? '#07303a' : T.soft,
+            background:mounts[mi] && mounts[mi].s===id ? T.a2 : T.panel2,
+            border:'1px solid ' + (mounts[mi] && mounts[mi].s===id ? T.a2 : T.line)}}));
+        v.mountSliders = mounts.length ? [
+          {label:'ALCANCE · RANGE', raw:mounts[mi].r, min:1, max:5, step:.5, value:mounts[mi].r + ' células',
+            onChange:e=>upd('r', parseFloat(e.target.value))},
+          {label:'ABERTURA · FOV', raw:mounts[mi].f, min:20, max:150, step:5, value:mounts[mi].f + '°',
+            onChange:e=>upd('f', parseFloat(e.target.value))}
+        ].concat(s.advanced ? [{label:'DIREÇÃO · ANGLE', raw:mounts[mi].a, min:0, max:350, step:10,
+            value:mounts[mi].a + '°', onChange:e=>upd('a', parseFloat(e.target.value))}] : []) : [];
+        v.removeMount = ()=>{ const ms = JSON.parse(JSON.stringify(s.mounts));
+          ms.splice(mi,1); this.setState({mounts:ms, mountIdx:0}); };
+      }
+
+      if(s.labTab === 'wiring' && P.f.wiring){
+        const list = s.wires, H = SENSORS.length*46 - 8;
+        v.graphBox = {display:'flex', alignItems:'flex-start', gap:'6px'};
+        v.colStack = {flex:1, minWidth:0, display:'flex', flexDirection:'column', gap:'8px'};
+        v.wireSvg = {flex:'none', width:'38px', height:H + 'px', overflow:'visible', pointerEvents:'none'};
+        v.graphView = '0 0 38 ' + H;
+        v.wireHelp = s.sel
+          ? 'Agora toque numa ação para ligar “' + (SENSORS.find(x=>x[0]===s.sel) || [,''])[1] + '”.'
+          : 'Toque num sensor, depois numa ação. ⚙ abre os blocos da ação.';
+        const y = i=>i*46 + 19;
+        v.wires = list.map(([a,b])=>{
+          const i = SENSORS.findIndex(x=>x[0]===a), j = ACTIONS.findIndex(x=>x[0]===b);
+          if(i<0 || j<0) return null;
+          return {d:'M0 ' + y(i) + ' C 15 ' + y(i) + ', 23 ' + y(j) + ', 38 ' + y(j), stroke:T.a1 + 'cc'};
+        }).filter(Boolean);
+        const wired = new Set(list.reduce((acc,p)=>acc.concat(p), []));
+        const mk = isAct=>(row)=>{
+          const id = row[0], pt = row[1];
+          const on = wired.has(id), sel = s.sel===id, accent = isAct ? T.a2 : T.a1;
+          const p = isAct ? (s.programs[id] || {main:[], p1:[]}) : null;
+          const count = p ? p.main.length + p.p1.length : 0;
+          return {label:pt,
+            onTap:()=>{
+              if(!isAct){ this.setState({sel:id}); return; }
+              if(!s.sel) return;
+              const w = JSON.parse(JSON.stringify(s.wires));
+              const k = w.findIndex(r=>r[0]===s.sel && r[1]===id);
+              if(k >= 0) w.splice(k,1); else w.push([s.sel, id]);
+              this.setState({wires:w, sel:null});
+            },
+            blockCount:count ? count + '⚙' : '⚙',
+            onOpen:e=>{ if(e && e.stopPropagation) e.stopPropagation();
+              this.setState({labTab:'blocks', prog:id, slot:'main'}); },
+            style:{width:'100%', height:'38px', display:'flex', alignItems:'center', gap:'6px',
+              padding:isAct ? '0 5px 0 8px' : '0 8px 0 7px', borderRadius:'12px', cursor:'pointer',
+              flexDirection:isAct ? 'row-reverse' : 'row', fontSize:'11px', fontWeight:800, lineHeight:1.1,
+              color:on || sel ? T.ink : T.soft,
+              background:sel ? accent + '33' : on ? T.panel : T.panel2,
+              border:'1px solid ' + (sel ? accent : on ? accent + '66' : T.line),
+              boxShadow:sel ? '0 0 0 3px ' + accent + '22' : 'none'},
+            text:{flex:1, minWidth:0, lineHeight:1.15, textAlign:isAct ? 'right' : 'left'},
+            pin:{flex:'none', width:'9px', height:'9px', borderRadius:'50%',
+              background:on || sel ? accent : T.faint, boxShadow:on || sel ? '0 0 8px ' + accent + '99' : 'none'},
+            openBtn:{flex:'none', display:'flex', alignItems:'center', justifyContent:'center',
+              height:'28px', padding:'0 6px', borderRadius:'9px', cursor:'pointer', whiteSpace:'nowrap',
+              fontSize:'10.5px', fontWeight:800,
+              color:s.prog===id ? T.onA1 : T.a2, background:s.prog===id ? T.a2 : T.a2 + '22',
+              border:'1px solid ' + T.a2 + '55'}};
+        };
+        v.sensorNodes = SENSORS.map(mk(false));
+        v.actionNodes = ACTIONS.map(mk(true));
+        v.ruleLines = list.map(([a,b])=>({
+          when:(SENSORS.find(x=>x[0]===a) || [,'?'])[1],
+          then:(ACTIONS.find(x=>x[0]===b) || [,'?'])[1],
+          style:{display:'flex', alignItems:'center', gap:'8px', padding:'10px 12px', borderRadius:'14px',
+            background:T.panel, border:'1px solid ' + T.line, fontSize:'12px', fontWeight:700, color:T.ink},
+          kicker:{fontSize:'9.5px', fontWeight:800, color:T.a1, letterSpacing:'.6px'},
+          arrow:{color:T.a2}}));
+      }
+
+      if(s.labTab === 'blocks'){
+        const progId = P.f.wiring ? s.prog : 'fwd';
+        const prog = s.programs[progId] || {main:[], p1:[]};
+        const act = ACTIONS.find(x=>x[0]===progId) || [,'programa','program'];
+        v.progKicker = P.f.wiring ? 'PROGRAMANDO A AÇÃO' : 'O PROGRAMA DO PEIXE';
+        v.progTitle = P.f.wiring ? act[1] + ' · ' + act[2] : 'passo a passo · step by step';
+        v.blockHelp = 'Toque num bloco para pôr em ' + (s.slot==='main' && P.f.p1 ? 'PRINCIPAL' : 'PRINCIPAL') +
+          '. Toque num bloco já posto para tirar.';
+        v.stripMain = {padding:'10px', borderRadius:'18px', background:T.a2 + '1c', border:'1px solid ' + T.a2 + '44'};
+        v.stripProc = {padding:'10px', borderRadius:'18px', background:T.panel2, border:'1px solid ' + T.line};
+        v.stripTag = {fontSize:'9.5px', fontWeight:800, letterSpacing:'1.2px', color:T.a2, marginBottom:'7px'};
+        v.stripTagB = {fontSize:'9.5px', fontWeight:800, letterSpacing:'1.2px', color:T.a1, marginBottom:'7px'};
+        v.emptySlot = {display:'flex', alignItems:'center', padding:'0 10px', height:'48px',
+          borderRadius:'12px', border:'1.5px dashed ' + T.line, fontSize:'11px', fontWeight:700, color:T.faint};
+        v.mainEmpty = prog.main.length === 0; v.procEmpty = prog.p1.length === 0;
+        const A = this.agent, fr = A && A.stack.length ? A.stack[A.stack.length-1] : null;
+        const live = A && A.act === progId && s.running;
+        const tile = (b, active)=>({width:'48px', height:'48px', borderRadius:'12px', display:'flex',
+          alignItems:'center', justifyContent:'center', cursor:'pointer',
+          fontSize:b==='p1' ? '15px' : '20px', fontWeight:800, fontFamily:"'Baloo 2',cursive",
+          color:active ? T.onA1 : T.ink, background:active ? T.a1 : T.panel,
+          border:'1px solid ' + (active ? T.a1 : T.line),
+          boxShadow:active ? '0 0 0 3px ' + T.a1 + '33' : '0 2px 6px rgba(0,0,0,.12)'});
+        const edit = fn=>{
+          const programs = JSON.parse(JSON.stringify(s.programs));
+          const bag = programs[progId] || (programs[progId] = {main:[], p1:[]});
+          fn(bag); this.setState({programs});
+        };
+        v.mainBlocks = prog.main.map((b,i)=>({glyph:BLOCKS[b].glyph,
+          onTap:()=>edit(p=>p.main.splice(i,1)),
+          style:tile(b, live && fr && fr.list==='main' && fr.i===i+1)}));
+        v.procBlocks = prog.p1.map((b,i)=>({glyph:BLOCKS[b].glyph,
+          onTap:()=>edit(p=>p.p1.splice(i,1)),
+          style:tile(b, live && fr && fr.list==='p1' && fr.i===i+1)}));
+        v.slotTabs = [['main','pôr em PRINCIPAL'],['p1','pôr em P1']].map(([id,name])=>{
+          const on = s.slot===id;
+          return {name, onTap:()=>this.setState({slot:id}),
+            style:{flex:1, textAlign:'center', padding:'9px 4px', borderRadius:'11px', cursor:'pointer',
+              fontSize:'11.5px', fontWeight:800, color:on ? T.onA1 : T.soft, background:on ? T.a2 : 'transparent'}};
+        });
+        v.palette = Object.keys(BLOCKS).filter(id=>id!=='p1' || P.f.p1).map(id=>({
+          glyph:BLOCKS[id].glyph, pt:BLOCKS[id].pt, en:BLOCKS[id].en,
+          onTap:()=>edit(p=>{ ((s.slot==='p1' && P.f.p1) ? p.p1 : p.main).push(id); }),
+          style:{width:'64px', display:'flex', flexDirection:'column', alignItems:'center', gap:'3px',
+            padding:'9px 4px', borderRadius:'14px', cursor:'pointer', background:T.panel2,
+            border:'1px solid ' + T.line},
+          glyphStyle:{fontFamily:"'Baloo 2',cursive", fontWeight:800, fontSize:id==='p1' ? '15px' : '20px',
+            color:id==='p1' ? T.a2 : T.ink, lineHeight:1},
+          capStyle:{fontSize:'9.5px', fontWeight:800, color:T.soft},
+          capEnStyle:{fontSize:'8px', fontWeight:700, color:T.faint}}));
+      }
+    }
+
+    return v;
+  }
+}
+</script>
+</body>
+</html>

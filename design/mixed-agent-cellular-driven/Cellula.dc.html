@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#04121b;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#79dcc4}a:hover{color:#a8ead9}
+*{box-sizing:border-box}
+input[type=range]{-webkit-appearance:none;appearance:none;height:22px;background:transparent}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:rgba(121,220,196,.22)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-7px;border-radius:50%;background:#79dcc4;border:3px solid #0b2b36;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+@keyframes drift{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-14px,0)}100%{transform:translate3d(0,0,0)}}
+@keyframes rise{0%{transform:translateY(0);opacity:.5}100%{transform:translateY(-380px);opacity:0}}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:28px 16px 40px;display:flex;flex-direction:column;align-items:center;gap:18px;background:radial-gradient(120% 80% at 20% 0%,#0d3a44 0%,#071c28 55%,#04121b 100%)">
+
+<div style="display:flex;align-items:center;gap:12px;color:#dff3fb">
+<div style="width:34px;height:34px;border-radius:12px;background:radial-gradient(circle at 32% 28%,#8ff0d6,#2fa08f 55%,#14555c);box-shadow:0 4px 14px rgba(47,160,143,.5)"></div>
+<div>
+<div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:22px;line-height:1;letter-spacing:.3px">Cellula</div>
+<div style="font-size:11.5px;font-weight:600;color:rgba(223,243,251,.5);letter-spacing:.4px">agent simulations for curious kids</div>
+</div>
+</div>
+
+<div style="position:relative;width:390px;max-width:100%;height:844px;border-radius:44px;padding:10px;background:linear-gradient(160deg,#20505c,#0a2028);box-shadow:0 30px 70px rgba(0,0,0,.55),0 0 0 1px rgba(121,220,196,.18)">
+<div style="position:relative;width:100%;height:100%;border-radius:35px;overflow:hidden;background:#08202c;display:flex;flex-direction:column">
+
+<div style="position:absolute;inset:0;background:radial-gradient(90% 55% at 30% 12%,#1d6f6b 0%,#0f4450 45%,#08202c 100%);pointer-events:none"></div>
+<div style="position:absolute;left:14%;top:60%;width:6px;height:6px;border-radius:50%;background:rgba(180,240,225,.5);animation:rise 9s linear infinite"></div>
+<div style="position:absolute;left:72%;top:70%;width:9px;height:9px;border-radius:50%;background:rgba(180,240,225,.35);animation:rise 13s linear infinite 2s"></div>
+<div style="position:absolute;left:44%;top:80%;width:4px;height:4px;border-radius:50%;background:rgba(180,240,225,.45);animation:rise 11s linear infinite 5s"></div>
+
+<div style="position:relative;flex:none;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#dff3fb;font-size:13px;font-weight:700;letter-spacing:.2px">
+<span>9:41</span>
+<div style="display:flex;align-items:center;gap:5px">
+<span style="width:15px;height:9px;border-radius:2px;border:1.5px solid rgba(223,243,251,.7);display:inline-block"></span>
+<span style="width:16px;height:10px;border-radius:2px;background:rgba(223,243,251,.75);display:inline-block"></span>
+</div>
+</div>
+
+<div style="position:relative;flex:none;padding:2px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+<div>
+<div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:24px;color:#eafaf6;line-height:1.1">{{ title }}</div>
+<div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.52)">{{ subtitle }}</div>
+</div>
+<div onClick="{{ toggleVision }}" style="flex:none;padding:7px 11px;border-radius:12px;font-size:11px;font-weight:800;letter-spacing:.3px;cursor:pointer;background:rgba(121,220,196,.12);border:1px solid rgba(121,220,196,.3);color:#9fe8d4">{{ visionLabel }}</div>
+</div>
+
+<div style="position:relative;flex:1;min-height:0;overflow-y:auto;padding:0 16px 14px">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="position:relative;border-radius:22px;overflow:hidden;padding:16px;background:linear-gradient(135deg,#17646b,#0c3a48);border:1px solid rgba(121,220,196,.22)">
+<div style="position:absolute;right:-24px;top:-18px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle at 34% 30%,rgba(168,207,76,.6),rgba(47,160,143,.15) 60%,transparent 70%);animation:drift 8s ease-in-out infinite"></div>
+<div style="position:relative;font-size:10.5px;font-weight:800;letter-spacing:1.2px;color:#8fe4cf">CONTINUE</div>
+<div style="position:relative;font-family:'Baloo 2',cursive;font-weight:700;font-size:26px;color:#f2fdfa;margin-top:2px">Pond Drop</div>
+<div style="position:relative;font-size:12.5px;font-weight:600;color:rgba(223,243,251,.66);max-width:210px;text-wrap:pretty">3 species, 4 rules wired. Your ciliates just learned to follow the light.</div>
+<div onClick="{{ goStage }}" style="position:relative;margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:14px;background:#79dcc4;color:#07303a;font-weight:800;font-size:14px;cursor:pointer;box-shadow:0 6px 18px rgba(121,220,196,.35)" style-hover="background:#9aead6">
+<span style="width:0;height:0;border-left:9px solid #07303a;border-top:6px solid transparent;border-bottom:6px solid transparent"></span>Run simulation</div>
+</div>
+
+<div style="font-size:11px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45);margin-top:2px">WORLDS</div>
+<sc-for list="{{ worlds }}" as="w" hint-placeholder-count="3">
+<div onClick="{{ w.onTap }}" style="display:flex;gap:13px;align-items:center;padding:12px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(121,220,196,.14);cursor:pointer" style-hover="background:rgba(255,255,255,.085)">
+<div style="{{ w.thumb }}"></div>
+<div style="flex:1;min-width:0">
+<div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;color:#eafaf6;line-height:1.2">{{ w.name }}</div>
+<div style="font-size:11.5px;font-weight:600;color:rgba(223,243,251,.5);text-wrap:pretty">{{ w.desc }}</div>
+</div>
+<div style="flex:none;font-size:10px;font-weight:800;padding:5px 9px;border-radius:9px;background:rgba(121,220,196,.14);color:#8fe4cf">{{ w.tag }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isStage }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="position:relative;width:100%;aspect-ratio:10/13;border-radius:22px;overflow:hidden;border:1px solid rgba(121,220,196,.25);background:radial-gradient(75% 55% at 62% 22%,#2b8f86 0%,#146069 42%,#0a3542 72%,#062632 100%);box-shadow:inset 0 0 60px rgba(4,18,27,.6)">
+<div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.045) 0 2px,transparent 2px 26px)"></div>
+<sc-for list="{{ rocks }}" as="r" hint-placeholder-count="4"><div style="{{ r.style }}"></div></sc-for>
+<sc-for list="{{ motes }}" as="m" hint-placeholder-count="10"><div style="{{ m.style }}"></div></sc-for>
+<sc-for list="{{ agents }}" as="a" hint-placeholder-count="12">
+<div style="{{ a.wrap }}">
+<div style="{{ a.cone }}"></div>
+<div style="{{ a.body }}"><div style="{{ a.nucleus }}"></div><div style="{{ a.tail }}"></div></div>
+</div>
+</sc-for>
+<div style="position:absolute;left:10px;top:10px;display:flex;flex-direction:column;gap:5px">
+<sc-for list="{{ counts }}" as="c" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:6px;padding:4px 9px 4px 6px;border-radius:11px;background:rgba(4,18,27,.5);backdrop-filter:blur(6px)">
+<span style="{{ c.dot }}"></span>
+<span style="font-size:11px;font-weight:800;color:#eafaf6">{{ c.n }}</span>
+<span style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.55)">{{ c.name }}</span>
+</div>
+</sc-for>
+</div>
+<div style="position:absolute;right:10px;top:10px;padding:4px 9px;border-radius:11px;background:rgba(4,18,27,.5);font-size:10.5px;font-weight:800;color:#8fe4cf">t {{ clock }}</div>
+</div>
+
+<div style="display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16)">
+<div onClick="{{ toggleRun }}" style="{{ playStyle }}">{{ playIcon }}</div>
+<div onClick="{{ reset }}" style="flex:none;width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(121,220,196,.1);border:1px solid rgba(121,220,196,.24);color:#9fe8d4;font-size:16px;font-weight:800">↻</div>
+<div style="flex:1;min-width:0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.5)"><span>SPEED</span><span style="color:#9fe8d4">{{ speedLabel }}</span></div>
+<input type="range" min="0.25" max="3" step="0.25" value="{{ speed }}" onChange="{{ setSpeed }}" style="width:100%">
+</div>
+</div>
+
+<div style="padding:12px 14px;border-radius:18px;background:rgba(240,166,60,.1);border:1px solid rgba(240,166,60,.28)">
+<div style="font-size:10.5px;font-weight:800;letter-spacing:1px;color:#f0a63c">WATCH FOR</div>
+<div style="font-size:12.5px;font-weight:600;color:rgba(240,247,243,.85);text-wrap:pretty">{{ hint }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isRules }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:8px;padding:5px;border-radius:15px;background:rgba(255,255,255,.05)">
+<sc-for list="{{ speciesTabs }}" as="s" hint-placeholder-count="3">
+<div onClick="{{ s.onTap }}" style="{{ s.style }}"><span style="{{ s.dot }}"></span>{{ s.name }}</div>
+</sc-for>
+</div>
+
+<div style="font-size:12px;font-weight:700;color:rgba(223,243,251,.6);text-wrap:pretty">{{ wireHelp }}</div>
+
+<div style="position:relative;border-radius:20px;background:rgba(4,18,27,.35);border:1px solid rgba(121,220,196,.14);padding:10px">
+<div style="display:flex;justify-content:space-between;padding:0 4px 8px;font-size:9.5px;font-weight:800;letter-spacing:1.1px"><span style="color:#8fe4cf">SENSORS</span><span style="color:#f0a63c">ACTIONS</span></div>
+<div style="{{ graphBox }}">
+<svg viewBox="{{ graphView }}" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none">
+<sc-for list="{{ wires }}" as="w" hint-placeholder-count="4">
+<path d="{{ w.d }}" fill="none" stroke="{{ w.stroke }}" stroke-width="{{ w.width }}" stroke-linecap="round"></path>
+</sc-for>
+</svg>
+<sc-for list="{{ nodes }}" as="n" hint-placeholder-count="10">
+<div onClick="{{ n.onTap }}" style="{{ n.style }}">
+<span style="{{ n.pin }}"></span>
+<span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ n.label }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="font-size:11px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">READS AS</div>
+<sc-for list="{{ ruleLines }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(121,220,196,.12);font-size:12.5px;font-weight:700;color:#eafaf6">
+<span style="font-size:10px;font-weight:800;color:#8fe4cf;letter-spacing:.6px">WHEN</span>{{ r.when }}
+<span style="color:#f0a63c">→</span>{{ r.then }}
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSpecies }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:8px;padding:5px;border-radius:15px;background:rgba(255,255,255,.05)">
+<sc-for list="{{ speciesTabs }}" as="s" hint-placeholder-count="3">
+<div onClick="{{ s.onTap }}" style="{{ s.style }}"><span style="{{ s.dot }}"></span>{{ s.name }}</div>
+</sc-for>
+</div>
+
+<div style="display:flex;gap:14px;align-items:center;padding:14px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16)">
+<div style="{{ heroSprite }}"></div>
+<div style="flex:1;min-width:0">
+<div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:20px;color:#eafaf6;line-height:1.15">{{ curName }}</div>
+<div style="font-size:11.5px;font-weight:600;color:rgba(223,243,251,.55);text-wrap:pretty">{{ curRole }}</div>
+</div>
+</div>
+
+<div>
+<div style="font-size:11px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45);margin-bottom:8px">SPRITE</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<sc-for list="{{ sprites }}" as="s" hint-placeholder-count="4"><div onClick="{{ s.onTap }}" style="{{ s.style }}"><div style="{{ s.inner }}"></div></div></sc-for>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(121,220,196,.14)">
+<sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+<div>
+<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:.5px;color:rgba(223,243,251,.55)"><span>{{ s.label }}</span><span style="color:#9fe8d4">{{ s.value }}</span></div>
+<input type="range" min="{{ s.min }}" max="{{ s.max }}" step="{{ s.step }}" value="{{ s.raw }}" onChange="{{ s.onChange }}" style="width:100%">
+</div>
+</sc-for>
+</div>
+
+<div>
+<div style="font-size:11px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45);margin-bottom:8px">SENSORS IT HAS</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ sensorChips }}" as="c" hint-placeholder-count="6"><div onClick="{{ c.onTap }}" style="{{ c.style }}">{{ c.label }}</div></sc-for>
+</div>
+</div>
+<div>
+<div style="font-size:11px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45);margin-bottom:8px">THINGS IT CAN DO</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ actuatorChips }}" as="c" hint-placeholder-count="6"><div onClick="{{ c.onTap }}" style="{{ c.style }}">{{ c.label }}</div></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBuild }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<sc-for list="{{ tools }}" as="t" hint-placeholder-count="5"><div onClick="{{ t.onTap }}" style="{{ t.style }}"><span style="{{ t.swatch }}"></span>{{ t.label }}</div></sc-for>
+</div>
+<div style="position:relative;width:100%;aspect-ratio:10/14;border-radius:20px;overflow:hidden;border:1px solid rgba(121,220,196,.25);background:radial-gradient(70% 50% at 60% 20%,#227d78,#0c414d 55%,#062632);display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(14,1fr);gap:1px;padding:1px">
+<sc-for list="{{ cells }}" as="c" hint-placeholder-count="40"><div onClick="{{ c.onTap }}" style="{{ c.style }}"></div></sc-for>
+</div>
+<div style="display:flex;gap:10px">
+<div onClick="{{ clearWorld }}" style="flex:1;text-align:center;padding:12px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.2);color:#9fe8d4;font-weight:800;font-size:13px;cursor:pointer">Clear</div>
+<div onClick="{{ goStage }}" style="flex:2;text-align:center;padding:12px;border-radius:15px;background:#79dcc4;color:#07303a;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 6px 18px rgba(121,220,196,.3)">Drop the agents in</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isData }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:13px">
+<div style="padding:14px 14px 8px;border-radius:20px;background:rgba(4,18,27,.4);border:1px solid rgba(121,220,196,.16)">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+<div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:16px;color:#eafaf6">Population over time</div>
+<div style="font-size:10.5px;font-weight:800;color:rgba(223,243,251,.45)">last {{ histSpan }}s</div>
+</div>
+<svg viewBox="0 0 300 130" style="width:100%;height:auto;overflow:visible">
+<line x1="0" y1="120" x2="300" y2="120" stroke="rgba(223,243,251,.18)" stroke-width="1"></line>
+<line x1="0" y1="62" x2="300" y2="62" stroke="rgba(223,243,251,.09)" stroke-width="1"></line>
+<sc-for list="{{ series }}" as="s" hint-placeholder-count="3">
+<polyline points="{{ s.points }}" fill="none" stroke="{{ s.color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+</sc-for>
+</svg>
+<div style="display:flex;gap:14px;padding-top:8px">
+<sc-for list="{{ counts }}" as="c" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:6px"><span style="{{ c.dot }}"></span><span style="font-size:11px;font-weight:700;color:rgba(223,243,251,.6)">{{ c.name }}</span></div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:flex;gap:10px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="3">
+<div style="flex:1;padding:12px;border-radius:17px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.13)">
+<div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:22px;color:{{ k.color }};line-height:1">{{ k.value }}</div>
+<div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.5);text-wrap:pretty">{{ k.label }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="padding:14px;border-radius:20px;background:linear-gradient(135deg,rgba(121,220,196,.14),rgba(47,160,143,.06));border:1px solid rgba(121,220,196,.25)">
+<div style="font-size:10.5px;font-weight:800;letter-spacing:1.1px;color:#8fe4cf">WHAT HAPPENED</div>
+<div style="font-size:13px;font-weight:600;color:rgba(240,247,243,.86);text-wrap:pretty;margin-top:3px">{{ story }}</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<div style="position:relative;flex:none;display:grid;grid-template-columns:repeat(6,1fr);gap:2px;padding:8px 6px 20px;background:rgba(4,18,27,.55);border-top:1px solid rgba(121,220,196,.14);backdrop-filter:blur(10px)">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
+<div onClick="{{ t.onTap }}" style="{{ t.style }}"><span style="{{ t.glyph }}"></span>{{ t.label }}</div>
+</sc-for>
+</div>
+
+</div>
+</div>
+
+<div style="max-width:390px;font-size:11.5px;font-weight:600;line-height:1.6;color:rgba(223,243,251,.42);text-wrap:pretty">
+Live sim — agents sense, steer, eat and divide on their own. Wire sensors to actions in <b style="color:#9fe8d4">Rules</b>, paint rocks and nutrients in <b style="color:#9fe8d4">Build</b>, then watch the balance shift in <b style="color:#9fe8d4">Data</b>.
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:980}}">
+const SPECIES = {
+  alga:    {name:'Alga',    color:'#a8cf4c', role:'Producer. Soaks up light, drifts slowly, divides when full.', speed:0.055, size:15, prey:'mote'},
+  ciliate: {name:'Ciliate', color:'#79dcc4', role:'Grazer. Fast, hunts algae, follows chemical trails.', speed:0.20, size:19, prey:'alga'},
+  amoeba:  {name:'Amoeba',  color:'#f0a63c', role:'Predator. Slow and patient, engulfs ciliates whole.', speed:0.13, size:26, prey:'ciliate'}
+};
+const SENSORS = [
+  ['front','front is free'],['food','sees food'],['other','sees another species'],
+  ['wall','touching wall'],['energy','energy is low'],['light','light is brighter'],
+  ['trail','smells a trail'],['dice','1 in 4 chance'],['age','has lived a while']
+];
+const ACTUATORS = [
+  ['fwd','move forward'],['turn','turn left / right'],['rand','turn a random way'],
+  ['eat','eat it'],['divide','divide in two'],['trail','leave a trail'],
+  ['color','change colour'],['die','decay away'],['wait','wait a beat']
+];
+const DEFAULT_RULES = {
+  alga:    [['light','fwd'],['front','fwd'],['wall','turn'],['energy','divide'],['dice','rand']],
+  ciliate: [['food','fwd'],['front','fwd'],['wall','turn'],['food','eat'],['dice','rand'],['energy','divide']],
+  amoeba:  [['other','fwd'],['other','eat'],['wall','turn'],['energy','divide']]
+};
+const COLS = 10, ROWS = 14, CW = 100/COLS, CH = 100/ROWS;
+const TITLES = {
+  home:['Cellula','pick a world or keep going'],
+  stage:['Pond Drop','a living drop of pond water'],
+  rules:['Rules','wire a sensor to an action'],
+  species:['Species','shape how each one lives'],
+  build:['Build','paint the world they live in'],
+  data:['Data','what your world is doing']
+};
+
+class Component extends DCLogic {
+  state = {screen:'home', running:true, speed:1, sel:null, cur:'ciliate', tool:'rock',
+    vision:true, rules:JSON.parse(JSON.stringify(DEFAULT_RULES)),
+    stats:{alga:{size:15,speed:0.055,greed:40},ciliate:{size:19,speed:0.20,greed:55},amoeba:{size:26,speed:0.13,greed:70}},
+    sprite:{alga:0,ciliate:1,amoeba:2}, frame:0};
+
+  componentDidMount(){ this.seed(); this.last = performance.now(); this.loop(); }
+  componentWillUnmount(){ cancelAnimationFrame(this.raf); }
+
+  seed(){
+    const cells = new Array(COLS*ROWS).fill(0);
+    [[2,3],[3,3],[2,4],[7,9],[8,9],[8,10],[5,12],[4,6]].forEach(([x,y])=>cells[y*COLS+x]=1);
+    [[1,11],[8,2],[6,6]].forEach(([x,y])=>cells[y*COLS+x]=3);
+    const sim = {cells, agents:[], motes:[], t:0, hist:[], nextId:1, deaths:0, births:0};
+    const add = (k,n)=>{ for(let i=0;i<n;i++) sim.agents.push({
+      id:sim.nextId++, k, x:8+Math.random()*84, y:8+Math.random()*84,
+      h:Math.random()*Math.PI*2, e:40+Math.random()*30, age:0}); };
+    add('alga',14); add('ciliate',9); add('amoeba',3);
+    for(let i=0;i<26;i++) sim.motes.push({x:Math.random()*96+2, y:Math.random()*96+2, r:1.1+Math.random()*1.1});
+    this.sim = sim;
+  }
+
+  loop = ()=>{
+    this.raf = requestAnimationFrame(this.loop);
+    const now = performance.now(), dt = Math.min(3,(now-this.last)/16.7); this.last = now;
+    if(this.state.running) this.step(dt*this.state.speed);
+    this.setState(s=>({frame:s.frame+1}));
+  };
+
+  blocked(x,y){
+    if(x<2||x>98||y<2||y>98) return true;
+    const c = this.sim.cells[Math.min(ROWS-1,Math.floor(y/CH))*COLS+Math.min(COLS-1,Math.floor(x/CW))];
+    return c===1;
+  }
+  lightAt(x,y){ return Math.max(0,1-(y/100)) * 1.2; }
+
+  step(dt){
+    const sim = this.sim, S = this.state.stats;
+    sim.t += dt;
+    const byKind = {alga:[],ciliate:[],amoeba:[]};
+    sim.agents.forEach(a=>byKind[a.k].push(a));
+    const born = [];
+    sim.agents.forEach(a=>{
+      const st = S[a.k], def = SPECIES[a.k];
+      a.age += dt;
+      let target = null, best = 26;
+      const pool = def.prey==='mote' ? sim.motes : byKind[def.prey];
+      for(const p of pool){ const d = Math.hypot(p.x-a.x,p.y-a.y); if(d<best && !p.dead){best=d;target=p;} }
+      if(target){
+        const want = Math.atan2(target.y-a.y,target.x-a.x);
+        let diff = ((want-a.h+Math.PI*3)%(Math.PI*2))-Math.PI;
+        a.h += Math.max(-0.14,Math.min(0.14,diff*0.09))*dt;
+      } else if(a.k==='alga'){
+        const want = -Math.PI/2;
+        let diff = ((want-a.h+Math.PI*3)%(Math.PI*2))-Math.PI;
+        a.h += Math.max(-0.05,Math.min(0.05,diff*0.03))*dt;
+      }
+      a.h += (Math.random()-0.5)*0.22*dt;
+      const sp = st.speed*dt, nx = a.x+Math.cos(a.h)*sp, ny = a.y+Math.sin(a.h)*sp;
+      if(this.blocked(nx,ny)){ a.h += 1.9+Math.random(); } else { a.x = nx; a.y = ny; }
+      a.e -= (a.k==='alga'?0.018:a.k==='ciliate'?0.05:0.042)*dt;
+      if(a.k==='alga') a.e += this.lightAt(a.x,a.y)*0.115*dt;
+      if(target && best < (st.size/11+2.2)){
+        if(def.prey==='mote'){ target.dead = true; a.e += 24; }
+        else { target.e = -1; target.eaten = true; a.e += 42; }
+      }
+      if(a.e > st.greed+10 && byKind[a.k].length + born.length < (a.k==='alga'?46:a.k==='ciliate'?26:9)){
+        a.e *= 0.48;
+        born.push({id:sim.nextId++, k:a.k, x:a.x+(Math.random()-0.5)*4, y:a.y+(Math.random()-0.5)*4,
+          h:Math.random()*Math.PI*2, e:a.e, age:0});
+        sim.births++;
+      }
+    });
+    const before = sim.agents.length;
+    sim.agents = sim.agents.filter(a=>a.e>0).concat(born);
+    sim.deaths += Math.max(0, before + born.length - sim.agents.length);
+    sim.motes = sim.motes.filter(m=>!m.dead);
+    sim.moteAcc = (sim.moteAcc||0) + 0.55*dt;
+    while(sim.moteAcc >= 1){
+      sim.moteAcc -= 1;
+      if(sim.motes.length < 30)
+        sim.motes.push({x:Math.random()*96+2, y:Math.random()*96+2, r:1.1+Math.random()*1.1});
+    }
+    const floor = {alga:3, ciliate:2, amoeba:1};
+    Object.keys(floor).forEach(k=>{
+      let n = 0; sim.agents.forEach(a=>{ if(a.k===k) n++; });
+      if(n===0){
+        for(let i=0;i<floor[k];i++) sim.agents.push({id:sim.nextId++, k,
+          x:6+Math.random()*88, y:6+Math.random()*88, h:Math.random()*Math.PI*2,
+          e:this.state.stats[k].greed, age:0});
+        sim.reseeds = (sim.reseeds||0)+1;
+        sim.lastReseed = k;
+      }
+    });
+    if(sim.t - (sim.lastLog||0) > 8){
+      sim.lastLog = sim.t;
+      sim.hist.push({a:byKind.alga.length, c:byKind.ciliate.length, m:byKind.amoeba.length});
+      if(sim.hist.length>44) sim.hist.shift();
+    }
+  }
+
+  set = (k,v)=>this.setState({[k]:v});
+  go = s=>()=>this.setState({screen:s});
+
+  toggleWire(sid){
+    const s = this.state;
+    if(!s.sel){ this.setState({sel:sid}); return; }
+    if(SENSORS.some(x=>x[0]===sid)){ this.setState({sel:sid}); return; }
+    const rules = JSON.parse(JSON.stringify(s.rules));
+    const list = rules[s.cur];
+    const i = list.findIndex(r=>r[0]===s.sel && r[1]===sid);
+    if(i>=0) list.splice(i,1); else list.push([s.sel,sid]);
+    this.setState({rules, sel:null});
+  }
+
+  spriteStyle(k,size,i){
+    const c = SPECIES[k].color;
+    const shapes = ['50%','48% 52% 55% 45% / 58% 42% 58% 42%','44%','60% 40% 55% 45% / 50% 60% 40% 50%'];
+    return {width:size+'px', height:size*0.78+'px', borderRadius:shapes[i%4],
+      background:'radial-gradient(circle at 34% 30%, #ffffffcc 0%, '+c+'dd 34%, '+c+'55 78%, '+c+'22 100%)',
+      boxShadow:'0 0 10px '+c+'66, inset 0 0 6px '+c+'88', position:'relative'};
+  }
+
+  renderVals(){
+    const s = this.state, sim = this.sim, sc = s.screen;
+    const t = TITLES[sc];
+    const cur = s.cur, curDef = SPECIES[cur];
+    const v = {
+      title:t[0], subtitle:t[1],
+      isHome:sc==='home', isStage:sc==='stage', isRules:sc==='rules',
+      isSpecies:sc==='species', isBuild:sc==='build', isData:sc==='data',
+      visionLabel:s.vision?'vision cones on':'vision cones off',
+      toggleVision:()=>this.set('vision',!s.vision),
+      goStage:this.go('stage'),
+      speed:s.speed, speedLabel:s.speed+'×',
+      setSpeed:e=>this.set('speed',parseFloat(e.target.value)),
+      toggleRun:()=>this.set('running',!s.running),
+      playIcon:s.running?'❙❙':'▶',
+      playStyle:{flex:'none',width:'42px',height:'42px',borderRadius:'14px',display:'flex',
+        alignItems:'center',justifyContent:'center',cursor:'pointer',fontSize:'14px',fontWeight:800,
+        background:s.running?'rgba(121,220,196,.16)':'#79dcc4', color:s.running?'#9fe8d4':'#07303a',
+        border:'1px solid rgba(121,220,196,.3)'},
+      reset:()=>{ this.seed(); this.setState({running:true}); },
+      clock:(sim?Math.floor(sim.t/60):0)+'s',
+      hint:cur==='amoeba'?'Amoebas are slow — if ciliates get too clever, the predators starve.'
+        :'Ciliates chase algae. Take away nutrients in Build and watch the whole chain wobble.',
+      curName:curDef.name, curRole:curDef.role,
+      heroSprite:Object.assign(this.spriteStyle(cur, s.stats[cur].size*2.6, s.sprite[cur]),{flex:'none'}),
+      tabs:['home','stage','rules','species','build','data'].map((id,i)=>{
+        const on = sc===id;
+        return {label:['Worlds','Stage','Rules','Species','Build','Data'][i], onTap:this.go(id),
+          style:{display:'flex',flexDirection:'column',alignItems:'center',gap:'4px',padding:'6px 2px',
+            borderRadius:'12px',cursor:'pointer',fontSize:'9.5px',fontWeight:800,letterSpacing:'.2px',
+            color:on?'#0a2f3a':'rgba(223,243,251,.55)', background:on?'#79dcc4':'transparent'},
+          glyph:{width:'12px',height:'12px',display:'block',
+            background:on?'#0a2f3a':'rgba(223,243,251,.55)',
+            borderRadius:[ '3px','50%','2px','40% 60% 55% 45%','2px','3px' ][i],
+            transform:i===3?'rotate(0deg)':i===2?'rotate(45deg)':'none'}};
+      }),
+      speciesTabs:Object.keys(SPECIES).map(k=>{
+        const on = k===cur;
+        return {name:SPECIES[k].name, onTap:()=>this.setState({cur:k, sel:null}),
+          style:{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:'6px',
+            padding:'9px 4px',borderRadius:'11px',cursor:'pointer',fontSize:'12px',fontWeight:800,
+            color:on?'#07303a':'rgba(223,243,251,.6)', background:on?SPECIES[k].color:'transparent'},
+          dot:{width:'8px',height:'8px',borderRadius:'50%',display:'block',
+            background:on?'rgba(7,48,58,.65)':SPECIES[k].color}};
+      })
+    };
+
+    if(sc==='home'){
+      v.worlds = [
+        ['Pond Drop','Algae, ciliates and one hungry amoeba.','3 species'],
+        ['Deep Vent','Heat, no light. Only chemical trails guide them.','locked soon'],
+        ['Petri Dish','Flat, bright, and full of nutrients. Great first world.','starter']
+      ].map(([name,desc,tag],i)=>({name,desc,tag,onTap:this.go('stage'),
+        thumb:{flex:'none',width:'54px',height:'54px',borderRadius:'16px',
+          background:['radial-gradient(circle at 30% 28%,#8ff0d6,#2fa08f 55%,#0f4450)',
+            'radial-gradient(circle at 70% 70%,#f0a63c,#a2452f 55%,#241019)',
+            'radial-gradient(circle at 40% 35%,#e8f7f2,#a8cf4c 60%,#3c6b2c)'][i],
+          boxShadow:'inset 0 0 12px rgba(0,0,0,.35)'}}));
+    }
+
+    if((sc==='stage') && sim){
+      v.agents = sim.agents.map(a=>{
+        const st = s.stats[a.k], c = SPECIES[a.k].color, size = st.size;
+        return {
+          wrap:{position:'absolute', left:a.x+'%', top:a.y+'%', width:'0', height:'0',
+            transform:'rotate('+(a.h*180/Math.PI)+'deg)'},
+          cone:{position:'absolute', left:'0', top:'0', width:(size*2.4)+'px', height:(size*2)+'px',
+            marginTop:-(size)+'px', opacity:s.vision?(a.k===cur?0.3:0.13):0,
+            background:'linear-gradient(90deg,'+c+'aa,transparent)',
+            clipPath:'polygon(0% 50%,100% 4%,100% 96%)', transition:'opacity .2s'},
+          body:Object.assign(this.spriteStyle(a.k, size, s.sprite[a.k]),
+            {position:'absolute', left:-(size/2)+'px', top:-(size*0.39)+'px'}),
+          nucleus:{position:'absolute', left:'26%', top:'28%', width:'26%', height:'32%',
+            borderRadius:'50%', background:'rgba(4,26,34,.45)'},
+          tail:{position:'absolute', right:'-42%', top:'44%', width:'44%', height:'2px',
+            borderRadius:'2px', background:c+'99',
+            transform:'rotate('+Math.sin(sim.t*0.5+a.id)*22+'deg)', transformOrigin:'left center'}
+        };
+      });
+      v.motes = sim.motes.map(m=>({style:{position:'absolute', left:m.x+'%', top:m.y+'%',
+        width:(m.r*3.2)+'px', height:(m.r*3.2)+'px', marginLeft:'-3px', marginTop:'-3px',
+        borderRadius:'50%', background:'rgba(232,247,242,.55)', boxShadow:'0 0 6px rgba(232,247,242,.5)'}}));
+      v.rocks = sim.cells.map((c,i)=>({c,i})).filter(o=>o.c!==0).map(o=>{
+        const x=(o.i%COLS)*CW, y=Math.floor(o.i/COLS)*CH;
+        const fill = o.c===1 ? 'radial-gradient(circle at 40% 35%,#3d5a63,#16323c)'
+          : 'radial-gradient(circle at 50% 50%,rgba(240,166,60,.42),transparent 70%)';
+        return {style:{position:'absolute', left:x+'%', top:y+'%', width:CW+'%', height:CH+'%',
+          background:fill, borderRadius:o.c===1?'26%':'50%',
+          boxShadow:o.c===1?'inset 0 0 10px rgba(0,0,0,.4)':'none'}};
+      });
+    }
+
+    if(sc==='stage'||sc==='data'){
+      const b = {alga:0,ciliate:0,amoeba:0};
+      (sim?sim.agents:[]).forEach(a=>b[a.k]++);
+      v.counts = Object.keys(SPECIES).map(k=>({name:SPECIES[k].name, n:b[k],
+        dot:{width:'9px',height:'9px',borderRadius:'50%',display:'block',
+          background:SPECIES[k].color, boxShadow:'0 0 8px '+SPECIES[k].color+'88'}}));
+    }
+
+    if(sc==='rules'){
+      const list = s.rules[cur], H = 8+SENSORS.length*46;
+      v.graphBox = {position:'relative', height:H+'px'};
+      v.graphView = '0 0 358 '+H;
+      v.wireHelp = s.sel
+        ? 'Now tap an action on the right to connect “'+(SENSORS.find(x=>x[0]===s.sel)||[,''])[1]+'”.'
+        : 'Tap a sensor, then tap an action. Tap a wired pair again to unhook it.';
+      const sy = i=>8+i*46+19, ay = i=>8+i*46+19;
+      v.wires = list.map(([a,b])=>{
+        const i = SENSORS.findIndex(x=>x[0]===a), j = ACTUATORS.findIndex(x=>x[0]===b);
+        if(i<0||j<0) return null;
+        const y1 = sy(i), y2 = ay(j);
+        return {d:'M150 '+y1+' C 182 '+y1+', 176 '+y2+', 208 '+y2,
+          stroke:curDef.color+'cc', width:2.4};
+      }).filter(Boolean);
+      const wired = new Set(list.flat());
+      v.nodes = [].concat(
+        SENSORS.map(([id,label],i)=>({id,label,i,side:'s'})),
+        ACTUATORS.map(([id,label],i)=>({id,label,i,side:'a'}))
+      ).map(n=>{
+        const isS = n.side==='s', on = wired.has(n.id), sel = s.sel===n.id;
+        const accent = isS ? '#79dcc4' : '#f0a63c';
+        return {label:n.label, onTap:()=>this.toggleWire(n.id),
+          style:{position:'absolute', top:(8+n.i*46)+'px', left:isS?'0':'auto', right:isS?'auto':'0',
+            width:'150px', height:'38px', display:'flex', alignItems:'center', gap:'7px',
+            padding:isS?'0 8px 0 9px':'0 9px 0 8px', borderRadius:'12px', cursor:'pointer',
+            flexDirection:isS?'row':'row-reverse', textAlign:isS?'left':'right',
+            fontSize:'11.5px', fontWeight:800, lineHeight:1.1,
+            color:on||sel?'#f2fdfa':'rgba(223,243,251,.6)',
+            background:sel?accent+'33':on?'rgba(255,255,255,.07)':'rgba(255,255,255,.03)',
+            border:'1px solid '+(sel?accent:on?accent+'55':'rgba(121,220,196,.13)'),
+            boxShadow:sel?'0 0 0 3px '+accent+'22':'none'},
+          pin:{flex:'none', width:'9px', height:'9px', borderRadius:'50%',
+            background:on||sel?accent:'rgba(223,243,251,.25)',
+            boxShadow:on||sel?'0 0 8px '+accent+'99':'none'}};
+      });
+      v.ruleLines = list.map(([a,b])=>({
+        when:(SENSORS.find(x=>x[0]===a)||[,'?'])[1],
+        then:(ACTUATORS.find(x=>x[0]===b)||[,'?'])[1]}));
+    }
+
+    if(sc==='species'){
+      v.sprites = [0,1,2,3].map(i=>({
+        onTap:()=>this.setState({sprite:Object.assign({},s.sprite,{[cur]:i})}),
+        style:{width:'62px',height:'62px',borderRadius:'18px',display:'flex',alignItems:'center',
+          justifyContent:'center',cursor:'pointer',background:'rgba(255,255,255,.05)',
+          border:'1px solid '+(s.sprite[cur]===i?curDef.color:'rgba(121,220,196,.14)'),
+          boxShadow:s.sprite[cur]===i?'0 0 0 3px '+curDef.color+'2e':'none'},
+        inner:this.spriteStyle(cur,34,i)}));
+      const st = s.stats[cur];
+      const upd = (key,val)=>this.setState({stats:Object.assign({},s.stats,
+        {[cur]:Object.assign({},st,{[key]:val})})});
+      v.stats = [
+        {label:'BODY SIZE', raw:st.size, min:10, max:34, step:1, value:st.size+' µm',
+          onChange:e=>upd('size',parseFloat(e.target.value))},
+        {label:'SWIM SPEED', raw:st.speed, min:0.03, max:0.4, step:0.01,
+          value:(st.speed*100).toFixed(0)+'%', onChange:e=>upd('speed',parseFloat(e.target.value))},
+        {label:'DIVIDES WHEN FULL', raw:st.greed, min:20, max:90, step:5, value:st.greed+' energy',
+          onChange:e=>upd('greed',parseFloat(e.target.value))}
+      ];
+      const wired = new Set(s.rules[cur].flat());
+      const chip = (id,label,accent)=>({label,
+        onTap:()=>this.setState({screen:'rules', sel:SENSORS.some(x=>x[0]===id)?id:null}),
+        style:{padding:'8px 11px', borderRadius:'11px', cursor:'pointer', fontSize:'11.5px',
+          fontWeight:800, color:wired.has(id)?'#f2fdfa':'rgba(223,243,251,.45)',
+          background:wired.has(id)?accent+'26':'rgba(255,255,255,.035)',
+          border:'1px solid '+(wired.has(id)?accent+'66':'rgba(121,220,196,.12)')}});
+      v.sensorChips = SENSORS.map(([id,l])=>chip(id,l,'#79dcc4'));
+      v.actuatorChips = ACTUATORS.map(([id,l])=>chip(id,l,'#f0a63c'));
+    }
+
+    if(sc==='build'){
+      const TOOLS = [['water','Water',0,'rgba(47,160,143,.35)'],['rock','Rock',1,'#3d5a63'],
+        ['nutrient','Nutrients',2,'rgba(232,247,242,.7)'],['light','Light',3,'rgba(240,166,60,.6)']];
+      v.tools = TOOLS.map(([id,label,code,col])=>({label,
+        onTap:()=>this.setState({tool:id}),
+        style:{display:'flex',alignItems:'center',gap:'7px',padding:'9px 12px',borderRadius:'13px',
+          cursor:'pointer',fontSize:'12px',fontWeight:800,
+          color:s.tool===id?'#07303a':'rgba(223,243,251,.6)',
+          background:s.tool===id?'#79dcc4':'rgba(255,255,255,.05)',
+          border:'1px solid rgba(121,220,196,.18)'},
+        swatch:{width:'12px',height:'12px',borderRadius:code===1?'3px':'50%',background:col,display:'block'}}));
+      const codeOf = {water:0, rock:1, nutrient:2, light:3};
+      v.cells = (sim?sim.cells:new Array(COLS*ROWS).fill(0)).map((c,i)=>({
+        onTap:()=>{ this.sim.cells[i] = this.sim.cells[i]===codeOf[s.tool] ? 0 : codeOf[s.tool];
+          this.forceUpdate(); },
+        style:{borderRadius:'5px', cursor:'pointer',
+          background:c===1?'radial-gradient(circle at 40% 35%,#46656f,#16323c)'
+            :c===2?'radial-gradient(circle at 50% 50%,rgba(232,247,242,.75),transparent 68%)'
+            :c===3?'radial-gradient(circle at 50% 50%,rgba(240,166,60,.5),transparent 70%)'
+            :'rgba(255,255,255,.035)'}}));
+      v.clearWorld = ()=>{ this.sim.cells = new Array(COLS*ROWS).fill(0); this.forceUpdate(); };
+    }
+
+    if(sc==='data'){
+      const h = sim?sim.hist:[];
+      v.histSpan = Math.max(1,Math.round(h.length*8/60));
+      const max = Math.max(10, ...h.map(p=>Math.max(p.a,p.c,p.m)));
+      const line = key=>h.map((p,i)=>
+        (h.length<2?0:(i/(h.length-1))*300).toFixed(1)+','+(120-(p[key]/max)*112).toFixed(1)).join(' ');
+      v.series = [{points:line('a'),color:SPECIES.alga.color},
+        {points:line('c'),color:SPECIES.ciliate.color},
+        {points:line('m'),color:SPECIES.amoeba.color}];
+      v.kpis = [
+        {value:sim?sim.births:0, label:'divisions so far', color:'#a8cf4c'},
+        {value:sim?sim.deaths:0, label:'agents lost', color:'#f0a63c'},
+        {value:(sim?sim.agents.length:0), label:'alive right now', color:'#79dcc4'}
+      ];
+      const last = h[h.length-1]||{a:0,c:0,m:0};
+      v.story = last.c > last.a*1.2
+        ? 'Ciliates are outnumbering the algae. Their food is running out — expect a crash soon.'
+        : (sim&&sim.lastReseed) ? SPECIES[sim.lastReseed].name+'s died out completely, so the pond seeded a few fresh ones. Give them more food or fewer predators next run.'
+        : 'Algae, ciliates and amoebas are holding a rough balance. Add rocks or take away nutrients to break it.';
+    }
+
+    return v;
+  }
+}
+
+</script>
+</body>
+</html>
