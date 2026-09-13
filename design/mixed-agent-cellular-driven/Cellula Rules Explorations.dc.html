@@ -24,28 +24,41 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
 <section style="display:flex;flex-direction:column;gap:22px;padding:34px;min-width:1440px">
 
   <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
-    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:30px;color:#eafaf6;line-height:1">Regras de transição · turno 1</div>
-    <div style="font-size:13px;font-weight:700;color:rgba(223,243,251,.5);padding-bottom:4px">Transition rules — three candidate editors. Demonstration is the primary act in all three; the rule list is the same object seen flat.</div>
+    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:30px;color:#eafaf6;line-height:1">
+      <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Regras de transição · turno 1</sc-if><sc-if value="{{ isEN }}">Transition rules · turn 1</sc-if>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:rgba(223,243,251,.5);padding-bottom:4px;flex:1;min-width:280px">
+      <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Três editores candidatos. Demonstrar é o ato principal nos três; a lista de regras é o mesmo objeto visto de forma plana.</sc-if><sc-if value="{{ isEN }}">Three candidate editors. Demonstration is the primary act in all three; the rule list is the same object seen flat.</sc-if>
+    </div>
+    <div style="display:flex;gap:4px;padding:4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);flex:none">
+      <div onClick="{{ setPT }}" style="padding:6px 13px;border-radius:9px;font-size:11.5px;font-weight:800;cursor:pointer;background:{{ ptBg }};color:{{ ptFg }}">Português</div>
+      <div onClick="{{ setEN }}" style="padding:6px 13px;border-radius:9px;font-size:11.5px;font-weight:800;cursor:pointer;background:{{ enBg }};color:{{ enFg }}">English</div>
+    </div>
   </div>
 
   <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap">
 
-    <!-- ══════════════════ 1a ══════════════════ -->
+    <!-- 1a -->
     <div id="1a" style="width:404px;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#79dcc4;padding:3px 11px;border-radius:9px">1a</div>
-        <div>
-          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">Gravador no palco</div>
-          <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);letter-spacing:.4px">STAGE RECORDER</div></sc-if>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Gravador no palco</sc-if><sc-if value="{{ isEN }}">Stage recorder</sc-if>
         </div>
       </div>
-      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;min-height:34px">Você arrasta o peixe no próprio aquário. O sistema fotografa o antes e o depois. Nenhum formulário — a regra <em>é</em> o exemplo.</div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;min-height:34px">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Você arrasta o peixe no próprio aquário. O sistema fotografa o antes e o depois. Nenhum formulário — a regra <em>é</em> o exemplo.</sc-if><sc-if value="{{ isEN }}">You drag the fish inside the aquarium itself. The system photographs the before and the after. No form — the rule <em>is</em> the example.</sc-if>
+      </div>
 
       <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:13px">
 
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">AQUÁRIO · AO VIVO</div>
-          <div style="font-size:10px;font-weight:800;color:#f0a63c;padding:4px 9px;border-radius:8px;background:rgba(240,166,60,.14);animation:pulseRing 2.2s ease-in-out infinite">● GRAVANDO</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">AQUÁRIO · AO VIVO</sc-if><sc-if value="{{ isEN }}">AQUARIUM · LIVE</sc-if>
+          </div>
+          <div style="font-size:10px;font-weight:800;color:#f0a63c;padding:4px 9px;border-radius:8px;background:rgba(240,166,60,.14);animation:pulseRing 2.2s ease-in-out infinite;flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">● GRAVANDO</sc-if><sc-if value="{{ isEN }}">● RECORDING</sc-if>
+          </div>
         </div>
 
         <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:2px;padding:6px;border-radius:14px;background:rgba(4,18,27,.5);position:relative">
@@ -58,23 +71,28 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
 
         <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:15px;background:rgba(240,166,60,.1);border:1px solid rgba(240,166,60,.3)">
           <img src="art/fish-right.svg" alt="" style="width:26px;height:26px;animation:dragGhost 2.4s ease-in-out infinite">
-          <div style="font-size:11.5px;font-weight:700;color:#f0a63c;text-wrap:pretty">Arraste o peixe uma casa à direita<sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><span style="color:rgba(223,243,251,.4)"> · drag the fish one cell right</span></sc-if></div>
+          <div style="font-size:11.5px;font-weight:700;color:#f0a63c;text-wrap:pretty">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Arraste o peixe uma casa à direita</sc-if><sc-if value="{{ isEN }}">Drag the fish one cell to the right</sc-if>
+          </div>
         </div>
 
         <div style="height:1px;background:rgba(121,220,196,.16)"></div>
 
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">GESTOS · COMO FAZER O DEPOIS</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">arrastar é só um deles</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">GESTOS · COMO FAZER O DEPOIS</sc-if><sc-if value="{{ isEN }}">GESTURES · HOW TO MAKE THE AFTER</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">arrastar é só um deles</sc-if><sc-if value="{{ isEN }}">dragging is just one</sc-if>
+          </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
           <sc-for list="{{ gestures }}" as="g" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:14px;cursor:pointer;background:{{ g.bg }};border:1px solid {{ g.bd }}">
               <div style="font-size:14px;line-height:1;flex:none">{{ g.g }}</div>
               <div style="min-width:0">
-                <div style="font-size:10.5px;font-weight:800;color:{{ g.fg }};line-height:1.15">{{ g.pt }}</div>
-                <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.42);line-height:1.2">→ {{ g.out }}</div>
-                <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:8.5px;font-weight:700;color:rgba(223,243,251,.3);line-height:1.2">{{ g.en }}</div></sc-if>
+                <div style="font-size:10.5px;font-weight:800;color:{{ g.fg }};line-height:1.15">{{ g.label }}</div>
+                <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.42);line-height:1.2">→ {{ g.outLabel }}</div>
               </div>
             </div>
           </sc-for>
@@ -90,15 +108,16 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
             <div style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:{{ dupA0.bg }}"><sc-if value="{{ dupA0.src }}" hint-placeholder-val="{{ true }}"><img src="{{ dupA0.src }}" alt="" style="width:90%;height:90%;object-fit:contain"></sc-if></div>
             <div style="width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:{{ dupA1.bg }}"><sc-if value="{{ dupA1.src }}" hint-placeholder-val="{{ true }}"><img src="{{ dupA1.src }}" alt="" style="width:90%;height:90%;object-fit:contain"></sc-if></div>
           </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:11px;font-weight:800;color:#eafaf6;text-wrap:pretty">A mãe <strong style="color:#a8cf4c">continua ali</strong> — por isso é duplicar, e não andar.</div>
-            <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);text-wrap:pretty">Duplication can never be a one-cell rule: parent + empty → parent + child.</div></sc-if>
+          <div style="flex:1;min-width:0;font-size:11px;font-weight:800;color:#eafaf6;text-wrap:pretty">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">A mãe <strong style="color:#a8cf4c">continua ali</strong> — por isso é duplicar, e não andar. Duplicar nunca é regra de uma casa só.</sc-if><sc-if value="{{ isEN }}">The mother <strong style="color:#a8cf4c">is still there</strong> — that is why it reads as duplication, not movement. Duplication is never a one-cell rule.</sc-if>
           </div>
         </div>
 
         <div style="height:1px;background:rgba(121,220,196,.16)"></div>
 
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">O QUE FOI GRAVADO</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">O QUE FOI GRAVADO</sc-if><sc-if value="{{ isEN }}">WHAT WAS RECORDED</sc-if>
+        </div>
         <div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:13px;border-radius:18px;background:rgba(4,18,27,.4)">
           <div style="display:flex;flex-direction:column;gap:5px;align-items:center">
             <div style="display:grid;grid-template-columns:repeat(3,30px);gap:3px">
@@ -109,7 +128,9 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
                 </div>
               </sc-for>
             </div>
-            <div style="font-size:9.5px;font-weight:800;color:rgba(223,243,251,.45);letter-spacing:.6px">ANTES · BEFORE</div>
+            <div style="font-size:9.5px;font-weight:800;color:rgba(223,243,251,.45);letter-spacing:.6px">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">ANTES</sc-if><sc-if value="{{ isEN }}">BEFORE</sc-if>
+            </div>
           </div>
           <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:22px;color:#f0a63c">➜</div>
           <div style="display:flex;flex-direction:column;gap:5px;align-items:center">
@@ -121,24 +142,34 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
                 </div>
               </sc-for>
             </div>
-            <div style="font-size:9.5px;font-weight:800;color:rgba(223,243,251,.45);letter-spacing:.6px">DEPOIS · AFTER</div>
+            <div style="font-size:9.5px;font-weight:800;color:rgba(223,243,251,.45);letter-spacing:.6px">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">DEPOIS</sc-if><sc-if value="{{ isEN }}">AFTER</sc-if>
+            </div>
           </div>
         </div>
 
-        <div style="display:flex;gap:7px;align-items:center">
-          <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);flex:none">Toque em uma casa para dizer <strong style="color:#eafaf6">não importa</strong> ✳</div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55)">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Toque em uma casa para dizer <strong style="color:#eafaf6">não importa</strong> ✳</sc-if><sc-if value="{{ isEN }}">Tap a cell to say <strong style="color:#eafaf6">does not matter</strong> ✳</sc-if>
         </div>
 
         <div style="display:flex;gap:8px">
-          <div style="flex:1;text-align:center;padding:11px;border-radius:15px;background:#79dcc4;color:#07303a;font-weight:800;font-size:13px;cursor:pointer">Salvar regra</div>
-          <div style="flex:none;padding:11px 14px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.55);font-weight:800;font-size:13px;cursor:pointer">Refazer</div>
+          <div style="flex:1;text-align:center;padding:11px;border-radius:15px;background:#79dcc4;color:#07303a;font-weight:800;font-size:13px;cursor:pointer">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Salvar regra</sc-if><sc-if value="{{ isEN }}">Save rule</sc-if>
+          </div>
+          <div style="flex:none;padding:11px 14px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.55);font-weight:800;font-size:13px;cursor:pointer">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Refazer</sc-if><sc-if value="{{ isEN }}">Redo</sc-if>
+          </div>
         </div>
       </div>
 
       <div style="border-radius:26px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:9px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">MINHAS REGRAS · EM ORDEM</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">a primeira que casa, vence</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">MINHAS REGRAS · EM ORDEM</sc-if><sc-if value="{{ isEN }}">MY RULES · IN ORDER</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">a primeira que casa, vence</sc-if><sc-if value="{{ isEN }}">first match wins</sc-if>
+          </div>
         </div>
         <sc-for list="{{ ruleList }}" as="r" hint-placeholder-count="4">
           <div style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16)">
@@ -152,10 +183,7 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
               <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:{{ r.a0.bg }}"><sc-if value="{{ r.a0.src }}" hint-placeholder-val="{{ true }}"><img src="{{ r.a0.src }}" alt="" style="width:90%;height:90%;object-fit:contain"></sc-if></div>
               <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:{{ r.a1.bg }}"><sc-if value="{{ r.a1.src }}" hint-placeholder-val="{{ true }}"><img src="{{ r.a1.src }}" alt="" style="width:90%;height:90%;object-fit:contain"></sc-if></div>
             </div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:11.5px;font-weight:800;color:#eafaf6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.pt }}</div>
-              <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.en }}</div></sc-if>
-            </div>
+            <div style="flex:1;min-width:0;font-size:11.5px;font-weight:800;color:#eafaf6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</div>
             <div style="flex:none;font-size:15px;color:#79dcc4;font-weight:800">{{ r.arrow }}</div>
             <div style="flex:none;font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:8px;background:rgba(255,255,255,.035);color:rgba(223,243,251,.55)">{{ r.prob }}%</div>
           </div>
@@ -163,9 +191,13 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
       </div>
 
       <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">⚙ MODO AVANÇADO</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">escape hatch</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">⚙ MODO AVANÇADO</sc-if><sc-if value="{{ isEN }}">⚙ ADVANCED MODE</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">escotilha</sc-if><sc-if value="{{ isEN }}">escape hatch</sc-if>
+          </div>
         </div>
         <div style="display:flex;gap:12px;align-items:center">
           <div style="display:grid;grid-template-columns:repeat(3,20px);gap:3px;flex:none">
@@ -173,35 +205,41 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
               <div style="height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:{{ d.bg }};color:{{ d.fg }};border:1px solid rgba(121,220,196,.16);cursor:pointer">{{ d.g }}</div>
             </sc-for>
           </div>
-          <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">A seta gravada pode ser trocada por várias — ou por <strong style="color:#eafaf6">qualquer</strong>. A grade 3×3 de vizinhança fica aqui, longe das crianças.</div>
+          <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">A seta gravada pode ser trocada por várias — ou por <strong style="color:#eafaf6">qualquer</strong>. A grade 3×3 de vizinhança fica aqui, longe das crianças.</sc-if><sc-if value="{{ isEN }}">The recorded arrow can be swapped for several — or for <strong style="color:#eafaf6">any</strong>. The 3×3 neighbourhood grid lives here, away from the children.</sc-if>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- ══════════════════ 1b ══════════════════ -->
+    <!-- 1b -->
     <div id="1b" style="width:404px;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#a8cf4c;padding:3px 11px;border-radius:9px">1b</div>
-        <div>
-          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">Fita de momentos</div>
-          <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);letter-spacing:.4px">FILMSTRIP</div></sc-if>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Fita de momentos</sc-if><sc-if value="{{ isEN }}">Filmstrip of moments</sc-if>
         </div>
       </div>
-      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;min-height:34px">Onde as regras são <em>afinadas</em>, não nascidas. A criança volta no tempo, escolhe dois instantes vizinhos e diz: isto virou regra. Generalizar é apagar.</div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;min-height:34px">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Onde as regras são <em>afinadas</em>, não nascidas. A criança volta no tempo, escolhe dois instantes vizinhos e diz: isto virou regra. Generalizar é apagar.</sc-if><sc-if value="{{ isEN }}">Where rules are <em>tuned</em>, not born. The child goes back in time, picks two adjacent moments and says: this became a rule. Generalising is erasing.</sc-if>
+      </div>
 
       <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:13px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">DE ONDE VEM A FITA?</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">nada é pré-gravado</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">DE ONDE VEM A FITA?</sc-if><sc-if value="{{ isEN }}">WHERE DOES THE STRIP COME FROM?</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">nada é pré-gravado</sc-if><sc-if value="{{ isEN }}">nothing is pre-recorded</sc-if>
+          </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <sc-for list="{{ sources }}" as="s" hint-placeholder-count="3">
             <div style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:15px;cursor:pointer;background:{{ s.bg }};border:1px solid {{ s.bd }}">
               <div style="font-size:14px;line-height:1;flex:none">{{ s.g }}</div>
               <div style="flex:1;min-width:0">
-                <div style="font-size:11px;font-weight:800;color:{{ s.fg }};line-height:1.15">{{ s.pt }}</div>
-                <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">{{ s.note }}</div>
-                <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:8.5px;font-weight:700;color:rgba(223,243,251,.3)">{{ s.en }}</div></sc-if>
+                <div style="font-size:11px;font-weight:800;color:{{ s.fg }};line-height:1.15">{{ s.label }}</div>
+                <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">{{ s.noteLabel }}</div>
               </div>
             </div>
           </sc-for>
@@ -209,9 +247,11 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
 
         <div style="height:1px;background:rgba(121,220,196,.16)"></div>
 
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">MESA DO MOTOR · VOCÊ MEXE, ELA GRAVA</div>
-          <div style="display:flex;gap:4px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">MESA DO MOTOR · VOCÊ MEXE, ELA GRAVA</sc-if><sc-if value="{{ isEN }}">ENGINE TABLE · YOU MOVE, IT RECORDS</sc-if>
+          </div>
+          <div style="display:flex;gap:4px;flex:none">
             <sc-for list="{{ stepChips }}" as="p" hint-placeholder-count="4">
               <div style="width:19px;height:19px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;background:{{ p.bg }};color:{{ p.fg }};border:1px solid {{ p.bd }}">{{ p.n }}</div>
             </sc-for>
@@ -229,27 +269,35 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
 
         <div style="display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:15px;background:rgba(168,207,76,.1);border:1px solid rgba(168,207,76,.32)">
           <div style="font-size:14px;flex:none">🎭</div>
-          <div style="font-size:11px;font-weight:700;color:#a8cf4c;text-wrap:pretty">Passo 4: arrastei o peixe uma casa e pintei uma alga. O peixe apagado mostra onde ele estava.</div>
+          <div style="font-size:11px;font-weight:700;color:#a8cf4c;text-wrap:pretty">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Passo 4: arrastei o peixe uma casa e pintei uma alga. O peixe apagado mostra onde ele estava.</sc-if><sc-if value="{{ isEN }}">Step 4: I dragged the fish one cell and painted an algae. The faded fish shows where it was.</sc-if>
+          </div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
           <sc-for list="{{ gestures }}" as="g" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:13px;cursor:pointer;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16)">
               <div style="font-size:13px;line-height:1;flex:none">{{ g.g }}</div>
-              <div style="font-size:10px;font-weight:800;color:#eafaf6;line-height:1.15">{{ g.pt }}</div>
+              <div style="font-size:10px;font-weight:800;color:#eafaf6;line-height:1.15">{{ g.label }}</div>
             </div>
           </sc-for>
         </div>
 
         <div style="display:flex;gap:8px">
-          <div style="flex:1;text-align:center;padding:12px;border-radius:15px;background:#a8cf4c;color:#12300a;font-weight:800;font-size:13px;cursor:pointer">Pronto — próximo passo ➜</div>
+          <div style="flex:1;text-align:center;padding:12px;border-radius:15px;background:#a8cf4c;color:#12300a;font-weight:800;font-size:13px;cursor:pointer">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Pronto — próximo passo ➜</sc-if><sc-if value="{{ isEN }}">Done — next step ➜</sc-if>
+          </div>
           <div style="flex:none;padding:12px 13px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.55);font-weight:800;font-size:13px;cursor:pointer">↩</div>
         </div>
-        <div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);text-wrap:pretty">Cada vez que você diz <strong style="color:#eafaf6">pronto</strong>, o mundo é fotografado e a foto vira o próximo quadro da fita. É assim que nasce o tempo: você decide quando o instante acabou.</div>
+        <div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);text-wrap:pretty">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Cada vez que você diz <strong style="color:#eafaf6">pronto</strong>, o mundo é fotografado e a foto vira o próximo quadro da fita. É assim que nasce o tempo: você decide quando o instante acabou.</sc-if><sc-if value="{{ isEN }}">Every time you say <strong style="color:#eafaf6">done</strong>, the world is photographed and the photo becomes the next frame. That is how time is born: you decide when the moment ended.</sc-if>
+        </div>
 
         <div style="height:1px;background:rgba(121,220,196,.16)"></div>
 
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">FITA DO TEMPO · TIMELINE</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">FITA DO TEMPO</sc-if><sc-if value="{{ isEN }}">TIMELINE</sc-if>
+        </div>
         <div style="display:flex;gap:6px;align-items:flex-end;overflow:hidden">
           <sc-for list="{{ frames }}" as="f" hint-placeholder-count="4">
             <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;align-items:center">
@@ -267,14 +315,20 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
 
         <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:15px;background:rgba(168,207,76,.1);border:1px solid rgba(168,207,76,.32)">
           <div style="font-size:15px">⇥</div>
-          <div style="font-size:11.5px;font-weight:700;color:#a8cf4c;text-wrap:pretty">Dois instantes selecionados: <strong style="color:#eafaf6">t3 → t4</strong><sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><span style="color:rgba(223,243,251,.4)"> · two adjacent moments</span></sc-if></div>
+          <div style="font-size:11.5px;font-weight:700;color:#a8cf4c;text-wrap:pretty">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Dois instantes vizinhos selecionados: <strong style="color:#eafaf6">t3 → t4</strong></sc-if><sc-if value="{{ isEN }}">Two adjacent moments selected: <strong style="color:#eafaf6">t3 → t4</strong></sc-if>
+          </div>
         </div>
 
         <div style="height:1px;background:rgba(121,220,196,.16)"></div>
 
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">O QUE IMPORTA?</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">apague o resto</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:rgba(223,243,251,.45)">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">O QUE IMPORTA?</sc-if><sc-if value="{{ isEN }}">WHAT MATTERS?</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">apague o resto</sc-if><sc-if value="{{ isEN }}">erase the rest</sc-if>
+          </div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:7px;border-radius:16px;background:rgba(4,18,27,.4)">
           <sc-for list="{{ maskCells }}" as="c" hint-placeholder-count="16">
@@ -284,20 +338,32 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
             </div>
           </sc-for>
         </div>
-        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">Duas casas guardadas, catorze apagadas. A regra ficou curta — e serve para todo o aquário.</div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Duas casas guardadas, catorze apagadas. A regra ficou curta — e serve para todo o aquário.</sc-if><sc-if value="{{ isEN }}">Two cells kept, fourteen erased. The rule came out short — and it works for the whole aquarium.</sc-if>
+        </div>
 
         <div style="display:flex;gap:8px">
-          <div style="flex:1;text-align:center;padding:11px;border-radius:15px;background:#a8cf4c;color:#12300a;font-weight:800;font-size:13px;cursor:pointer">Virar regra</div>
-          <div style="flex:none;padding:11px 14px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.55);font-weight:800;font-size:13px;cursor:pointer">Ver casos</div>
+          <div style="flex:1;text-align:center;padding:11px;border-radius:15px;background:#a8cf4c;color:#12300a;font-weight:800;font-size:13px;cursor:pointer">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Virar regra</sc-if><sc-if value="{{ isEN }}">Make it a rule</sc-if>
+          </div>
+          <div style="flex:none;padding:11px 14px;border-radius:15px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.55);font-weight:800;font-size:13px;cursor:pointer">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Ver casos</sc-if><sc-if value="{{ isEN }}">See cases</sc-if>
+          </div>
         </div>
       </div>
 
       <div style="border-radius:26px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">COLHEITA · O QUE VOCÊ FEZ VIROU REGRA</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">você aceita ou joga fora</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">COLHEITA · O QUE VOCÊ FEZ VIROU REGRA</sc-if><sc-if value="{{ isEN }}">HARVEST · WHAT YOU DID BECAME A RULE</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">aceite ou jogue fora</sc-if><sc-if value="{{ isEN }}">accept or discard</sc-if>
+          </div>
         </div>
-        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">Depois de brincar de motor, o sistema compara os momentos da fita e acha o que você repetiu.</div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Depois de brincar de motor, o sistema compara os momentos da fita e acha o que você repetiu.</sc-if><sc-if value="{{ isEN }}">After playing engine, the system compares the moments on the strip and finds what you repeated.</sc-if>
+        </div>
         <sc-for list="{{ harvest }}" as="h" hint-placeholder-count="3">
           <div style="display:flex;flex-direction:column;gap:8px;padding:10px 11px;border-radius:17px;background:{{ h.bg }};border:1px solid {{ h.bd }}">
             <div style="display:flex;align-items:center;gap:9px">
@@ -311,34 +377,49 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
                 <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:{{ h.a0.bg }}"><sc-if value="{{ h.a0.src }}" hint-placeholder-val="{{ true }}"><img src="{{ h.a0.src }}" alt="" style="width:90%;height:90%;object-fit:contain"></sc-if></div>
                 <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:{{ h.a1.bg }}"><sc-if value="{{ h.a1.src }}" hint-placeholder-val="{{ true }}"><img src="{{ h.a1.src }}" alt="" style="width:90%;height:90%;object-fit:contain"></sc-if></div>
               </div>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:11px;font-weight:800;color:#eafaf6;text-wrap:pretty;line-height:1.2">{{ h.pt }}</div>
-                <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:9px;font-weight:700;color:rgba(223,243,251,.4);line-height:1.2">{{ h.en }}</div></sc-if>
-              </div>
+              <div style="flex:1;min-width:0;font-size:11px;font-weight:800;color:#eafaf6;text-wrap:pretty;line-height:1.2">{{ h.label }}</div>
               <div style="flex:none;font-size:14px;font-weight:800;color:#79dcc4">{{ h.arrow }}</div>
             </div>
             <sc-if value="{{ h.clash }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;flex-direction:column;gap:7px;padding:9px 10px;border-radius:13px;background:rgba(4,18,27,.4)">
-                <div style="font-size:10.5px;font-weight:800;color:#f0a63c;text-wrap:pretty">Você fez isso 2 vezes, mas de dois jeitos diferentes.</div>
-                <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.5);text-wrap:pretty">Uma vez o peixe virou, outra vez ele ficou parado. O que você quis dizer?</div>
+                <div style="font-size:10.5px;font-weight:800;color:#f0a63c;text-wrap:pretty">
+                  <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Você fez isso 2 vezes, mas de dois jeitos diferentes.</sc-if><sc-if value="{{ isEN }}">You did this twice, but in two different ways.</sc-if>
+                </div>
+                <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.5);text-wrap:pretty">
+                  <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Uma vez o peixe virou, outra vez ele ficou parado. O que você quis dizer?</sc-if><sc-if value="{{ isEN }}">Once the fish turned, once it stayed put. Which did you mean?</sc-if>
+                </div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap">
-                  <div style="padding:6px 10px;border-radius:11px;background:rgba(240,166,60,.2);color:#f0a63c;font-size:10.5px;font-weight:800;cursor:pointer">sempre virar</div>
-                  <div style="padding:6px 10px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.6);font-size:10.5px;font-weight:800;cursor:pointer">virar com chance 50%</div>
-                  <div style="padding:6px 10px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.6);font-size:10.5px;font-weight:800;cursor:pointer">falta algo na foto</div>
+                  <div style="padding:6px 10px;border-radius:11px;background:rgba(240,166,60,.2);color:#f0a63c;font-size:10.5px;font-weight:800;cursor:pointer">
+                    <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">sempre virar</sc-if><sc-if value="{{ isEN }}">always turn</sc-if>
+                  </div>
+                  <div style="padding:6px 10px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.6);font-size:10.5px;font-weight:800;cursor:pointer">
+                    <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">virar com chance 50%</sc-if><sc-if value="{{ isEN }}">turn with 50% chance</sc-if>
+                  </div>
+                  <div style="padding:6px 10px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.6);font-size:10.5px;font-weight:800;cursor:pointer">
+                    <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">falta algo na foto</sc-if><sc-if value="{{ isEN }}">something is missing in the photo</sc-if>
+                  </div>
                 </div>
               </div>
             </sc-if>
             <div style="display:flex;gap:7px">
-              <div style="flex:1;text-align:center;padding:8px;border-radius:12px;background:rgba(168,207,76,.85);color:#12300a;font-size:11px;font-weight:800;cursor:pointer">Aceitar</div>
-              <div style="flex:none;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.5);font-size:11px;font-weight:800;cursor:pointer">Apagar detalhes ✳</div>
-              <div style="flex:none;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.5);font-size:11px;font-weight:800;cursor:pointer">Jogar fora</div>
+              <div style="flex:1;text-align:center;padding:8px;border-radius:12px;background:rgba(168,207,76,.85);color:#12300a;font-size:11px;font-weight:800;cursor:pointer">
+                <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Aceitar</sc-if><sc-if value="{{ isEN }}">Accept</sc-if>
+              </div>
+              <div style="flex:none;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.5);font-size:11px;font-weight:800;cursor:pointer">
+                <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Apagar detalhes ✳</sc-if><sc-if value="{{ isEN }}">Erase details ✳</sc-if>
+              </div>
+              <div style="flex:none;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:rgba(223,243,251,.5);font-size:11px;font-weight:800;cursor:pointer">
+                <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Jogar fora</sc-if><sc-if value="{{ isEN }}">Discard</sc-if>
+              </div>
             </div>
           </div>
         </sc-for>
       </div>
 
       <div style="border-radius:26px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:9px">
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">QUANDO NINGUÉM SABE</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">QUANDO NINGUÉM SABE</sc-if><sc-if value="{{ isEN }}">WHEN NOBODY KNOWS</sc-if>
+        </div>
         <div style="display:flex;gap:11px;align-items:center;padding:11px;border-radius:18px;background:rgba(4,18,27,.4)">
           <div style="display:grid;grid-template-columns:repeat(3,24px);gap:3px;flex:none">
             <sc-for list="{{ unknownPatch }}" as="c" hint-placeholder-count="9">
@@ -347,71 +428,88 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
               </div>
             </sc-for>
           </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:12px;font-weight:800;color:#eafaf6;text-wrap:pretty">Nunca vi isto. O que acontece aqui?</div>
-            <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">I have never seen this. What happens here?</div></sc-if>
+          <div style="flex:1;min-width:0;font-size:12px;font-weight:800;color:#eafaf6;text-wrap:pretty">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Nunca vi isto. O que acontece aqui?</sc-if><sc-if value="{{ isEN }}">I have never seen this. What happens here?</sc-if>
           </div>
         </div>
-        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">A simulação para na primeira vizinhança desconhecida e pede a regra. É assim que tabelas grandes — Langton, von Neumann — ficam construíveis: uma pergunta por vez.</div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">A simulação para na primeira vizinhança desconhecida e pede a regra. É assim que tabelas grandes — Langton, von Neumann — ficam construíveis: uma pergunta por vez.</sc-if><sc-if value="{{ isEN }}">The simulation stops at the first unknown neighbourhood and asks for the rule. That is how big tables — Langton, von Neumann — become buildable: one question at a time.</sc-if>
+        </div>
       </div>
 
       <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px;display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">⚙ MODO AVANÇADO</div>
-        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">A fita também aceita <strong style="color:#eafaf6">t−2</strong>: regras que olham dois passos atrás. Útil para Wireworld, onde a cauda do elétron é memória.</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">⚙ MODO AVANÇADO</sc-if><sc-if value="{{ isEN }}">⚙ ADVANCED MODE</sc-if>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.55);text-wrap:pretty">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">A fita também aceita <strong style="color:#eafaf6">t−2</strong>: regras que olham dois passos atrás. Útil para Wireworld, onde a cauda do elétron é memória.</sc-if><sc-if value="{{ isEN }}">The strip also accepts <strong style="color:#eafaf6">t−2</strong>: rules that look two steps back. Useful for Wireworld, where the electron tail is memory.</sc-if>
+        </div>
       </div>
     </div>
 
-    <!-- ══════════════════ 1c ══════════════════ -->
+    <!-- 1c -->
     <div id="1c" style="width:436px;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#2a1a04;background:#f0a63c;padding:3px 11px;border-radius:9px">1c</div>
-        <div>
-          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">Bancada de regras</div>
-          <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);letter-spacing:.4px">WORKBENCH · KINDS OF RULE</div></sc-if>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Bancada de regras</sc-if><sc-if value="{{ isEN }}">Rule workbench</sc-if>
         </div>
       </div>
-      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;min-height:34px">Demonstrar continua sendo o padrão. Mas a regra tem <em>tipos</em>: contar, tabela, quantidade, bloco, fita 1D, turmite. Um seletor, não um segundo editor.</div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;min-height:34px">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Demonstrar continua sendo o padrão. Mas a regra tem <em>tipos</em>: contar, tabela, quantidade, bloco, fita 1D, turmite. Um seletor, não um segundo editor.</sc-if><sc-if value="{{ isEN }}">Demonstration is still the default. But rules have <em>kinds</em>: count, table, quantity, block, 1D strip, turmite. A selector, not a second editor.</sc-if>
+      </div>
 
       <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:13px">
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">TIPO DE REGRA</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">TIPO DE REGRA</sc-if><sc-if value="{{ isEN }}">KIND OF RULE</sc-if>
+        </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px">
           <sc-for list="{{ kinds }}" as="k" hint-placeholder-count="8">
             <div style="display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:13px;cursor:pointer;background:{{ k.bg }};border:1px solid {{ k.bd }}">
               <div style="font-size:13px;line-height:1">{{ k.g }}</div>
-              <div>
-                <div style="font-size:11px;font-weight:800;color:{{ k.fg }};line-height:1.1">{{ k.pt }}</div>
-                <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:8.5px;font-weight:700;color:rgba(223,243,251,.38);line-height:1.2">{{ k.en }}</div></sc-if>
-              </div>
+              <div style="font-size:11px;font-weight:800;color:{{ k.fg }};line-height:1.1">{{ k.label }}</div>
             </div>
           </sc-for>
         </div>
 
         <div style="height:1px;background:rgba(121,220,196,.16)"></div>
 
-        <div style="display:flex;align-items:baseline;justify-content:space-between">
-          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">CONTAR · O JOGO DA VIDA EM UM CARTÃO</div>
-          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4)">B3/S23</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+            <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">CONTAR · O JOGO DA VIDA EM UM CARTÃO</sc-if><sc-if value="{{ isEN }}">COUNT · LIFE ON A SINGLE CARD</sc-if>
+          </div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);flex:none">B3/S23</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:18px;background:rgba(4,18,27,.4)">
           <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:58px;flex:none;font-size:11px;font-weight:800;color:#eafaf6">nasce</div>
+            <div style="width:64px;flex:none;font-size:11px;font-weight:800;color:#eafaf6">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">nasce</sc-if><sc-if value="{{ isEN }}">is born</sc-if>
+            </div>
             <sc-for list="{{ birth }}" as="b" hint-placeholder-count="9">
               <div style="flex:1;text-align:center;padding:7px 0;border-radius:9px;font-size:12px;font-weight:800;cursor:pointer;background:{{ b.bg }};color:{{ b.fg }};border:1px solid {{ b.bd }}">{{ b.n }}</div>
             </sc-for>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:58px;flex:none;font-size:11px;font-weight:800;color:#eafaf6">continua</div>
+            <div style="width:64px;flex:none;font-size:11px;font-weight:800;color:#eafaf6">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">continua</sc-if><sc-if value="{{ isEN }}">stays</sc-if>
+            </div>
             <sc-for list="{{ survive }}" as="b" hint-placeholder-count="9">
               <div style="flex:1;text-align:center;padding:7px 0;border-radius:9px;font-size:12px;font-weight:800;cursor:pointer;background:{{ b.bg }};color:{{ b.fg }};border:1px solid {{ b.bd }}">{{ b.n }}</div>
             </sc-for>
           </div>
           <div style="display:flex;align-items:center;gap:8px;padding-top:2px">
-            <div style="width:58px;flex:none;font-size:11px;font-weight:800;color:rgba(223,243,251,.55)">vizinhos</div>
-            <div style="flex:1;font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);text-wrap:pretty">quantos ao redor são <img src="art/cyanobacteria.svg" alt="" style="width:15px;height:15px;vertical-align:-3px;object-fit:contain"> — sem direção, sem grade 3×3</div>
+            <div style="width:64px;flex:none;font-size:11px;font-weight:800;color:rgba(223,243,251,.55)">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">vizinhos</sc-if><sc-if value="{{ isEN }}">neighbours</sc-if>
+            </div>
+            <div style="flex:1;font-size:10.5px;font-weight:700;color:rgba(223,243,251,.45);text-wrap:pretty">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">quantos ao redor são <img src="art/cyanobacteria.svg" alt="" style="width:15px;height:15px;vertical-align:-3px;object-fit:contain"> — sem direção, sem grade 3×3</sc-if><sc-if value="{{ isEN }}">how many around are <img src="art/cyanobacteria.svg" alt="" style="width:15px;height:15px;vertical-align:-3px;object-fit:contain"> — no direction, no 3×3 grid</sc-if>
+            </div>
           </div>
         </div>
 
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">QUANTIDADE · A ÁGUA QUE SE NIVELA</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">QUANTIDADE · A ÁGUA QUE SE NIVELA</sc-if><sc-if value="{{ isEN }}">QUANTITY · WATER THAT LEVELS ITSELF</sc-if>
+        </div>
         <div style="display:flex;align-items:center;gap:11px;padding:12px;border-radius:18px;background:rgba(4,18,27,.4)">
           <div style="display:flex;gap:4px;flex:none">
             <div style="width:40px;height:52px;border-radius:8px;background:rgba(60,120,220,.75);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:12px;font-weight:800;color:#fff">7</div>
@@ -421,13 +519,19 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
             </div>
             <div style="width:40px;height:52px;border-radius:8px;background:rgba(60,120,220,.22);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:12px;font-weight:800;color:#cfe6ff">2</div>
           </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:11.5px;font-weight:800;color:#eafaf6;text-wrap:pretty">Se eu tenho mais que o vizinho, passo <strong style="color:#f0a63c">1</strong> para ele.</div>
-            <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">A transfer rule on the edge between two cells. Nothing is created; the total never changes.</div></sc-if>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+            <div style="font-size:11.5px;font-weight:800;color:#eafaf6;text-wrap:pretty">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Se eu tenho mais que o vizinho, passo <strong style="color:#f0a63c">1</strong> para ele.</sc-if><sc-if value="{{ isEN }}">If I have more than my neighbour, I pass <strong style="color:#f0a63c">1</strong> along.</sc-if>
+            </div>
+            <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Uma regra de transferência na fronteira entre duas casas. Nada é criado; o total nunca muda.</sc-if><sc-if value="{{ isEN }}">A transfer rule on the edge between two cells. Nothing is created; the total never changes.</sc-if>
+            </div>
           </div>
         </div>
 
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">FITA 1D · WOLFRAM SÃO OITO CARTÕES</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">FITA 1D · WOLFRAM SÃO OITO CARTÕES</sc-if><sc-if value="{{ isEN }}">1D STRIP · WOLFRAM IS EIGHT CARDS</sc-if>
+        </div>
         <div style="display:flex;flex-direction:column;gap:9px;padding:12px;border-radius:18px;background:rgba(4,18,27,.4)">
           <div style="display:flex;gap:5px;justify-content:space-between">
             <sc-for list="{{ wolfram }}" as="w" hint-placeholder-count="8">
@@ -443,30 +547,40 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
             </sc-for>
           </div>
           <div style="display:flex;align-items:baseline;gap:7px">
-            <div style="font-size:11px;font-weight:800;color:#eafaf6">Regra</div>
-            <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:19px;color:#f0a63c;line-height:1">110</div>
-            <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">— o número é lido nos oito cartões, não digitado</div>
+            <div style="font-size:11px;font-weight:800;color:#eafaf6;flex:none">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Regra</sc-if><sc-if value="{{ isEN }}">Rule</sc-if>
+            </div>
+            <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:19px;color:#f0a63c;line-height:1;flex:none">110</div>
+            <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.42);text-wrap:pretty">
+              <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">— o número é lido nos oito cartões, não digitado</sc-if><sc-if value="{{ isEN }}">— the number is read off the eight cards, not typed</sc-if>
+            </div>
           </div>
         </div>
 
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">GALERIA · SÓ PARA VER RODAR</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">GALERIA · SÓ PARA VER RODAR</sc-if><sc-if value="{{ isEN }}">GALLERY · JUST TO WATCH IT RUN</sc-if>
+        </div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:15px;background:{{ g.bg }};border:1px solid {{ g.bd }}">
               <div style="font-size:9px;font-weight:800;padding:3px 6px;border-radius:7px;background:rgba(255,255,255,.06);color:rgba(223,243,251,.5);flex:none">{{ g.states }}</div>
               <div style="flex:1;min-width:0">
                 <div style="font-size:11.5px;font-weight:800;color:#eafaf6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.name }}</div>
-                <sc-if value="{{ showEnglish }}" hint-placeholder-val="{{ true }}"><div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.note }}</div></sc-if>
+                <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.noteLabel }}</div>
               </div>
-              <div style="flex:none;font-size:9.5px;font-weight:800;color:{{ g.tagFg }}">{{ g.tag }}</div>
+              <div style="flex:none;font-size:9.5px;font-weight:800;color:{{ g.tagFg }}">{{ g.tagLabel }}</div>
             </div>
           </sc-for>
         </div>
       </div>
 
       <div style="border-radius:22px;background:rgba(121,220,196,.07);border:1px dashed rgba(121,220,196,.35);padding:13px;display:flex;flex-direction:column;gap:8px">
-        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">POR QUE ISTO ESCALA</div>
-        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.58);text-wrap:pretty">Cada tipo é um cartão novo na mesma lista ordenada, com a mesma chance %. A criança nunca troca de editor — ela ganha vocabulário. E as regras impossíveis de escrever (von Neumann) ficam na galeria, para ler.</div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">POR QUE ISTO ESCALA</sc-if><sc-if value="{{ isEN }}">WHY THIS SCALES</sc-if>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.58);text-wrap:pretty">
+          <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Cada tipo é um cartão novo na mesma lista ordenada, com a mesma chance %. A criança nunca troca de editor — ela ganha vocabulário. E as regras impossíveis de escrever (von Neumann) ficam na galeria, para ler.</sc-if><sc-if value="{{ isEN }}">Each kind is a new card in the same ordered list, with the same % chance. The child never switches editor — she gains vocabulary. And the rules impossible to write by hand (von Neumann) stay in the gallery, to read.</sc-if>
+        </div>
       </div>
     </div>
 
@@ -474,19 +588,27 @@ a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
 
   <div style="display:flex;gap:14px;flex-wrap:wrap;padding-top:6px">
     <div style="flex:1;min-width:300px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:15px">
-      <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4;margin-bottom:7px">A DECIDIR</div>
-      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.6);text-wrap:pretty">Todos os três resolvem direção com <strong style="color:#eafaf6">uma seta por regra</strong> e mantêm a grade 3×3 como escotilha avançada. A diferença real é <em>quando</em> a criança grava: no ato (<a href="#1a">1a</a>), depois no tempo (<a href="#1b">1b</a>), ou numa bancada com tipos (<a href="#1c">1c</a>). <a href="#1c">1c</a> é o único que responde Life / Wolfram / água — mas pode ser a camada avançada de <a href="#1a">1a</a>, não um rival.</div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4;margin-bottom:7px">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">A DECIDIR</sc-if><sc-if value="{{ isEN }}">TO DECIDE</sc-if>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.6);text-wrap:pretty">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Todos os três resolvem direção com <strong style="color:#eafaf6">uma seta por regra</strong> e mantêm a grade 3×3 como escotilha avançada. A diferença real é <em>quando</em> a criança grava: no ato (<a href="#1a">1a</a>), depois no tempo (<a href="#1b">1b</a>), ou numa bancada com tipos (<a href="#1c">1c</a>). <a href="#1c">1c</a> é o único que responde Life / Wolfram / água — mas pode ser a camada avançada de <a href="#1a">1a</a>, não um rival.</sc-if><sc-if value="{{ isEN }}">All three solve direction with <strong style="color:#eafaf6">one arrow per rule</strong> and keep the 3×3 grid as an advanced hatch. The real difference is <em>when</em> the child records: in the act (<a href="#1a">1a</a>), later in time (<a href="#1b">1b</a>), or at a workbench with kinds (<a href="#1c">1c</a>). <a href="#1c">1c</a> is the only one that answers Life / Wolfram / water — but it could be the advanced layer of <a href="#1a">1a</a>, not a rival.</sc-if>
+      </div>
     </div>
     <div style="flex:1;min-width:300px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:15px">
-      <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c;margin-bottom:7px">AINDA EM ABERTO</div>
-      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.6);text-wrap:pretty">Bloco/Margolus e turmite aparecem no seletor de <a href="#1c">1c</a> mas não têm superfície desenhada. O núcleo/curva (difusão) também não — provavelmente pertence ao professor, não à criança.</div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c;margin-bottom:7px">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">AINDA EM ABERTO</sc-if><sc-if value="{{ isEN }}">STILL OPEN</sc-if>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.6);text-wrap:pretty">
+        <sc-if value="{{ isPT }}" hint-placeholder-val="{{ true }}">Bloco/Margolus e turmite aparecem no seletor de <a href="#1c">1c</a> mas não têm superfície desenhada. O núcleo/curva (difusão) também não — provavelmente pertence ao professor, não à criança.</sc-if><sc-if value="{{ isEN }}">Block/Margolus and turmite appear in the <a href="#1c">1c</a> selector but have no surface drawn yet. Neither does the kernel/curve (diffusion) — it probably belongs to the teacher, not the child.</sc-if>
+      </div>
     </div>
   </div>
 
 </section>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;showEnglish&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Idioma&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#79dcc4&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#79dcc4&quot;,&quot;#f0a63c&quot;,&quot;#a8cf4c&quot;],&quot;section&quot;:&quot;Aparência&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;pt&quot;,&quot;options&quot;:[&quot;pt&quot;,&quot;en&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Idioma&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#79dcc4&quot;,&quot;options&quot;:[&quot;#79dcc4&quot;,&quot;#f0a63c&quot;,&quot;#a8cf4c&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Aparência&quot;}}">
 const W = 'rgba(150,215,240,.14)', SAND = 'rgba(226,199,140,.5)';
 const T = { a1:'#79dcc4', a2:'#f0a63c', a3:'#a8cf4c', ink:'#eafaf6',
   soft:'rgba(223,243,251,.55)', line:'rgba(121,220,196,.16)',
@@ -504,8 +626,12 @@ const cell = (kind) => {
 };
 
 class Component extends DCLogic {
+  state = { lang: null };
+
   renderVals() {
-    const showEnglish = this.props.showEnglish ?? true;
+    const lang = this.state.lang || this.props.lang || 'pt';
+    const isEN = lang === 'en', isPT = !isEN;
+    const pick = (pt, en) => isEN ? en : pt;
     const accent = this.props.accent ?? T.a1;
 
     // ---- 1a live stage: 9x7 aquarium, fish mid-left, recording ring on the pair
@@ -522,8 +648,7 @@ class Component extends DCLogic {
     rows.forEach((row, y) => row.split('').forEach((ch, x) => {
       const c = cell(ch);
       const ringed = (y === 3 && (x === 3 || x === 4));
-      stageCells.push({ bg:c.bg, src:c.src,
-        ring: ringed ? '2px solid ' + T.a2 : 'none' });
+      stageCells.push({ bg:c.bg, src:c.src, ring: ringed ? '2px solid ' + T.a2 : 'none' });
     }));
 
     const patch = (spec) => spec.map(ch => {
@@ -542,7 +667,7 @@ class Component extends DCLogic {
       { pt:'alga se divide',       en:'algae divides',     b:['a','.'], a:['a','a'], arrow:'✳', prob:8 }
     ];
     const ruleList = RULES.map((r, i) => ({
-      n:i+1, pt:r.pt, en:r.en, arrow:r.arrow, prob:r.prob,
+      n:i+1, label:pick(r.pt, r.en), arrow:r.arrow, prob:r.prob,
       b0:pair(r.b[0]), b1:pair(r.b[1]), a0:pair(r.a[0]), a1:pair(r.a[1])
     }));
 
@@ -552,7 +677,8 @@ class Component extends DCLogic {
       ['●','tocar e pintar','tap and paint','torna-se','becomes', false],
       ['⌫','apagar','erase','morre','dies', false]
     ];
-    const gestures = GEST.map(([g, pt, en, out, outEn, on]) => ({ g, pt, en, out, outEn,
+    const gestures = GEST.map(([g, pt, en, out, outEn, on]) => ({ g,
+      label:pick(pt, en), outLabel:pick(out, outEn),
       bg: on ? 'rgba(240,166,60,.14)' : T.panel2,
       bd: on ? 'rgba(240,166,60,.45)' : T.line,
       fg: on ? T.a2 : T.ink }));
@@ -561,11 +687,18 @@ class Component extends DCLogic {
     const dupA = [pair('a'), pair('a')];
 
     const SRC = [
-      ['🎭','eu sou o motor','I am the engine','eu mexo tudo com a mão, passo a passo — a fita grava o que eu fiz', true],
-      ['▶','o mundo rodando','the world running','as regras que já existem produzem os momentos', false],
-      ['📼','mundo de exemplo','shipped example','uma fita já gravada, para ler a regra de outra pessoa', false]
+      ['🎭','eu sou o motor','I am the engine',
+        'eu mexo tudo com a mão, passo a passo — a fita grava o que eu fiz',
+        'I move everything by hand, step by step — the strip records what I did', true],
+      ['▶','o mundo rodando','the world running',
+        'as regras que já existem produzem os momentos',
+        'the rules that already exist produce the moments', false],
+      ['📼','mundo de exemplo','shipped example',
+        'uma fita já gravada, para ler a regra de outra pessoa',
+        'a strip already recorded, to read someone else\u2019s rule', false]
     ];
-    const sources = SRC.map(([g, pt, en, note, on]) => ({ g, pt, en, note,
+    const sources = SRC.map(([g, pt, en, note, noteEn, on]) => ({ g,
+      label:pick(pt, en), noteLabel:pick(note, noteEn),
       bg: on ? 'rgba(168,207,76,.13)' : T.panel2,
       bd: on ? 'rgba(168,207,76,.45)' : T.line,
       fg: on ? T.a3 : T.ink }));
@@ -576,15 +709,14 @@ class Component extends DCLogic {
       bg: ON.indexOf(i) >= 0 ? accent : T.panel,
       fg: ON.indexOf(i) >= 0 ? '#07303a' : T.soft }));
 
-    // ---- 1b filmstrip: 4x4 patch over 5 moments, fish drifting right
+    // ---- 1b filmstrip: 4x4 patch over 4 moments, fish drifting right
     const frames = [0,1,2,3].map(i => {
       const sel = (i === 2 || i === 3);
-      const fx = i;
       const cells = [];
       for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
         let ch = '.';
         if (y === 3) ch = 's';
-        else if (y === 1 && x === fx) ch = 'f';
+        else if (y === 1 && x === i) ch = 'f';
         else if (y === 2 && x === 3) ch = 'p';
         cells.push(cell(ch));
       }
@@ -593,16 +725,10 @@ class Component extends DCLogic {
         fg: sel ? T.a3 : 'rgba(223,243,251,.35)' };
     });
 
-    // ---- 1b puppet table: the child IS the engine, step 4 in progress
-    const pRows = [
-      '......',
-      '..a...',
-      '.f....',
-      '....p.',
-      'ssssss'
-    ];
-    const GHOST = [{y:2,x:0}];          // where the fish was on step 3
-    const TOUCHED = [{y:2,x:1},{y:1,x:2}]; // edited this step
+    // ---- 1b engine table: the child IS the engine, step 4 in progress
+    const pRows = ['......','..a...','.f....','....p.','ssssss'];
+    const GHOST = [{y:2,x:0}];
+    const TOUCHED = [{y:2,x:1},{y:1,x:2}];
     const engineCells = [];
     pRows.forEach((row, y) => row.split('').forEach((ch, x) => {
       const c = cell(ch);
@@ -629,7 +755,6 @@ class Component extends DCLogic {
 
     const unknownPatch = patch(['.','a','.', 'a','f','a', '.','a','.']);
 
-    // ---- 1b harvest: rules induced from the puppet session
     const HARV = [
       { pt:'peixe anda pra frente', en:'fish moves ahead', b:['f','.'], a:['.','f'],
         times:5, arrow:'→', status:'ok' },
@@ -639,7 +764,7 @@ class Component extends DCLogic {
         times:2, arrow:'→', status:'clash' }
     ];
     const harvest = HARV.map((r, i) => ({
-      n:i+1, pt:r.pt, en:r.en, times:r.times, arrow:r.arrow,
+      n:i+1, label:pick(r.pt, r.en), times:r.times, arrow:r.arrow,
       b0:pair(r.b[0]), b1:pair(r.b[1]), a0:pair(r.a[0]), a1:pair(r.a[1]),
       clash: r.status === 'clash',
       bg: r.status === 'clash' ? 'rgba(240,166,60,.1)' : T.panel,
@@ -654,12 +779,12 @@ class Component extends DCLogic {
       ['🔢','contar','count', true],
       ['▦','tabela aberta','open table', false],
       ['💧','quantidade','quantity', false],
-      ['⬒','bloco 2×2','block', false],
+      ['⬒','bloco 2×2','2×2 block', false],
       ['▬','fita 1D','1D strip', false],
       ['🐜','turmite','turmite', false],
       ['🖼','galeria','gallery', false]
     ];
-    const kinds = KINDS.map(([g, pt, en, on]) => ({ g, pt, en,
+    const kinds = KINDS.map(([g, pt, en, on]) => ({ g, label:pick(pt, en),
       bg: on ? 'rgba(240,166,60,.16)' : T.panel,
       bd: on ? 'rgba(240,166,60,.5)' : T.line,
       fg: on ? T.a2 : T.ink }));
@@ -682,20 +807,37 @@ class Component extends DCLogic {
     });
 
     const GAL = [
-      ['Wireworld', 'counting: 1 or 2 electron heads', '4', 'editável', T.a3],
-      ['Laço de Langton', 'self-reproducing loop, 219 entries', '8', 'tabela aberta', T.a2],
-      ['Formiga de Langton', 'turmite: write, turn, repeat', '2', 'editável', T.a3],
-      ['Autômato de von Neumann', 'directed excitable states', '29', 'só leitura', T.soft]
+      ['Wireworld', 'Wireworld',
+       'contando: 1 ou 2 cabeças de elétron', 'counting: 1 or 2 electron heads',
+       '4', 'editável', 'editable', T.a3],
+      ['Laço de Langton', 'Langton\u2019s Loop',
+       'laço que se reproduz, 219 entradas', 'self-reproducing loop, 219 entries',
+       '8', 'tabela aberta', 'open table', T.a2],
+      ['Formiga de Langton', 'Langton\u2019s Ant',
+       'turmite: escreve, vira, repete', 'turmite: write, turn, repeat',
+       '2', 'editável', 'editable', T.a3],
+      ['Autômato de von Neumann', 'von Neumann automaton',
+       'estados excitáveis com direção', 'directed excitable states',
+       '29', 'só leitura', 'read only', T.soft]
     ];
-    const gallery = GAL.map(([name, note, states, tag, tagFg]) => ({
-      name, note, states, tag, tagFg,
+    const gallery = GAL.map(([pt, en, note, noteEn, states, tag, tagEn, tagFg]) => ({
+      name:pick(pt, en), noteLabel:pick(note, noteEn), states,
+      tagLabel:pick(tag, tagEn), tagFg,
       bg: tag === 'só leitura' ? T.panel2 : T.panel,
       bd: tag === 'só leitura' ? T.line : 'rgba(121,220,196,.28)'
     }));
 
-    return { showEnglish, stageCells, beforePatch, afterPatch, ruleList, dirDial,
+    const onBg = accent, onFg = '#07303a', offBg = 'transparent', offFg = 'rgba(223,243,251,.5)';
+
+    return { isPT, isEN,
+      setPT: () => this.setState({ lang:'pt' }),
+      setEN: () => this.setState({ lang:'en' }),
+      ptBg: isPT ? onBg : offBg, ptFg: isPT ? onFg : offFg,
+      enBg: isEN ? onBg : offBg, enFg: isEN ? onFg : offFg,
+      stageCells, beforePatch, afterPatch, ruleList, dirDial,
       gestures, dupB0:dupB[0], dupB1:dupB[1], dupA0:dupA[0], dupA1:dupA[1], sources,
-      frames, maskCells, unknownPatch, harvest, kinds, engineCells, stepChips, birth, survive, wolfram, gallery };
+      frames, maskCells, unknownPatch, harvest, kinds, engineCells, stepChips,
+      birth, survive, wolfram, gallery };
   }
 }
 
