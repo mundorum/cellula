@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#081419;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
+</style>
+</helmet>
+
+<section style="max-width:1000px;margin:0 auto;padding:34px 28px 54px;display:flex;flex-direction:column;gap:22px">
+
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:32px;color:#eafaf6;line-height:1.05">Sete versões da página de explorações</div>
+    <div style="font-size:13.5px;font-weight:600;color:rgba(223,243,251,.58);text-wrap:pretty;max-width:72ch">Um arquivo por turno, cada um abrindo como página completa. São <strong style="color:#eafaf6">reconstruções</strong> a partir da nossa trilha de decisões — o código antigo não é recuperável daqui, então o que cada arquivo reproduz é o estado do <em>design</em> naquele turno, não o markup exato.</div>
+    <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.45);text-wrap:pretty;max-width:72ch">Ficaram na raiz do projeto, não numa pasta: dentro de uma subpasta os arquivos perdem o runtime e os caminhos de <code>art/</code>.</div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:9px">
+    <sc-for list="{{ versions }}" as="v" hint-placeholder-count="7">
+      <a href="{{ v.href }}" style="display:flex;align-items:center;gap:15px;padding:15px 16px;border-radius:20px;background:{{ v.bg }};border:1px solid {{ v.bd }}" style-hover="background:rgba(121,220,196,.1)">
+        <div style="flex:none;width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:17px;background:{{ v.chipBg }};color:{{ v.chipFg }}">{{ v.tag }}</div>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;color:#eafaf6;line-height:1.15">{{ v.title }}</div>
+          <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.5);text-wrap:pretty">{{ v.note }}</div>
+        </div>
+        <div style="flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:.8px;color:{{ v.whoFg }}">{{ v.who }}</div>
+          <div style="font-size:15px;font-weight:800;color:#79dcc4">→</div>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;gap:14px;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px;border-radius:22px;background:rgba(121,220,196,.07);border:1px dashed rgba(121,220,196,.35);padding:16px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">COMO LER A SÉRIE</div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.62);text-wrap:pretty;line-height:1.5">De v1 a v7 a página não cresce só em conteúdo: ela vai tirando suposições. v1 exige nove casas por regra; v2 troca isso por uma seta; v4 para de supor que a fita existe; v7 para de supor que duas línguas cabem no mesmo espaço. O raciocínio de cada passo está em <a href="Cellula Rules Timeline.dc.html">Cellula Rules Timeline</a>.</div>
+    </div>
+    <div style="flex:1;min-width:280px;border-radius:22px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:16px;display:flex;flex-direction:column;gap:8px">
+      <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">FIDELIDADE</div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.62);text-wrap:pretty;line-height:1.5">v5, v6 e v7 são fiéis: as diferenças eram de texto e de idioma, e eu as desfiz exatamente. v1 a v4 são honestas no que havia e no que faltava, mas o detalhe visual dos blocos removidos é reconstruído — não confie neles para medir pixels.</div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1000}}">
+const T = { a1:'#79dcc4', a2:'#f0a63c', a3:'#a8cf4c', line:'rgba(121,220,196,.16)',
+  panel:'rgba(255,255,255,.045)' };
+
+class Component extends DCLogic {
+  renderVals() {
+    const V = [
+      ['v1', 'Três editores candidatos', 'Cellula Rules v1 - tres editores.dc.html',
+       'A vizinhança 3×3 é a superfície primária; arrastar é o único gesto.', 'você pediu'],
+      ['v2', 'Uma seta por regra', 'Cellula Rules v2 - uma seta por regra.dc.html',
+       'Direção vira uma seta gravada com o gesto; a grade 3×3 desce para o modo avançado.', 'eu propus'],
+      ['v3', 'Quatro gestos', 'Cellula Rules v3 - quatro gestos.dc.html',
+       'Arrastar, arrastar uma cópia, pintar, apagar — com a mãe visível nos dois quadros.', 'você levantou'],
+      ['v4', 'Mesa do motor', 'Cellula Rules v4 - mesa do motor.dc.html',
+       'A criança fabrica o tempo à mão: cada “Pronto” fotografa o mundo e acrescenta um quadro.', 'você achou o furo'],
+      ['v5', 'Colheita e conflito', 'Cellula Rules v5 - colheita e conflito.dc.html',
+       'A fita propõe regras candidatas; a contradição ganha três respostas honestas.', 'eu, do seu furo'],
+      ['v6', 'Voz pt-BR', 'Cellula Rules v6 - voz pt-BR.dc.html',
+       'Gerúndio, “salvar”, “em uma” — e as regras fixadas no CLAUDE.md.', 'você corrigiu'],
+      ['v7', 'Um idioma por vez', 'Cellula Rules v7 - um idioma por vez.dc.html',
+       'A linha dupla sai; prop lang (pt/en) e toggle no cabeçalho. Estado atual.', 'você levantou']
+    ];
+    const versions = V.map(([tag, title, href, note, who], i) => {
+      const last = i === V.length - 1;
+      const mine = who.indexOf('eu') === 0;
+      return { tag, title, href, note, who,
+        bg: last ? 'rgba(121,220,196,.09)' : T.panel,
+        bd: last ? 'rgba(121,220,196,.4)' : T.line,
+        chipBg: last ? T.a1 : (mine ? 'rgba(240,166,60,.16)' : 'rgba(168,207,76,.16)'),
+        chipFg: last ? '#07303a' : (mine ? T.a2 : T.a3),
+        whoFg: mine ? T.a2 : T.a3 };
+    });
+    return { versions };
+  }
+}
+
+</script>
+</body>
+</html>
