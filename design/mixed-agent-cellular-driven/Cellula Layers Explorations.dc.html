@@ -221,11 +221,12 @@ const COPY = {
     l2Live:'DUAS CÂMARAS', l2Canvas:'Duas câmaras separadas por uma membrana com poros',
     l2Hint:'As barras mostram quanto de cada tipo está à esquerda e à direita. Mude quem passa e veja qual barra chega ao meio.',
     l2Found:'A membrana não precisa de um modelo próprio. Ela é um tipo de terreno com uma lista de quem passa, lida pelo modelo de movimento. A mesma lista vai servir para as camadas de números.',
-    sceneKicker:'CENA', scSed:'Sedimento', scCloud:'Nuvem', scVolt:'Voltagem',
+    sceneKicker:'CENA', scSed:'Sedimento', scCloud:'Nuvem', scVolt:'Voltagem', scClus:'Grupos',
     txSed:'O chão puxa todas para baixo e a agitação espalha para cima. O resultado é uma camada densa no fundo e rala no alto.',
     txCloud:'Uma carga fixa no centro atrai as negativas, que se repelem entre si. A agitação decide o tamanho da nuvem.',
     txVolt:'Só as positivas passam pela membrana. Elas se espalham para a direita, mas as negativas que ficaram as puxam de volta.',
-    prSed:'altura média: {a} casas acima do fundo', prCloud:'raio da nuvem: {a} casas', prVolt:'positivas à direita: {a} de {b}',
+    prSed:'altura média: {a} casas acima do fundo', prCloud:'raio da nuvem: {a} casas', prVolt:'positivas à direita: {a} de {b}', prClus:'grupos: {a} · o maior tem {b} de 60',
+    txClus:'Todas se atraem e a agitação espalha. Com força fraca ficam por igual; passando de um ponto, elas se juntam de repente em grupos.',
     l3Canvas:'Partículas sob força e agitação ao mesmo tempo',
     layersKicker:'CAMADAS À VISTA', eyeP:'partículas', eyeF:'campo', eyeC:'concentração',
     pull:'FORÇA', l3Hint:'Ponha a força em zero e a agitação vence: tudo se iguala. Ponha a agitação em zero e a força vence.',
@@ -254,11 +255,12 @@ const COPY = {
     l2Live:'TWO CHAMBERS', l2Canvas:'Two chambers separated by a membrane with pores',
     l2Hint:'The bars show how much of each kind is on the left and on the right. Change who passes and see which bar reaches the middle.',
     l2Found:'The membrane needs no model of its own. It is a kind of terrain with a list of who passes, read by the motion model. The same list will serve the number layers.',
-    sceneKicker:'SCENE', scSed:'Sediment', scCloud:'Cloud', scVolt:'Voltage',
+    sceneKicker:'SCENE', scSed:'Sediment', scCloud:'Cloud', scVolt:'Voltage', scClus:'Clusters',
     txSed:'The floor pulls everything down and the jiggle spreads it up. The result is a layer that is dense at the bottom and thin on top.',
     txCloud:'A fixed charge in the centre attracts the negatives, which repel each other. The jiggle decides how big the cloud is.',
     txVolt:'Only positives pass the membrane. They spread to the right, but the negatives left behind pull them back.',
-    prSed:'mean height: {a} cells above the floor', prCloud:'cloud radius: {a} cells', prVolt:'positives on the right: {a} of {b}',
+    prSed:'mean height: {a} cells above the floor', prCloud:'cloud radius: {a} cells', prVolt:'positives on the right: {a} of {b}', prClus:'clusters: {a} · the biggest has {b} of 60',
+    txClus:'Everything attracts and the jiggle spreads. With a weak force they stay even; past a point, they suddenly gather into clusters.',
     l3Canvas:'Particles under force and jiggle at the same time',
     layersKicker:'LAYERS IN VIEW', eyeP:'particles', eyeF:'field', eyeC:'concentration',
     pull:'STRENGTH', l3Hint:'Set strength to zero and the jiggle wins: everything evens out. Set jiggle to zero and the force wins.',
@@ -319,7 +321,7 @@ function stepWorld(W,o){
   var sig=0.5*o.temp, keep=1-o.drag, S=0.15*o.s;
   for(i=0;i<order.length;i++){ p=order[i];
     var fx=0, fy=o.g||0;                                   // weight
-    if(useF&&p.q){ var g=gradCell(F,p.x,p.y), g2=gradCell(p.self,p.x,p.y), c=p.q>0?-1:1;
+    if(useF&&p.q){ var g=gradCell(F,p.x,p.y), g2=gradCell(p.self,p.x,p.y), c=o.all?1:(p.q>0?-1:1);
       fx+=c*S*(g[0]-g2[0]); fy+=c*S*(g[1]-g2[1]); }        // forces
     fx+=(Math.random()*2-1)*sig; fy+=(Math.random()*2-1)*sig; // jiggle
     p.vx=Math.max(-0.9,Math.min(0.9,(p.vx+fx)*keep));
@@ -462,6 +464,8 @@ class Component extends DCLogic {
     } else if(scene==='cloud'){
       W.fixed.push({x:MID,y:10,q:22}); W.T[10*G_W+MID]=WALL;
       while(n<22){ if(addP(W,Math.floor(Math.random()*G_W),Math.floor(Math.random()*M_H),'neg',-1)) n++; }
+    } else if(scene==='clus'){
+      while(n<60){ if(addP(W,Math.floor(Math.random()*G_W),Math.floor(Math.random()*M_H),'m',1)) n++; }
     } else {
       this.wallColumn(W,5,MID);
       while(n<20){ if(addP(W,Math.floor(Math.random()*MID),Math.floor(Math.random()*M_H),'pos',1)) n++; }
@@ -471,7 +475,7 @@ class Component extends DCLogic {
   }
   mixOpts(){
     var s=this.state, sc=s.scene, st=s.strength/100;
-    return {temp:s.temp/100, drag:s.drag/100, s:sc==='sed'?0:st, range:6,
+    return {temp:s.temp/100, drag:s.drag/100, s:sc==='sed'?0:(sc==='clus'?0.4*st:st), range:sc==='clus'?4:6, all:sc==='clus',
       g:sc==='sed'?0.012*st:0, pass:{pos:true,neg:false}};
   }
   probes3(){
@@ -479,6 +483,16 @@ class Component extends DCLogic {
     if(sc==='sed'){ for(i=0;i<P.length;i++) sum+=(M_H-1-P[i].y); return [(sum/Math.max(1,P.length)).toFixed(1),'']; }
     if(sc==='cloud'){ for(i=0;i<P.length;i++){ var dx=P[i].x-MID, dy=P[i].y-10; sum+=Math.sqrt(dx*dx+dy*dy); }
       return [(sum/Math.max(1,P.length)).toFixed(1),'']; }
+    if(sc==='clus'){ // groups of 3 or more touching particles
+      var at={}, seen={}, cnt=0, big=0;
+      for(i=0;i<P.length;i++) at[P[i].x+','+P[i].y]=1;
+      for(i=0;i<P.length;i++){ var k=P[i].x+','+P[i].y; if(seen[k]) continue;
+        var st=[[P[i].x,P[i].y]], sz=0; seen[k]=1;
+        while(st.length){ var c=st.pop(); sz++;
+          for(var ey=-1;ey<=1;ey++) for(var ex=-1;ex<=1;ex++){ var q=(c[0]+ex)+','+(c[1]+ey);
+            if(at[q]&&!seen[q]){ seen[q]=1; st.push([c[0]+ex,c[1]+ey]); } } }
+        if(sz>=3) cnt++; if(sz>big) big=sz; }
+      return [String(cnt),String(big)]; }
     for(i=0;i<P.length;i++) if(P[i].kind==='pos'){ n++; if(P[i].x>MID) sum++; }
     return [String(sum),String(n)];
   }
@@ -555,11 +569,11 @@ class Component extends DCLogic {
       fill:{width:(l+r?Math.round(l/(l+r)*100):0)+'%', height:'100%', background:color, borderRadius:'99px', transition:'width .3s'}});
     v.sideBars=[bar(L.kA,s.aL,s.aR,A2), bar(L.kB,s.bL,s.bR,A3)];
 
-    v.sceneTabs=[['sed',L.scSed],['cloud',L.scCloud],['volt',L.scVolt]].map((d)=>(
+    v.sceneTabs=[['sed',L.scSed],['cloud',L.scCloud],['volt',L.scVolt],['clus',L.scClus]].map((d)=>(
       {label:d[1], on:s.scene===d[0], style:seg(s.scene===d[0],A2,40),
        onTap:()=>{ if(s.scene===d[0]) return; this.seedMix(d[0]); this.setState({scene:d[0]}); }}));
-    v.sceneText=s.scene==='sed'?L.txSed:(s.scene==='cloud'?L.txCloud:L.txVolt);
-    v.probe3=(s.scene==='sed'?L.prSed:(s.scene==='cloud'?L.prCloud:L.prVolt)).replace('{a}',s.pa).replace('{b}',s.pb);
+    v.sceneText=s.scene==='sed'?L.txSed:(s.scene==='cloud'?L.txCloud:(s.scene==='clus'?L.txClus:L.txVolt));
+    v.probe3=(s.scene==='sed'?L.prSed:(s.scene==='cloud'?L.prCloud:(s.scene==='clus'?L.prClus:L.prVolt))).replace('{a}',s.pa).replace('{b}',s.pb);
 
     v.eyes=[['eyeP',L.eyeP],['eyeF',L.eyeF],['eyeC',L.eyeC]].map((d)=>(
       {label:d[1], on:s[d[0]], mark:s[d[0]]?'●':'○', onTap:()=>this.setState({[d[0]]:!s[d[0]]}), style:chip(s[d[0]])}));

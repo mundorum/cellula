@@ -80,3 +80,112 @@ harena-lab/dcc, bilingual PT+EN voice, rule-card editor) on this project's skin 
 - Block programs currently drive the sandbox; the continuous Stage sim still runs its
   built-in primitives — unifying the two is the next substantive step.
 - Comic-strip rule editor (`1b`) and priority ladder (`1c`) remain unbuilt alternatives.
+
+## v0.6 — as regras de transição entram no app
+**File:** `Cellula v4.dc.html` (v3 kept)
+
+A superfície de regras de `Cellula Rules Explorations` foi incorporada à Oficina, no modo
+CÉLULAS, como duas abas em vez de um editor novo — tudo desenhado com os tokens de `SKINS`,
+então pond / lab / meadow / slide continuam valendo sem exceção.
+
+1. **Gravar (era 1a).** O cartão "ensinar uma regra" virou gravador: quatro gestos
+   (arrastar · arrastar cópia · pintar · apagar) e o *depois* é **calculado** do antes pelo gesto
+   escolhido — duplicar mantém a mãe na casa de origem, apagar esvazia, pintar usa o pincel atual.
+   A seta de direção e o salvar continuam os mesmos, então a regra colhida entra na mesma lista
+   ordenada com a mesma chance %.
+2. **Fita (era 1b).** Nova: `this.frames` guarda uma fotografia da grade inteira por passo
+   (máx. 6). O botão **Pronto — próximo passo** é a mesa do motor: a criança aciona o tempo à mão,
+   cada toque fotografa o mundo e acrescenta um quadro. Tocar num quadro escolhe o par t_n → t_n+1.
+   A **colheita** difere as duas fotos em regras candidatas de par, conta repetições e marca
+   contradição (mesmo antes + mesma direção, dois depois diferentes) com as respostas
+   "sempre assim" / "com chance 50%". Aceitar grava na lista; jogar fora esconde o candidato.
+3. **Gating pela escada de presets.** `f.strip` só existe em *misto* e *bancada livre*: no
+   capítulo 1 a Oficina mostra apenas Gravar, sem abas. A criança ganha a fita quando já tem
+   motivo para ela.
+
+O diff da colheita foi o trabalho real: dois passos (movimento lido só da casa de origem, para
+não reportar o mesmo evento espelhado; depois mudanças no lugar, emparelhadas com um vizinho que
+*não* mudou) para que dois eventos simultâneos não se misturem numa regra confusa.
+
+Dois consertos depois da revisão: os quadros da fita passaram de 46px (células de 2,5px,
+instantes indistinguíveis) para 96px com rolagem horizontal e **contorno lima nas casas que
+mudaram** em relação ao quadro anterior — é o contorno da Mesa do motor, que faltava; e a colheita
+não aceita mais um antes com as duas casas vazias: esse candidato casaria em qualquer lugar do
+aquário, então vira a terceira resposta honesta ("falta algo na foto") em vez de um Aceitar.
+
+Terceira rodada, depois de o usuário notar que só os gestos tinham atravessado: o editor ganhou
+**mundo** nas duas abas. Em **Gravar**, o aquário inteiro aparece dentro do cartão de regra —
+tocar numa casa escolhe o par (ela e a vizinha na direção da seta, ambas com o anel âmbar) e o
+gesto calcula o depois; abaixo, os dois recortes **3×3 antes/depois** com ✳ nas casas que não
+importam. Em **Fita**, a mesa do motor virou o aquário editável de verdade: pincéis, contorno lima
+nas casas tocadas desde a última foto, e a foto anterior aparecendo esmaecida por baixo do que
+mudou. A fita também foi destravada no preset `ca` — o capítulo 1, que é puro células, era
+justamente onde colher do tempo jogado faz mais sentido. Navegação mantida como estava, a pedido.
+
+### Open / next
+- **Tipos de regra (1c)** ficou fora: contar (B/S), quantidade, fita 1D e turmite exigem um
+  segundo caminho no motor, que hoje só sabe trocar pares. É o próximo passo substantivo.
+- A gravação em 1a ainda acontece num par de células, não arrastando o peixe no aquário da tela
+  Mundo — o gesto é escolhido por botão. Ligar o gesto ao arraste real é a melhoria óbvia.
+- `Cellula Rules Timeline` e `Cellula Rules Versions` registram de onde essas decisões vieram.
+
+## v0.7 — forças: a fundação antes do modelo
+**File:** `Cellula Forces Explorations.dc.html` (v4 intocado)
+
+Revisão da v4: o motor está fechado em seis pontos (célula = um caractere, uma só forma de regra,
+uma só política de atualização, dois motores escolhidos por `mode`, objetivos dentro do motor,
+grade fixa). Fundação combinada, no mesmo gesto que `SKINS` fez para os temas:
+
+- **Tipos com propriedades** (`{kind, heading, charge, mass, vx, vy}`) no lugar de caracteres.
+- **Camadas**: a de símbolos de hoje mais camadas de números (o campo). O mundo é dono do tamanho e da borda.
+- **Modelos como entradas de registro**: cada um declara o que precisa, seus botões, política de
+  atualização, rostos (células / agentes), cartão, lentes, medidas e eventos. O motor só percorre a lista.
+- **Medidas e eventos**: objetivos e gráficos leem deles, não de bandeiras no motor.
+
+Decisões do usuário: lei como cartão de três botões (força, alcance, sinal); opção direta 1/r² no
+rosto AGENTE para elipses de verdade; 2D com grade maior nas cenas de força; explorações primeiro.
+
+A página de explorações traz três peças vivas, todas obedecendo ao mesmo cartão:
+**F1 cartão de lei** (na lista de leis, com o rosto CÉLULAS agindo), **F2 lente de campo**
+(calor, setas, passos de campo por ciclo) e **F3 gesto de lançar** (tocar, puxar, soltar; caminho
+previsto pontilhado; pelo campo ⇄ direto 1/r²; contadores de órbita, fuga e captura).
+
+Achado ao construir: um corpo não pode sentir o próprio campo. Com o campo atrasado, o rastro do
+corpo o freava e a órbita caía. Cada fonte guarda o seu campo e o motor desconta — entra no
+contrato do modelo.
+
+### Open / next
+- Atrito: hoje fixo (a água freia). Quarto botão do cartão ou propriedade do mundo?
+- Portar a v4 para o registro (regras de par e cérebro como as duas primeiras entradas) e só então
+  acrescentar o capítulo de forças.
+- Os tipos de regra (1c) da v0.6 entram pela mesma porta: são modelos novos, não um segundo motor.
+
+## v0.8 — camadas: concentração que busca o equilíbrio
+**File:** `Cellula Layers Explorations.dc.html`
+
+Segundo conceito, combinado com as forças por camadas. Decisões do usuário: o equilíbrio vem do
+**movimento ao acaso** (versão principal), com a camada lisa de quantidade como opção; osmose
+propriamente dita (água atravessando, célula inchando) fica para depois.
+
+Três regras de contrato que fazem os modelos se combinarem:
+1. **Modelos empurram, um só modelo move.** Força, peso e agitação somam no mesmo empurrão.
+2. **O terreno media tudo.** A membrana é terreno com uma lista de quem passa.
+3. **Qualquer camada pode ser lida por qualquer um**: lente, sensor, objetivo.
+
+Peças vivas: **L1 o meio** (agitação e arrasto como propriedades do mundo; gota se espalhando,
+partículas ⇄ quantidade; medida de mistura), **L2 membrana** (quem passa, poros; duas câmaras com
+barras esquerda/direita) e **L3 camadas juntas** (cenas Sedimento, Nuvem e Voltagem; olhos por
+camada; força contra agitação).
+
+Achados: a camada lisa usa a mesma regra do campo de forças (trocar com as vizinhas), só que sem
+fonte e sem perda — uma regra de espalhar com dois ajustes, não dois modelos. O atrito da v0.7
+ficou resolvido: arrasto e agitação moram juntos no meio.
+
+Quarta cena em L3, **Grupos**: todas as partículas se atraem e a agitação espalha. Há uma virada
+brusca: com agitação alta e força fraca tudo fica por igual; passando de um ponto, quase tudo se
+junta. Força muito alta dá vários grupos pequenos, porque travam antes de se fundir. O motor da
+página ganhou o sinal “tudo se atrai” (`all`), o mesmo do cartão de lei.
+
+### Open / next
+- O peso (puxão uniforme do chão) é um segundo cartão de lei ou propriedade do meio?
+- Com poucas partículas o “igual” fica irregular; cenas de equilíbrio pedem grade maior.
