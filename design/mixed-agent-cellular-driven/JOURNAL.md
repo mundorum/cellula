@@ -189,3 +189,25 @@ página ganhou o sinal “tudo se atrai” (`all`), o mesmo do cartão de lei.
 ### Open / next
 - O peso (puxão uniforme do chão) é um segundo cartão de lei ou propriedade do meio?
 - Com poucas partículas o “igual” fica irregular; cenas de equilíbrio pedem grade maior.
+
+## v0.9 — contagem: a vizinhança é da criança
+**File:** `Cellula Counting Explorations.dc.html`
+
+Terceiro tipo de cartão na lista de leis (fecha o “tipos de regra (1c)” da v0.6). Decisões do
+usuário: vizinhança até 5×5, começando em 3×3; “quantos” como números tocados (qualquer conjunto).
+
+O cartão é uma frase com cinco lugares: *uma casa que é [isto], com [tantos] de [aquilo] na
+[vizinhança], vira [isto]*, mais a chance. A contagem é uma **camada medida** (a mesma da v0.8,
+com a máscara da criança) e a regra lê essa camada. Atualiza todas de uma vez, como o campo.
+
+Peças vivas: **N1 cartão de contagem** (lista de regras, editor de vizinhança, faixa de números,
+mundo 31×21; conjuntos prontos Vida, Labirinto, Em cruz), **N2 lente de contagem** (o número que
+cada casa vê, quem vai mudar no próximo passo, olhar uma casa) e **N3 com forças** (partículas que
+se atraem e viram cristal quando cercadas; ordem no ciclo: mover, depois contar).
+
+Achados: o Jogo da Vida são dois cartões (nascer, morrer); sobreviver não precisa de regra.
+Em N3, com “5 ou mais vizinhas”, sem força formam-se uns 12 cristais de 60; com força, uns 54.
+
+### Open / next
+- Ordem no ciclo: pela lista de leis (a criança arrasta) ou por fases fixas por tipo de cartão?
+- A colheita da fita ainda só propõe regras de par; propor regras de contagem fica para depois.

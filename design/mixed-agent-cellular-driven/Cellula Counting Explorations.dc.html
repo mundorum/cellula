@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cellula Counting Explorations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#081419;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
+button{font:inherit;border:0;margin:0;padding:0;background:none;color:inherit;cursor:pointer;text-align:inherit}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid #f0a63c;outline-offset:2px}
+canvas{display:block;border-radius:14px;background:rgba(4,18,27,.55)}
+input[type=range]{-webkit-appearance:none;appearance:none;height:28px;background:transparent;width:100%;color:#79dcc4;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:rgba(121,220,196,.28)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:#79dcc4;border:3px solid rgba(0,0,0,.25);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:rgba(121,220,196,.28)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#79dcc4;border:3px solid rgba(0,0,0,.25)}
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:22px;padding:34px;min-width:1440px">
+
+  <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
+    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:30px;color:#eafaf6;line-height:1">{{ L.pageTitle }}</div>
+    <div style="font-size:13px;font-weight:700;color:rgba(223,243,251,.62);padding-bottom:4px;flex:1;min-width:280px;text-wrap:pretty">{{ L.pageSub }}</div>
+    <div style="display:flex;gap:4px;padding:4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);flex:none">
+      <button type="button" onClick="{{ setPT }}" style="{{ ptStyle }}">Português</button>
+      <button type="button" onClick="{{ setEN }}" style="{{ enStyle }}">English</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap">
+
+    <!-- N1 · count card -->
+    <div id="n1" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#79dcc4;padding:3px 11px;border-radius:9px">N1</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.n1Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.n1Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">{{ L.lawsKicker }}</div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.6);flex:none">{{ L.lawsNote }}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ presetChips }}" as="p" hint-placeholder-count="3">
+            <button type="button" onClick="{{ p.onTap }}" style="{{ p.style }}">{{ p.label }}</button>
+          </sc-for>
+        </div>
+        <sc-for list="{{ ruleRows }}" as="r" hint-placeholder-count="2">
+          <button type="button" onClick="{{ r.onTap }}" aria-pressed="{{ r.on }}" style="{{ r.style }}">
+            <span style="font-family:'Baloo 2',cursive;font-weight:700;font-size:13px;color:rgba(223,243,251,.6);width:12px;flex:none">{{ r.n }}</span>
+            <span style="{{ r.fromTile }}"></span>
+            <span style="font-family:'Baloo 2',cursive;font-weight:700;font-size:13px;color:#f0a63c;flex:none">➜</span>
+            <span style="{{ r.toTile }}"></span>
+            <span style="flex:1;min-width:0;font-size:11.5px;font-weight:800;color:#eafaf6;text-wrap:pretty">{{ r.text }}</span>
+            <span style="flex:none;font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:8px;background:rgba(255,255,255,.05);color:rgba(223,243,251,.66)">{{ L.countKind }}</span>
+          </button>
+        </sc-for>
+        <div style="display:flex;gap:8px">
+          <button type="button" onClick="{{ addRule }}" style="flex:1;height:40px;border-radius:12px;text-align:center;font-size:11.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.addRule }}</button>
+          <button type="button" onClick="{{ delRule }}" style="flex:1;height:40px;border-radius:12px;text-align:center;font-size:11.5px;font-weight:800;background:rgba(240,166,60,.1);border:1px solid rgba(240,166,60,.35);color:#f0a63c">{{ L.delRule }}</button>
+        </div>
+      </div>
+
+      <div style="padding:13px;border-radius:20px;background:rgba(121,220,196,.08);border:1px solid rgba(121,220,196,.34);display:flex;flex-direction:column;gap:13px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;color:#eafaf6;line-height:1.15">{{ editTitle }}</div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ slotTiles }}" as="t" hint-placeholder-count="3">
+            <button type="button" onClick="{{ t.onTap }}" style="display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 4px;border-radius:14px;background:rgba(4,18,27,.4);border:1px solid rgba(121,220,196,.16)">
+              <span style="font-size:9.5px;font-weight:800;letter-spacing:.8px;color:rgba(223,243,251,.66)">{{ t.cap }}</span>
+              <span style="{{ t.tile }}"></span>
+              <span style="font-size:11px;font-weight:800;color:#eafaf6">{{ t.name }}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px">
+            <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.66)">{{ L.hood }}</div>
+            <div style="display:flex;gap:5px">
+              <sc-for list="{{ hoodPresets }}" as="p" hint-placeholder-count="4">
+                <button type="button" onClick="{{ p.onTap }}" aria-pressed="{{ p.on }}" style="{{ p.style }}">{{ p.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="{{ hoodGrid }}">
+              <sc-for list="{{ hoodCells }}" as="c" hint-placeholder-count="9">
+                <button type="button" onClick="{{ c.onTap }}" aria-pressed="{{ c.on }}" aria-label="{{ c.aria }}" style="{{ c.style }}">{{ c.glyph }}</button>
+              </sc-for>
+            </div>
+            <div style="flex:1;min-width:0;font-size:11px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty">{{ hoodText }}</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.66);margin-bottom:7px">{{ L.howMany }}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <sc-for list="{{ numChips }}" as="n" hint-placeholder-count="9">
+              <button type="button" onClick="{{ n.onTap }}" aria-pressed="{{ n.on }}" style="{{ n.style }}">{{ n.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.chance }}</span><span style="color:#eafaf6">{{ probLabel }}</span></span>
+          <input type="range" min="5" max="100" step="5" value="{{ prob }}" onChange="{{ setProb }}">
+        </label>
+
+        <div style="padding:9px 11px;border-radius:13px;background:rgba(255,255,255,.04)">
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:1px;color:#79dcc4">{{ L.readsAs }}</div>
+          <div style="font-size:12px;font-weight:700;color:#eafaf6;text-wrap:pretty;margin-top:2px">{{ ruleSentence }}</div>
+        </div>
+      </div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">{{ L.n1Live }}</div>
+          <div style="font-size:10px;font-weight:800;color:#a8cf4c;padding:4px 9px;border-radius:8px;background:rgba(168,207,76,.14);flex:none">{{ genLabel }}</div>
+        </div>
+        <canvas id="nx-world" role="img" aria-label="{{ L.n1Canvas }}" onClick="{{ paint1 }}" style="width:376px;height:255px;cursor:crosshair"></canvas>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);flex:none">{{ L.brush }}</div>
+          <sc-for list="{{ brushes }}" as="b" hint-placeholder-count="3">
+            <button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}"><span style="{{ b.tile }}"></span>{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button type="button" onClick="{{ toggleRun }}" aria-label="{{ L.playPause }}" style="flex:none;width:44px;height:44px;border-radius:14px;text-align:center;font-size:14px;font-weight:800;background:#79dcc4;color:#07303a">{{ runIcon }}</button>
+          <button type="button" onClick="{{ step1 }}" style="flex:none;width:52px;height:44px;border-radius:14px;text-align:center;font-size:13px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">+1</button>
+          <button type="button" onClick="{{ random1 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.random }}</button>
+          <button type="button" onClick="{{ clear1 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.clear }}</button>
+        </div>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.foundKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.n1Found }}</div>
+      </div>
+    </div>
+
+    <!-- N2 · count lens -->
+    <div id="n2" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#a8cf4c;padding:3px 11px;border-radius:9px">N2</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.n2Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.n2Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c;margin-bottom:6px">{{ L.lensKicker }}</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <sc-for list="{{ lensChips }}" as="b" hint-placeholder-count="2">
+              <button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}<span style="font-size:12px;font-weight:800">{{ b.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+
+        <canvas id="nx-lens" role="img" aria-label="{{ L.n2Canvas }}" onClick="{{ tap2 }}" style="width:376px;height:276px;cursor:crosshair"></canvas>
+
+        <div style="display:flex;gap:5px;padding:5px;border-radius:15px;background:rgba(4,18,27,.4)">
+          <sc-for list="{{ tapModes }}" as="t" hint-placeholder-count="2">
+            <button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:#eafaf6;text-wrap:pretty;padding:9px 11px;border-radius:13px;background:rgba(168,207,76,.12);min-height:52px">{{ lookText }}</div>
+
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(223,243,251,.72)"><span style="width:14px;height:14px;border-radius:4px;border:2px solid #a8cf4c;display:inline-block"></span>{{ L.legBorn }}</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(223,243,251,.72)"><span style="width:14px;height:14px;border-radius:4px;border:2px dashed #f0a63c;display:inline-block"></span>{{ L.legDie }}</div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button type="button" onClick="{{ step2 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:#79dcc4;color:#07303a">{{ L.oneStep }}</button>
+          <button type="button" onClick="{{ reset2 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.again }}</button>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.66);text-wrap:pretty">{{ L.n2Hint }}</div>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.foundKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.n2Found }}</div>
+      </div>
+    </div>
+
+    <!-- N3 · with forces -->
+    <div id="n3" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#f0a63c;padding:3px 11px;border-radius:9px">N3</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.n3Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.n3Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.n3Live }}</div>
+          <div style="font-size:10px;font-weight:800;color:#a8cf4c;padding:4px 9px;border-radius:8px;background:rgba(168,207,76,.14);flex:none">{{ crysLabel }}</div>
+        </div>
+        <canvas id="nx-crys" role="img" aria-label="{{ L.n3Canvas }}" style="width:376px;height:255px"></canvas>
+
+        <div style="padding:10px 11px;border-radius:15px;background:rgba(4,18,27,.4);display:flex;flex-direction:column;gap:7px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.66)">{{ L.order }}</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#eafaf6"><span style="flex:none;width:20px;height:20px;border-radius:7px;background:rgba(121,220,196,.2);color:#79dcc4;display:inline-flex;align-items:center;justify-content:center;font-size:11px">1</span>{{ L.order1 }}</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#eafaf6"><span style="flex:none;width:20px;height:20px;border-radius:7px;background:rgba(240,166,60,.2);color:#f0a63c;display:inline-flex;align-items:center;justify-content:center;font-size:11px">2</span>{{ L.order2 }}</div>
+        </div>
+
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.66);margin-bottom:7px">{{ L.crysRule }}</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <sc-for list="{{ crysChips }}" as="n" hint-placeholder-count="9">
+              <button type="button" onClick="{{ n.onTap }}" aria-pressed="{{ n.on }}" style="{{ n.style }}">{{ n.label }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#eafaf6;text-wrap:pretty;margin-top:8px">{{ crysSentence }}</div>
+        </div>
+
+        <div style="height:1px;background:rgba(121,220,196,.16)"></div>
+
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.pull }}</span><span style="color:#eafaf6">{{ strengthLabel }}</span></span>
+          <input type="range" min="0" max="100" step="5" value="{{ strength }}" onChange="{{ setStrength }}">
+        </label>
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.temp }}</span><span style="color:#eafaf6">{{ tempLabel }}</span></span>
+          <input type="range" min="0" max="100" step="5" value="{{ temp }}" onChange="{{ setTemp }}">
+        </label>
+        <button type="button" onClick="{{ reset3 }}" style="height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.again }}</button>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.openKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.n3Open }}</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+// ---------------------------------------------------------------- copy
+const COPY = {
+  pt:{
+    pageTitle:'Contagem · turno 1',
+    pageSub:'O terceiro tipo de cartão: uma casa olha a vizinhança que você desenhou, conta, e decide o que virar. O cartão em N1 também manda na lente de N2.',
+    n1Title:'Cartão de contagem', n2Title:'Lente de contagem', n3Title:'Com forças',
+    n1Desc:'Uma frase com cinco lugares: quem eu sou, o que eu conto, onde eu olho, quantos, e o que eu viro. A vizinhança é sua: toque nas casas que contam.',
+    n2Desc:'A lente mostra o número que cada casa enxerga e marca quem vai mudar no próximo passo. É a mesma camada medida da página de camadas, com a sua vizinhança.',
+    n3Desc:'A contagem lê tipos, então funciona sobre partículas que as forças movem. Aqui, quem fica cercada vira cristal e para de se mexer.',
+    lawsKicker:'LEIS DO MUNDO · EM ORDEM', lawsNote:'a primeira que casa, vence', countKind:'contar',
+    pLife:'Vida', pMaze:'Labirinto', pCross:'Em cruz',
+    addRule:'+ nova regra', delRule:'tirar esta',
+    editing:'Regra {n}', capFrom:'QUANDO É', capWhat:'CONTA', capTo:'VIRA',
+    kEmpty:'vazio', kAlga:'alga', kRock:'pedra',
+    hood:'VIZINHANÇA', me:'eu', hoodCellOn:'conta', hoodCellOff:'não conta',
+    hoodText:'{n} casas contam. Toque para ligar ou desligar cada uma.',
+    hoodNone:'Nenhuma casa conta: a regra só pode pedir zero.',
+    howMany:'QUANTOS', chance:'CHANCE', readsAs:'LÊ-SE ASSIM',
+    sent:'Uma casa que é {from}, com {nums} de {what} na vizinhança, vira {to}.',
+    sentNever:'Nenhum número escolhido: esta regra nunca dispara.',
+    short:'{from} com {nums} de {what} vira {to}', never:'nunca', or:' ou ',
+    n1Live:'O MUNDO · TODAS DE UMA VEZ', gen:'passo', alive:'algas',
+    n1Canvas:'Grade de células seguindo as regras de contagem',
+    brush:'PINCEL', bErase:'apagar', playPause:'rodar ou pausar', random:'Ao acaso', clear:'Limpar', again:'De novo',
+    foundKicker:'ACHADO DESTA RODADA', openKicker:'DECISÃO EM ABERTO',
+    n1Found:'O Jogo da Vida são só dois cartões: nascer e morrer. “Sobreviver” não precisa de regra, porque quando nenhuma regra dispara a casa fica como está. Uma vizinhança torta já dá mundos novos sem mexer no motor.',
+    lensKicker:'LENTE', lNum:'números', lNext:'o que vai mudar',
+    n2Canvas:'Grade ampliada com a contagem escrita em cada casa',
+    tPaint:'Pintar alga', tLook:'Olhar uma casa',
+    lookNone:'Escolha “Olhar uma casa” e toque em uma casa para ver a vizinhança dela e o que as regras dizem.',
+    lookSee:'Esta casa é {k} e vê {n} de {w} (regra {r}).', lookFire:' No próximo passo vira {t}.', lookStay:' Nenhuma regra dispara: fica como está.',
+    legBorn:'vai virar algo', legDie:'vai esvaziar', oneStep:'Um passo',
+    n2Hint:'Os números seguem a regra selecionada em N1. Mude a vizinhança lá e veja os números mudarem aqui.',
+    n2Found:'Como a contagem é uma camada, ela serve para mais do que a regra: a lente a mostra, um sensor de agente pode ler “quantas algas perto de mim” e um objetivo pode testá-la.',
+    n3Live:'CRISTAL CRESCENDO', crys:'cristais', n3Canvas:'Partículas que se atraem e viram cristal quando cercadas',
+    order:'ORDEM NO CICLO', order1:'forças e agitação movem · uma de cada vez', order2:'contagem decide · todas de uma vez',
+    crysRule:'VIRA CRISTAL COM QUANTAS VIZINHAS',
+    crysSent:'Uma partícula com {nums} vizinhas ao redor vira cristal.', crysNever:'Nenhum número escolhido: nada vira cristal.',
+    pull:'FORÇA', temp:'AGITAÇÃO',
+    n3Open:'Aqui a ordem é fixa: primeiro mover, depois contar. No app, a ordem deve vir da lista de leis (a criança arrasta os cartões) ou de fases fixas por tipo de cartão? A lista é mais flexível; as fases evitam surpresas.'
+  },
+  en:{
+    pageTitle:'Counting · turn 1',
+    pageSub:'The third card type: a cell looks at the neighbourhood you drew, counts, and decides what to become. The card in N1 also drives the lens in N2.',
+    n1Title:'Count card', n2Title:'Count lens', n3Title:'With forces',
+    n1Desc:'One sentence with five slots: what I am, what I count, where I look, how many, and what I become. The neighbourhood is yours: tap the cells that count.',
+    n2Desc:'The lens shows the number each cell sees and marks who will change on the next step. It is the same measured layer as on the layers page, with your neighbourhood.',
+    n3Desc:'Counting reads kinds, so it works on particles that forces move. Here, a particle that gets surrounded becomes crystal and stops moving.',
+    lawsKicker:'LAWS OF THE WORLD · IN ORDER', lawsNote:'first match wins', countKind:'count',
+    pLife:'Life', pMaze:'Maze', pCross:'Cross',
+    addRule:'+ new rule', delRule:'remove this',
+    editing:'Rule {n}', capFrom:'WHEN IT IS', capWhat:'COUNTS', capTo:'BECOMES',
+    kEmpty:'empty', kAlga:'alga', kRock:'rock',
+    hood:'NEIGHBOURHOOD', me:'me', hoodCellOn:'counts', hoodCellOff:'does not count',
+    hoodText:'{n} cells count. Tap to switch each one on or off.',
+    hoodNone:'No cell counts: the rule can only ask for zero.',
+    howMany:'HOW MANY', chance:'CHANCE', readsAs:'READS AS',
+    sent:'A cell that is {from}, with {nums} of {what} in its neighbourhood, becomes {to}.',
+    sentNever:'No number chosen: this rule never fires.',
+    short:'{from} with {nums} of {what} becomes {to}', never:'never', or:' or ',
+    n1Live:'THE WORLD · ALL AT ONCE', gen:'step', alive:'algae',
+    n1Canvas:'Grid of cells following the count rules',
+    brush:'BRUSH', bErase:'erase', playPause:'run or pause', random:'Random', clear:'Clear', again:'Again',
+    foundKicker:'FOUND THIS ROUND', openKicker:'OPEN DECISION',
+    n1Found:'The Game of Life is just two cards: birth and death. “Survive” needs no rule, because when no rule fires the cell stays as it is. A lopsided neighbourhood already gives new worlds without touching the engine.',
+    lensKicker:'LENS', lNum:'numbers', lNext:'what will change',
+    n2Canvas:'Enlarged grid with the count written in each cell',
+    tPaint:'Paint alga', tLook:'Look at a cell',
+    lookNone:'Choose “Look at a cell” and tap a cell to see its neighbourhood and what the rules say.',
+    lookSee:'This cell is {k} and sees {n} of {w} (rule {r}).', lookFire:' On the next step it becomes {t}.', lookStay:' No rule fires: it stays as it is.',
+    legBorn:'will become something', legDie:'will empty', oneStep:'One step',
+    n2Hint:'The numbers follow the rule selected in N1. Change the neighbourhood there and watch the numbers change here.',
+    n2Found:'Because the count is a layer, it serves more than the rule: the lens shows it, an agent sensor can read “how many algae near me”, and a goal can test it.',
+    n3Live:'A CRYSTAL GROWING', crys:'crystals', n3Canvas:'Particles that attract and become crystal when surrounded',
+    order:'ORDER WITHIN A TICK', order1:'forces and jiggle move · one at a time', order2:'counting decides · all at once',
+    crysRule:'BECOMES CRYSTAL WITH HOW MANY NEIGHBOURS',
+    crysSent:'A particle with {nums} neighbours around it becomes crystal.', crysNever:'No number chosen: nothing becomes crystal.',
+    pull:'STRENGTH', temp:'JIGGLE',
+    n3Open:'Here the order is fixed: move first, then count. In the app, should the order come from the list of laws (the child drags the cards) or from fixed phases per card type? The list is more flexible; phases avoid surprises.'
+  }
+};
+
+const INK='#eafaf6', A1='#79dcc4', A2='#f0a63c', A3='#a8cf4c', ROCK='#94a6b0', DARK='#07303a';
+const KINDS=['_','a','r'], KCOLOR={a:A3, r:ROCK};
+
+// ---------------------------------------------------------------- count model
+// a neighbourhood is 25 on/off cells (5x5, centre excluded); nums[k] = "fires with k"
+function maskOf(kind){ var m=new Array(25).fill(0);
+  for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){ if(!dx&&!dy) continue;
+    var on = kind==='4' ? (Math.abs(dx)+Math.abs(dy)===1) : kind==='8' ? (Math.abs(dx)<=1&&Math.abs(dy)<=1) : true;
+    m[(dy+2)*5+dx+2]=on?1:0; } return m; }
+function numsOf(list){ var n=new Array(25).fill(false); list.forEach(function(k){ n[k]=true; }); return n; }
+function rule(from,what,list,to,mask,prob){ return {from:from, what:what, nums:numsOf(list), to:to, mask:maskOf(mask), prob:prob||100}; }
+function maskSize(m){ var n=0; for(var i=0;i<25;i++) n+=m[i]; return n; }
+function isWide(m){ for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++) if((Math.abs(dx)>1||Math.abs(dy)>1)&&m[(dy+2)*5+dx+2]) return true; return false; }
+// the measured layer: how many `what` each cell sees through `mask` (outside the world counts as nothing)
+function countAt(G,w,h,x,y,mask,what){ var n=0;
+  for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){ if(!mask[(dy+2)*5+dx+2]) continue;
+    var cx=x+dx, cy=y+dy; if(cx<0||cy<0||cx>=w||cy>=h) continue; if(G[cy*w+cx]===what) n++; } return n; }
+// which rule would fire for this cell: index, or -1
+function firing(G,w,h,x,y,rules){ var c=G[y*w+x];
+  for(var i=0;i<rules.length;i++){ var r=rules[i]; if(r.from!==c||r.to===c) continue;
+    if(r.nums[countAt(G,w,h,x,y,r.mask,r.what)]) return i; } return -1; }
+// all at once: every cell reads the same snapshot
+function stepCount(G,w,h,rules){ var N=G.slice();
+  for(var y=0;y<h;y++) for(var x=0;x<w;x++){ var c=G[y*w+x];
+    for(var i=0;i<rules.length;i++){ var r=rules[i]; if(r.from!==c||r.to===c) continue;
+      if(!r.nums[countAt(G,w,h,x,y,r.mask,r.what)]) continue;
+      if(r.prob<100 && Math.random()*100>r.prob) continue;
+      N[y*w+x]=r.to; break; } }
+  return N; }
+
+const PRESETS = {
+  life:function(){ return [rule('_','a',[3],'a','8'), rule('a','a',[0,1,4,5,6,7,8],'_','8')]; },
+  maze:function(){ return [rule('_','a',[3],'a','8'), rule('a','a',[0,6,7,8],'_','8')]; },
+  cross:function(){ return [rule('_','a',[1],'a','4')]; }
+};
+
+// ---------------------------------------------------------------- forces + jiggle (same engine as the layers page)
+function makeField(w,h){ return {w:w,h:h,phi:new Float32Array(w*h),tmp:new Float32Array(w*h),rho:new Float32Array(w*h)}; }
+function decayFor(R){ return 1/(1+4*R*R); }
+function relax(F,decay,passes){
+  var w=F.w,h=F.h,a=F.phi,b=F.tmp,rho=F.rho,k=(1-decay)*0.25;
+  for(var p=0;p<passes;p++){
+    for(var y=0;y<h;y++){ var row=y*w;
+      for(var x=0;x<w;x++){ var i=row+x,c=a[i];
+        b[i]=k*((x>0?a[i-1]:c)+(x<w-1?a[i+1]:c)+(y>0?a[i-w]:c)+(y<h-1?a[i+w]:c))+rho[i]; } }
+    var t=a;a=b;b=t; }
+  F.phi=a;F.tmp=b;
+}
+function gradCell(F,x,y){ var w=F.w,h=F.h,p=F.phi,i=y*w+x,c=p[i];
+  return [((x<w-1?p[i+1]:c)-(x>0?p[i-1]:c))/2, ((y<h-1?p[i+w]:c)-(y>0?p[i-w]:c))/2]; }
+function moveParticles(W,o){
+  var P=W.P,w=W.w,h=W.h,F=W.F,i,p,d=decayFor(4),useF=o.s>0;
+  if(useF){ F.rho.fill(0);
+    for(i=0;i<P.length;i++) F.rho[P[i].y*w+P[i].x]+=1;
+    relax(F,d,4);
+    for(i=0;i<P.length;i++){ p=P[i]; if(p.fixed) continue;
+      p.self.rho.fill(0); p.self.rho[p.y*w+p.x]=1; relax(p.self,d,4); } }
+  var order=P.slice();
+  for(i=order.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=order[i]; order[i]=order[j]; order[j]=t; }
+  var sig=0.5*o.temp, keep=1-o.drag;
+  for(i=0;i<order.length;i++){ p=order[i]; if(p.fixed) continue;
+    var fx=0, fy=0;
+    if(useF){ var g=gradCell(F,p.x,p.y), g2=gradCell(p.self,p.x,p.y); fx=o.s*0.15*(g[0]-g2[0]); fy=o.s*0.15*(g[1]-g2[1]); }
+    fx+=(Math.random()*2-1)*sig; fy+=(Math.random()*2-1)*sig;
+    p.vx=Math.max(-0.9,Math.min(0.9,(p.vx+fx)*keep)); p.vy=Math.max(-0.9,Math.min(0.9,(p.vy+fy)*keep));
+    p.ax+=p.vx; p.ay+=p.vy;
+    if(Math.abs(p.ax)>=1){ var dx=p.ax>0?1:-1, nx=p.x+dx;
+      if(nx>=0&&nx<w&&!W.occ[p.y*w+nx]){ W.occ[p.y*w+p.x]=0; p.x=nx; W.occ[p.y*w+p.x]=1; p.ax-=dx; } else { p.vx*=-0.2; p.ax=0; } }
+    if(Math.abs(p.ay)>=1){ var dy=p.ay>0?1:-1, ny=p.y+dy;
+      if(ny>=0&&ny<h&&!W.occ[ny*w+p.x]){ W.occ[p.y*w+p.x]=0; p.y=ny; W.occ[p.y*w+p.x]=1; p.ay-=dy; } else { p.vy*=-0.2; p.ay=0; } }
+  }
+}
+// the count rule over particles: read one snapshot, then change everyone together
+function crystallise(W,nums){
+  var P=W.P,w=W.w,h=W.h,i,turn=[];
+  for(i=0;i<P.length;i++){ var p=P[i]; if(p.fixed) continue; var n=0;
+    for(var dy=-1;dy<=1;dy++) for(var dx=-1;dx<=1;dx++){ if(!dx&&!dy) continue;
+      var x=p.x+dx,y=p.y+dy; if(x>=0&&y>=0&&x<w&&y<h&&W.occ[y*w+x]) n++; }
+    if(nums[n]) turn.push(p); }
+  for(i=0;i<turn.length;i++){ turn[i].fixed=true; turn[i].vx=0; turn[i].vy=0; }
+}
+
+// ---------------------------------------------------------------- drawing
+function ctxFor(id,cw,ch){
+  var el=document.getElementById(id); if(!el||!el.getContext) return null;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  if(el.width!==Math.round(cw*dpr)){ el.width=Math.round(cw*dpr); el.height=Math.round(ch*dpr); }
+  var c=el.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,cw,ch); return c;
+}
+function drawGrid(c,w,h,cs,a){
+  c.strokeStyle='rgba(121,220,196,'+a+')'; c.lineWidth=1; c.beginPath();
+  for(var x=0;x<=w;x++){ c.moveTo(x*cs,0); c.lineTo(x*cs,h*cs); }
+  for(var y=0;y<=h;y++){ c.moveTo(0,y*cs); c.lineTo(w*cs,y*cs); }
+  c.stroke();
+}
+function rr(c,x,y,s,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+s,y,x+s,y+s,r); c.arcTo(x+s,y+s,x,y+s,r); c.arcTo(x,y+s,x,y,r); c.arcTo(x,y,x+s,y,r); c.closePath(); }
+function drawCells(c,G,w,h,cs){
+  var pad=Math.max(1,cs*0.1);
+  for(var y=0;y<h;y++) for(var x=0;x<w;x++){ var k=G[y*w+x]; if(k==='_') continue;
+    c.fillStyle=KCOLOR[k]; rr(c,x*cs+pad,y*cs+pad,cs-2*pad,cs*0.22); c.fill(); }
+}
+
+const W1=31, H1=21, W2=15, H2=11;
+
+class Component extends DCLogic {
+  state = { lang:'pt', rules:PRESETS.life(), sel:0, wide:false,
+    run:true, brush:'a', gen:0, alive:0,
+    lNum:true, lNext:true, tapMode:'look', look:null,
+    crysNums:numsOf([5,6,7,8]), strength:60, temp:45, crys:0 };
+
+  componentDidMount(){ this.seed1('life'); this.seed2(); this.seed3(); this.frame=0; this.loop(); }
+  componentWillUnmount(){ cancelAnimationFrame(this.raf); }
+
+  // ------------------------------------------------------------ N1
+  seed1(preset){
+    var G=new Array(W1*H1).fill('_'), i, cx=15, cy=10;
+    if(preset==='cross') G[cy*W1+cx]='a';
+    else if(preset==='maze'){ for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++) if(Math.random()<0.55) G[(cy+dy)*W1+cx+dx]='a'; }
+    else for(i=0;i<G.length;i++) if(Math.random()<0.28) G[i]='a';
+    this.g1=G; this.gen=0;
+  }
+  tick1(){ this.g1=stepCount(this.g1,W1,H1,this.state.rules); this.gen++; }
+  draw1(){
+    var cw=376, cs=cw/W1, c=ctxFor('nx-world',cw,255); if(!c) return;
+    drawGrid(c,W1,H1,cs,0.08); drawCells(c,this.g1,W1,H1,cs);
+  }
+  paint1 = (e)=>{
+    var r=e.currentTarget.getBoundingClientRect();
+    var x=Math.floor((e.clientX-r.left)/r.width*W1), y=Math.floor((e.clientY-r.top)/r.height*H1);
+    if(x<0||y<0||x>=W1||y>=H1) return;
+    var b=this.state.brush, i=y*W1+x; this.g1[i]=this.g1[i]===b?'_':b;
+  };
+
+  // ------------------------------------------------------------ N2
+  seed2(){
+    var G=new Array(W2*H2).fill('_');
+    [[2,1],[3,2],[1,3],[2,3],[3,3], [9,2],[10,2],[11,2], [10,6],[11,6],[10,7],[11,7], [5,8],[6,8],[7,8],[6,7]].forEach(function(p){ G[p[1]*W2+p[0]]='a'; });
+    this.g2=G;
+  }
+  draw2(){
+    var cw=376, cs=cw/W2, c=ctxFor('nx-lens',cw,276); if(!c) return;
+    var s=this.state, G=this.g2, R=s.rules, sr=R[Math.min(s.sel,R.length-1)], x, y, dx, dy;
+    if(s.look){ // the footprint of the selected rule's neighbourhood around the cell being looked at
+      c.fillStyle='rgba(121,220,196,.2)';
+      for(dy=-2;dy<=2;dy++) for(dx=-2;dx<=2;dx++){ if(!sr.mask[(dy+2)*5+dx+2]) continue;
+        x=s.look.x+dx; y=s.look.y+dy; if(x<0||y<0||x>=W2||y>=H2) continue; c.fillRect(x*cs,y*cs,cs,cs); } }
+    drawGrid(c,W2,H2,cs,0.12); drawCells(c,G,W2,H2,cs);
+    for(y=0;y<H2;y++) for(x=0;x<W2;x++){
+      var k=G[y*W2+x], n=countAt(G,W2,H2,x,y,sr.mask,sr.what);
+      if(s.lNext){ var f=firing(G,W2,H2,x,y,R);
+        if(f>=0){ var empt=R[f].to==='_'; c.strokeStyle=empt?A2:A3; c.lineWidth=2; c.setLineDash(empt?[4,3]:[]);
+          rr(c,x*cs+2,y*cs+2,cs-4,cs*0.2); c.stroke(); c.setLineDash([]); } }
+      if(s.lNum && (n>0||k!=='_')){ c.fillStyle=k==='_'?'rgba(234,250,246,.82)':DARK;
+        c.font='800 12px Nunito, sans-serif'; c.textAlign='center'; c.textBaseline='middle';
+        c.fillText(String(n),(x+0.5)*cs,(y+0.5)*cs+0.5); }
+    }
+    if(s.look){ c.strokeStyle=INK; c.lineWidth=2; c.strokeRect(s.look.x*cs+1,s.look.y*cs+1,cs-2,cs-2); }
+  }
+  tap2 = (e)=>{
+    var r=e.currentTarget.getBoundingClientRect();
+    var x=Math.floor((e.clientX-r.left)/r.width*W2), y=Math.floor((e.clientY-r.top)/r.height*H2);
+    if(x<0||y<0||x>=W2||y>=H2) return;
+    if(this.state.tapMode==='paint'){ var i=y*W2+x; this.g2[i]=this.g2[i]==='a'?'_':'a'; this.forceUpdate(); }
+    else this.setState({look:{x:x,y:y}});
+  };
+
+  // ------------------------------------------------------------ N3
+  seed3(){
+    var W={w:W1,h:H1,occ:new Uint8Array(W1*H1),P:[],F:makeField(W1,H1)}, n=0;
+    while(n<60){ var x=Math.floor(Math.random()*W1), y=Math.floor(Math.random()*H1), i=y*W1+x;
+      if(W.occ[i]) continue; W.occ[i]=1; n++;
+      W.P.push({x:x,y:y,vx:0,vy:0,ax:0,ay:0,fixed:false,self:makeField(W1,H1)}); }
+    this.w3=W;
+  }
+  tick3(){
+    var s=this.state;
+    moveParticles(this.w3,{temp:s.temp/100, drag:0.1, s:0.4*s.strength/100});   // 1 · move
+    crystallise(this.w3,s.crysNums);                                             // 2 · count
+  }
+  draw3(){
+    var cw=376, cs=cw/W1, c=ctxFor('nx-crys',cw,255); if(!c) return;
+    var P=this.w3.P, i, p;
+    drawGrid(c,W1,H1,cs,0.08);
+    for(i=0;i<P.length;i++){ p=P[i];
+      if(p.fixed){ c.fillStyle=A2; rr(c,p.x*cs+1,p.y*cs+1,cs-2,2); c.fill(); }
+      else { c.fillStyle=A3; c.beginPath(); c.arc((p.x+0.5)*cs,(p.y+0.5)*cs,cs*0.34,0,6.2832); c.fill(); } }
+  }
+
+  // ------------------------------------------------------------ loop
+  loop = ()=>{
+    this.raf=requestAnimationFrame(this.loop); this.frame++;
+    if(!this.g1) return;
+    if(this.state.run && this.frame%7===0) this.tick1();
+    if(this.frame%2===0) this.tick3();
+    this.draw1(); this.draw2(); this.draw3();
+    if(this.frame%15===0){ var a=0, k=0, i;
+      for(i=0;i<this.g1.length;i++) if(this.g1[i]==='a') a++;
+      for(i=0;i<this.w3.P.length;i++) if(this.w3.P[i].fixed) k++;
+      var s=this.state; if(a!==s.alive||k!==s.crys||this.gen!==s.gen) this.setState({alive:a, crys:k, gen:this.gen}); }
+  };
+
+  // ------------------------------------------------------------ editing the selected rule
+  edit(fn){ var R=JSON.parse(JSON.stringify(this.state.rules)), i=Math.min(this.state.sel,R.length-1);
+    fn(R[i]); var N=maskSize(R[i].mask); for(var k=N+1;k<25;k++) R[i].nums[k]=false; this.setState({rules:R}); }
+
+  renderVals(){
+    var s=this.state, L=COPY[s.lang]||COPY.pt, R=s.rules, si=Math.min(s.sel,R.length-1), cur=R[si];
+    var KN={'_':L.kEmpty, a:L.kAlga, r:L.kRock};
+    var seg=(on,color,h)=>({flex:1, minHeight:(h||44)+'px', textAlign:'center', padding:'6px 4px', borderRadius:'11px',
+      fontSize:'12px', fontWeight:800, lineHeight:1.15, color:on?DARK:'rgba(223,243,251,.72)', background:on?color:'transparent'});
+    var langBtn=(on)=>({padding:'6px 13px', borderRadius:'9px', fontSize:'11.5px', fontWeight:800,
+      background:on?A1:'transparent', color:on?DARK:'rgba(223,243,251,.72)'});
+    var chip=(on)=>({display:'inline-flex', alignItems:'center', gap:'7px', minHeight:'40px', padding:'0 11px', borderRadius:'12px',
+      fontSize:'11.5px', fontWeight:800, color:on?INK:'rgba(223,243,251,.72)',
+      background:on?'rgba(121,220,196,.16)':'rgba(255,255,255,.04)', border:'1px solid '+(on?'rgba(121,220,196,.6)':'rgba(121,220,196,.16)')});
+    var small=(on)=>({minWidth:'34px', height:'30px', padding:'0 8px', borderRadius:'9px', textAlign:'center', fontSize:'11px', fontWeight:800,
+      color:on?DARK:'rgba(223,243,251,.72)', background:on?A1:'rgba(255,255,255,.05)', border:'1px solid rgba(121,220,196,.2)'});
+    var numBtn=(on,color)=>({width:'36px', height:'36px', borderRadius:'10px', textAlign:'center', fontSize:'13px', fontWeight:800,
+      color:on?DARK:'rgba(223,243,251,.72)', background:on?color:'rgba(255,255,255,.05)', border:'1px solid '+(on?color:'rgba(121,220,196,.2)')});
+    var tile=(k,size)=>({flex:'none', width:size+'px', height:size+'px', borderRadius:Math.round(size*0.24)+'px', display:'inline-block',
+      background:k==='_'?'transparent':KCOLOR[k], border:k==='_'?'1.5px dashed rgba(223,243,251,.45)':'1.5px solid transparent'});
+    // "3" · "2 ou 3" · "0, 1, 4–8"
+    var listNums=(nums,max)=>{ var parts=[], k=0;
+      while(k<=max){ if(!nums[k]){ k++; continue; } var e=k; while(e+1<=max&&nums[e+1]) e++;
+        parts.push(e>k+1?(k+'–'+e):(e===k?String(k):(k+', '+e))); k=e+1; }
+      if(!parts.length) return null;
+      return parts.length===2&&parts[0].indexOf('–')<0&&parts[0].indexOf(',')<0&&parts[1].indexOf('–')<0&&parts[1].indexOf(',')<0 ? parts.join(L.or) : parts.join(', '); };
+    var fill=(t,r)=>{ var nm=listNums(r.nums,maskSize(r.mask));
+      return t.replace('{from}',KN[r.from]).replace('{to}',KN[r.to]).replace('{what}',KN[r.what]).replace('{nums}',nm===null?L.never:nm); };
+
+    var v={ L:L,
+      setPT:()=>this.setState({lang:'pt'}), setEN:()=>this.setState({lang:'en'}),
+      ptStyle:langBtn(s.lang==='pt'), enStyle:langBtn(s.lang==='en'),
+      editTitle:L.editing.replace('{n}',si+1),
+      addRule:()=>{ if(R.length>=5) return; var n=JSON.parse(JSON.stringify(R)); n.push(rule('_','a',[],'a','8')); this.setState({rules:n, sel:n.length-1}); },
+      delRule:()=>{ if(R.length<=1) return; var n=JSON.parse(JSON.stringify(R)); n.splice(si,1); this.setState({rules:n, sel:Math.max(0,si-1)}); },
+      prob:cur.prob, probLabel:cur.prob+'%', setProb:(e)=>{ var p=parseInt(e.target.value,10); this.edit((r)=>{ r.prob=p; }); },
+      ruleSentence:listNums(cur.nums,maskSize(cur.mask))===null?L.sentNever:fill(L.sent,cur),
+      genLabel:L.gen+' '+s.gen+' · '+L.alive+' '+s.alive,
+      paint1:this.paint1, tap2:this.tap2,
+      runIcon:s.run?'❙❙':'▶', toggleRun:()=>this.setState({run:!s.run}),
+      step1:()=>this.tick1(), random1:()=>this.seed1('life'),
+      clear1:()=>{ this.g1=new Array(W1*H1).fill('_'); this.gen=0; },
+      step2:()=>{ this.g2=stepCount(this.g2,W2,H2,R); this.forceUpdate(); },
+      reset2:()=>{ this.seed2(); this.setState({look:null}); },
+      reset3:()=>this.seed3(),
+      strength:s.strength, strengthLabel:s.strength+'%', temp:s.temp, tempLabel:s.temp+'%',
+      setStrength:(e)=>this.setState({strength:parseInt(e.target.value,10)}),
+      setTemp:(e)=>this.setState({temp:parseInt(e.target.value,10)}),
+      crysLabel:L.crys+': '+s.crys+' / 60'
+    };
+
+    v.presetChips=[['life',L.pLife],['maze',L.pMaze],['cross',L.pCross]].map((d)=>(
+      {label:d[1], style:Object.assign(chip(false),{minHeight:'34px'}),
+       onTap:()=>{ this.seed1(d[0]); this.setState({rules:PRESETS[d[0]](), sel:0, wide:false, run:true}); }}));
+
+    v.ruleRows=R.map((r,i)=>({n:i+1, on:i===si, text:fill(L.short,r), fromTile:tile(r.from,20), toTile:tile(r.to,20),
+      onTap:()=>this.setState({sel:i}),
+      style:{display:'flex', alignItems:'center', gap:'9px', width:'100%', padding:'9px 10px', borderRadius:'16px', minHeight:'44px',
+        background:i===si?'rgba(121,220,196,.14)':'rgba(255,255,255,.05)', border:'1px solid '+(i===si?'rgba(121,220,196,.6)':'rgba(121,220,196,.16)')}}));
+
+    var cyc=(key,list)=>()=>this.edit((r)=>{ r[key]=list[(list.indexOf(r[key])+1)%list.length]; });
+    v.slotTiles=[[L.capFrom,'from',KINDS],[L.capWhat,'what',['a','r']],[L.capTo,'to',KINDS]].map((d)=>(
+      {cap:d[0], tile:tile(cur[d[1]],30), name:KN[cur[d[1]]], onTap:cyc(d[1],d[2])}));
+
+    var wide=s.wide||isWide(cur.mask), span=wide?2:1, side=wide?5:3, px=wide?32:40;
+    v.hoodGrid={display:'grid', gridTemplateColumns:'repeat('+side+','+px+'px)', gap:'4px', flex:'none'};
+    v.hoodCells=[];
+    for(var dy=-span;dy<=span;dy++) for(var dx=-span;dx<=span;dx++){
+      var idx=(dy+2)*5+dx+2, centre=!dx&&!dy, on=!!cur.mask[idx];
+      v.hoodCells.push({on:on, glyph:centre?L.me:'', aria:centre?L.me:(on?L.hoodCellOn:L.hoodCellOff),
+        onTap:centre?(()=>{}):((k)=>()=>this.edit((r)=>{ r.mask[k]=r.mask[k]?0:1; }))(idx),
+        style:{width:px+'px', height:px+'px', borderRadius:'8px', textAlign:'center', fontSize:'10px', fontWeight:800,
+          color:centre?INK:DARK, cursor:centre?'default':'pointer',
+          background:centre?'rgba(255,255,255,.1)':(on?A3:'transparent'),
+          border:centre?'1.5px solid rgba(234,250,246,.6)':(on?'1.5px solid '+A3:'1.5px dashed rgba(121,220,196,.35)')}});
+    }
+    var N=maskSize(cur.mask);
+    v.hoodText=N?L.hoodText.replace('{n}',N):L.hoodNone;
+    var same=(a,b)=>{ for(var i=0;i<25;i++) if(a[i]!==b[i]) return false; return true; };
+    v.hoodPresets=[['4','4'],['8','8']].concat(wide?[['24','24']]:[]).map((d)=>(
+      {label:d[1], on:same(cur.mask,maskOf(d[0])), style:small(same(cur.mask,maskOf(d[0]))),
+       onTap:()=>this.edit((r)=>{ r.mask=maskOf(d[0]); })}));
+    v.hoodPresets.push({label:wide?'3×3':'5×5', on:false, style:small(false),
+      onTap:()=>{ if(wide){ this.edit((r)=>{ var m8=maskOf('8'); for(var i=0;i<25;i++) if(!m8[i]) r.mask[i]=0; }); this.setState({wide:false}); }
+        else this.setState({wide:true}); }});
+
+    v.numChips=[]; for(var k=0;k<=N;k++) v.numChips.push({label:String(k), on:!!cur.nums[k], style:numBtn(!!cur.nums[k],A1),
+      onTap:((q)=>()=>this.edit((r)=>{ r.nums[q]=!r.nums[q]; }))(k)});
+
+    v.brushes=[['a',L.kAlga],['r',L.kRock]].map((d)=>({label:d[1], on:s.brush===d[0], tile:tile(d[0],16),
+      onTap:()=>this.setState({brush:d[0]}), style:chip(s.brush===d[0])}));
+
+    v.lensChips=[['lNum',L.lNum],['lNext',L.lNext]].map((d)=>({label:d[1], on:s[d[0]], mark:s[d[0]]?'●':'○',
+      onTap:()=>this.setState({[d[0]]:!s[d[0]]}), style:chip(s[d[0]])}));
+    v.tapModes=[['look',L.tLook],['paint',L.tPaint]].map((d)=>({label:d[1], on:s.tapMode===d[0], style:seg(s.tapMode===d[0],A3,40),
+      onTap:()=>this.setState({tapMode:d[0], look:d[0]==='paint'?null:s.look})}));
+
+    if(s.look && this.g2){ var G=this.g2, lk=G[s.look.y*W2+s.look.x], f=firing(G,W2,H2,s.look.x,s.look.y,R), ur=f>=0?R[f]:cur;
+      v.lookText=L.lookSee.replace('{k}',KN[lk]).replace('{n}',countAt(G,W2,H2,s.look.x,s.look.y,ur.mask,ur.what))
+        .replace('{w}',KN[ur.what]).replace('{r}',(f>=0?f:si)+1) + (f>=0?L.lookFire.replace('{t}',KN[R[f].to]):L.lookStay);
+    } else v.lookText=L.lookNone;
+
+    v.crysChips=[]; for(var q=0;q<=8;q++) v.crysChips.push({label:String(q), on:!!s.crysNums[q], style:numBtn(!!s.crysNums[q],A2),
+      onTap:((n)=>()=>{ var c=s.crysNums.slice(); c[n]=!c[n]; this.setState({crysNums:c}); })(q)});
+    var cn=listNums(s.crysNums,8);
+    v.crysSentence=cn===null?L.crysNever:L.crysSent.replace('{nums}',cn);
+
+    return v;
+  }
+}
+</script>
+</body>
+</html>
