@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cellula Forces Explorations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Nunito:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#081419;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
+button{font:inherit;border:0;margin:0;background:none;color:inherit;cursor:pointer;text-align:inherit}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid #f0a63c;outline-offset:2px}
+canvas{display:block;border-radius:14px;background:rgba(4,18,27,.55)}
+input[type=range]{-webkit-appearance:none;appearance:none;height:28px;background:transparent;width:100%;color:#79dcc4;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:rgba(121,220,196,.28)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:#79dcc4;border:3px solid rgba(0,0,0,.25);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:rgba(121,220,196,.28)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#79dcc4;border:3px solid rgba(0,0,0,.25)}
+input[type=range]:disabled{opacity:.35}
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:22px;padding:34px;min-width:1440px">
+
+  <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
+    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:30px;color:#eafaf6;line-height:1">{{ L.pageTitle }}</div>
+    <div style="font-size:13px;font-weight:700;color:rgba(223,243,251,.62);padding-bottom:4px;flex:1;min-width:280px;text-wrap:pretty">{{ L.pageSub }}</div>
+    <div style="display:flex;gap:4px;padding:4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);flex:none">
+      <button type="button" onClick="{{ setPT }}" style="{{ ptStyle }}">Português</button>
+      <button type="button" onClick="{{ setEN }}" style="{{ enStyle }}">English</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap">
+
+    <!-- F1 · law card -->
+    <div id="f1" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#79dcc4;padding:3px 11px;border-radius:9px">F1</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.f1Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.f1Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">{{ L.lawsKicker }}</div>
+          <div style="font-size:9.5px;font-weight:700;color:rgba(223,243,251,.6);flex:none">{{ L.lawsNote }}</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16)">
+          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:13px;color:rgba(223,243,251,.6);width:12px;flex:none">1</div>
+          <div style="display:flex;gap:3px;padding:3px;border-radius:10px;background:rgba(4,18,27,.4);flex:none">
+            <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04)"><img src="art/fish-right.svg" alt="" style="width:90%;height:90%;object-fit:contain"></div>
+            <div style="width:22px;height:22px;border-radius:5px;background:rgba(255,255,255,.04)"></div>
+          </div>
+          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:13px;color:#f0a63c;flex:none">➜</div>
+          <div style="display:flex;gap:3px;padding:3px;border-radius:10px;background:rgba(4,18,27,.4);flex:none">
+            <div style="width:22px;height:22px;border-radius:5px;background:rgba(255,255,255,.04)"></div>
+            <div style="width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04)"><img src="art/fish-right.svg" alt="" style="width:90%;height:90%;object-fit:contain"></div>
+          </div>
+          <div style="flex:1;min-width:0;font-size:11.5px;font-weight:800;color:#eafaf6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ L.pairRule }}</div>
+          <div style="flex:none;font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:8px;background:rgba(255,255,255,.035);color:rgba(223,243,251,.66)">{{ L.pairKind }}</div>
+        </div>
+
+        <div style="padding:13px;border-radius:20px;background:rgba(121,220,196,.08);border:1px solid rgba(121,220,196,.34);display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:13px;color:rgba(223,243,251,.6);width:12px;flex:none">2</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;color:#eafaf6;line-height:1.15">{{ L.lawName }}</div>
+              <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.62)">{{ L.lawKind }}</div>
+            </div>
+            <button type="button" onClick="{{ toggleLaw }}" aria-pressed="{{ lawOn }}" aria-label="{{ L.lawSwitch }}" style="{{ swStyle }}"><span style="{{ knobStyle }}"></span></button>
+          </div>
+
+          <div>
+            <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);margin-bottom:6px">{{ L.signLabel }}</div>
+            <div style="display:flex;gap:5px;padding:5px;border-radius:15px;background:rgba(4,18,27,.4)">
+              <sc-for list="{{ signTabs }}" as="s" hint-placeholder-count="2">
+                <button type="button" onClick="{{ s.onTap }}" aria-pressed="{{ s.on }}" style="{{ s.style }}">{{ s.label }}<span style="display:block;font-size:9px;font-weight:700;opacity:.8">{{ s.sub }}</span></button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:6px;padding:10px 11px;border-radius:15px;background:rgba(4,18,27,.4)">
+            <sc-for list="{{ pairRows }}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="{{ p.dotA }}">{{ p.gA }}</div>
+                <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:15px;color:#eafaf6;width:38px;text-align:center;flex:none">{{ p.arrows }}</div>
+                <div style="{{ p.dotB }}">{{ p.gB }}</div>
+                <div style="flex:1;min-width:0;font-size:11.5px;font-weight:800;color:#eafaf6">{{ p.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <label style="display:block">
+            <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.strength }}</span><span style="color:#eafaf6">{{ strengthLabel }}</span></span>
+            <input type="range" min="20" max="100" step="5" value="{{ strengthPct }}" onChange="{{ setStrength }}">
+          </label>
+          <label style="display:block">
+            <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.range }}</span><span style="color:#eafaf6">{{ rangeLabel }}</span></span>
+            <input type="range" min="2" max="12" step="1" value="{{ range }}" onChange="{{ setRange }}">
+          </label>
+
+          <div style="padding:9px 11px;border-radius:13px;background:rgba(255,255,255,.04)">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:1px;color:#79dcc4">{{ L.readsAs }}</div>
+            <div style="font-size:12px;font-weight:700;color:#eafaf6;text-wrap:pretty;margin-top:2px">{{ lawSentence }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">{{ L.f1Live }}</div>
+          <div style="font-size:10px;font-weight:800;color:#a8cf4c;padding:4px 9px;border-radius:8px;background:rgba(168,207,76,.14);flex:none">{{ clusterLabel }}</div>
+        </div>
+        <canvas id="fx-cells" role="img" aria-label="{{ L.f1Canvas }}" style="width:376px;height:233px"></canvas>
+        <div style="display:flex;gap:8px">
+          <button type="button" onClick="{{ toggleRun1 }}" style="flex:none;width:44px;height:44px;border-radius:14px;text-align:center;font-size:14px;font-weight:800;background:#79dcc4;color:#07303a" aria-label="{{ L.playPause }}">{{ run1Icon }}</button>
+          <button type="button" onClick="{{ shuffle1 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.shuffle }}</button>
+        </div>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.openKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.f1Open }}</div>
+      </div>
+    </div>
+
+    <!-- F2 · field lens -->
+    <div id="f2" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#a8cf4c;padding:3px 11px;border-radius:9px">F2</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.f2Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.f2Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c;margin-bottom:6px">{{ L.lensKicker }}</div>
+          <div style="display:flex;gap:5px;padding:5px;border-radius:15px;background:rgba(4,18,27,.4)">
+            <sc-for list="{{ lensTabs }}" as="t" hint-placeholder-count="4">
+              <button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <canvas id="fx-field" role="img" aria-label="{{ L.f2Canvas }}" onClick="{{ paintField }}" style="width:376px;height:255px;cursor:crosshair"></canvas>
+
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);flex:none">{{ L.brush }}</div>
+          <sc-for list="{{ brushes }}" as="b" hint-placeholder-count="3">
+            <button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}"><span style="{{ b.dot }}">{{ b.glyph }}</span>{{ b.label }}</button>
+          </sc-for>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.66);text-wrap:pretty">{{ L.f2Hint }}</div>
+
+        <div style="height:1px;background:rgba(121,220,196,.16)"></div>
+
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);flex:1;min-width:120px">{{ L.passes }}</div>
+          <sc-for list="{{ passTabs }}" as="p" hint-placeholder-count="3">
+            <button type="button" onClick="{{ p.onTap }}" aria-pressed="{{ p.on }}" style="{{ p.style }}">{{ p.label }}</button>
+          </sc-for>
+          <button type="button" onClick="{{ zeroField }}" style="height:40px;padding:0 12px;border-radius:12px;font-size:11.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.zero }}</button>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.66);text-wrap:pretty">{{ L.passHint }}</div>
+      </div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.035);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">{{ L.ruleKicker }}</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="display:grid;grid-template-columns:repeat(3,22px);gap:3px;flex:none">
+            <div style="height:22px;border-radius:5px;border:1px dashed rgba(121,220,196,.2)"></div>
+            <div style="height:22px;border-radius:5px;background:rgba(168,207,76,.35)"></div>
+            <div style="height:22px;border-radius:5px;border:1px dashed rgba(121,220,196,.2)"></div>
+            <div style="height:22px;border-radius:5px;background:rgba(168,207,76,.35)"></div>
+            <div style="height:22px;border-radius:5px;background:#a8cf4c"></div>
+            <div style="height:22px;border-radius:5px;background:rgba(168,207,76,.35)"></div>
+            <div style="height:22px;border-radius:5px;border:1px dashed rgba(121,220,196,.2)"></div>
+            <div style="height:22px;border-radius:5px;background:rgba(168,207,76,.35)"></div>
+            <div style="height:22px;border-radius:5px;border:1px dashed rgba(121,220,196,.2)"></div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#eafaf6;text-wrap:pretty">{{ L.ruleText }}</div>
+        </div>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.foundKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.f2Found }}</div>
+      </div>
+    </div>
+
+    <!-- F3 · launch gesture -->
+    <div id="f3" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#f0a63c;padding:3px 11px;border-radius:9px">F3</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.f3Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.f3Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c;margin-bottom:6px">{{ L.feelKicker }}</div>
+          <div style="display:flex;gap:5px;padding:5px;border-radius:15px;background:rgba(4,18,27,.4)">
+            <sc-for list="{{ feelTabs }}" as="t" hint-placeholder-count="2">
+              <button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}<span style="display:block;font-size:9px;font-weight:700;opacity:.8">{{ t.sub }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+
+        <canvas id="fx-orbit" role="img" aria-label="{{ L.f3Canvas }}" onPointerDown="{{ dragStart }}" onPointerMove="{{ dragMove }}" onPointerUp="{{ dragEnd }}" onPointerCancel="{{ dragCancel }}" style="width:376px;height:376px;cursor:crosshair;touch-action:none"></canvas>
+
+        <div style="font-size:11.5px;font-weight:700;color:#f0a63c;text-wrap:pretty;padding:9px 11px;border-radius:15px;background:rgba(240,166,60,.1);border:1px solid rgba(240,166,60,.3)">{{ L.f3Hint }}</div>
+
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);flex:none">{{ L.launchWhat }}</div>
+          <sc-for list="{{ launchKinds }}" as="b" hint-placeholder-count="2">
+            <button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}"><span style="{{ b.dot }}">{{ b.glyph }}</span>{{ b.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+          <sc-for list="{{ eventChips }}" as="e" hint-placeholder-count="3">
+            <div style="padding:8px 6px;border-radius:13px;background:rgba(4,18,27,.4);text-align:center">
+              <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;line-height:1;color:{{ e.color }}">{{ e.n }}</div>
+              <div style="font-size:9.5px;font-weight:800;letter-spacing:.5px;color:rgba(223,243,251,.66);margin-top:2px">{{ e.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button type="button" onClick="{{ toggleRun3 }}" style="flex:none;width:44px;height:44px;border-radius:14px;text-align:center;font-size:14px;font-weight:800;background:#79dcc4;color:#07303a" aria-label="{{ L.playPause }}">{{ run3Icon }}</button>
+          <button type="button" onClick="{{ clear3 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.clear }}</button>
+        </div>
+        <div style="font-size:10.5px;font-weight:700;color:rgba(223,243,251,.62);text-wrap:pretty">{{ lawChip }}</div>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.foundKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.f3Found }}</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+// ---------------------------------------------------------------- copy
+const COPY = {
+  pt:{
+    pageTitle:'Forças · turno 1',
+    pageSub:'Três peças do modelo de forças, vivas: o cartão de lei, a lente de campo e o gesto de lançar. O cartão em F1 manda nos três mundos.',
+    f1Title:'Cartão de lei', f2Title:'Lente de campo', f3Title:'Gesto de lançar',
+    f1Desc:'Uma lei não é gravada como uma regra de par: ela vale no mundo inteiro. A criança só afina três botões, e a lei entra na mesma lista ordenada das regras.',
+    f2Desc:'O campo é uma camada de números sobre a mesma grade. A lente mostra essa camada: cada casa vira a média das vizinhas, mais o que a fonte coloca ali.',
+    f3Desc:'No rosto AGENTE o corpo tem velocidade. Tocar, puxar e soltar dá o empurrão inicial; a lei cuida do resto, e a órbita aparece no rastro.',
+    lawsKicker:'LEIS DO MUNDO · EM ORDEM', lawsNote:'regras e leis na mesma lista',
+    pairRule:'peixe → nada', pairKind:'par',
+    lawName:'Forças entre partículas', lawKind:'lei · vale no mundo inteiro', lawSwitch:'ligar ou desligar a lei',
+    signLabel:'SINAL', signLike:'Iguais se afastam', signLikeSub:'como cargas elétricas', signAll:'Tudo se atrai', signAllSub:'como a gravidade',
+    repel:'se afastam', attract:'se atraem', attractMore:'quanto mais massa, mais puxa',
+    strength:'FORÇA', range:'ALCANCE', cells:'casas', readsAs:'LÊ-SE ASSIM',
+    sentLike:'Iguais se afastam e diferentes se atraem, até {r} casas de distância.',
+    sentAll:'Tudo se atrai, e quem tem mais massa puxa mais, até {r} casas de distância.',
+    sentOff:'A lei está desligada: as partículas só seguem o embalo que já têm.',
+    f1Live:'A LEI AGINDO · ROSTO CÉLULAS', clusters:'aglomerados', f1Canvas:'Partículas na grade movidas pela lei do cartão',
+    playPause:'rodar ou pausar', shuffle:'Embaralhar', openKicker:'DECISÃO EM ABERTO', foundKicker:'ACHADO DESTA RODADA',
+    f1Open:'Sem atrito nada se junta: as partículas só passam umas pelas outras e voltam. Aqui a água freia um pouco, fixo. Isso deve virar um quarto botão do cartão ou uma propriedade do mundo?',
+    lensKicker:'LENTE', lensOff:'Desligada', lensHeat:'Calor', lensArrows:'Setas', lensBoth:'Os dois',
+    f2Canvas:'Grade com fontes e o campo que elas espalham',
+    brush:'PINCEL', bPlus:'positiva', bMinus:'negativa', bMass:'massa', bBig:'massa grande', bErase:'apagar',
+    f2Hint:'Toque em uma casa para colocar ou tirar uma fonte. A seta mostra para onde uma partícula de teste seria empurrada.',
+    passes:'PASSOS DE CAMPO POR CICLO', zero:'Zerar campo',
+    passHint:'O campo anda uma casa por passo. Com 1 passo você vê a onda saindo da fonte; com 16 ele parece instantâneo.',
+    ruleKicker:'A REGRA DO CAMPO', ruleText:'Cada casa vira a média das quatro vizinhas, perde um pouco (o alcance) e soma o que a fonte coloca. É uma regra de células de verdade.',
+    f2Found:'Um corpo não pode sentir o próprio campo. Como o campo demora para se espalhar, o rastro do corpo o puxava para trás e a órbita caía. Cada fonte passa a guardar o seu campo e o motor desconta: isso entra no contrato do modelo.',
+    feelKicker:'COMO O CORPO SENTE', feelField:'Pelo campo', feelFieldSub:'lê a camada · rosetas', feelDirect:'Direto 1/r²', feelDirectSub:'soma os pares · elipses',
+    f3Canvas:'Arena com um corpo central; arraste para lançar corpos em órbita',
+    f3Hint:'Toque, puxe e solte: a seta é a velocidade. A linha pontilhada mostra o caminho previsto.',
+    launchWhat:'LANÇAR', kLight:'leve', kHeavy:'pesado', kNeg:'negativa', kPos:'positiva',
+    evOrbit:'ÓRBITAS', evEscape:'FUGAS', evCapture:'CAPTURAS', clear:'Limpar',
+    chipField:'Lei do cartão: força {s}% · alcance {r} casas.',
+    chipDirect:'Lei do cartão: força {s}%. O alcance não vale aqui: 1/r² não tem alcance.',
+    f3Found:'No modo direto o botão Alcance some: cada variante da lei declara os botões que tem, e o cartão mostra só esses. Os três contadores acima são eventos que o modelo emite; os objetivos dos capítulos vão ler deles.'
+  },
+  en:{
+    pageTitle:'Forces · turn 1',
+    pageSub:'Three live pieces of the forces model: the law card, the field lens and the launch gesture. The card in F1 drives all three worlds.',
+    f1Title:'Law card', f2Title:'Field lens', f3Title:'Launch gesture',
+    f1Desc:'A law is not recorded like a pair rule: it holds across the whole world. The child only tunes three knobs, and the law sits in the same ordered list as the rules.',
+    f2Desc:'The field is a layer of numbers over the same grid. The lens shows that layer: each cell becomes the average of its neighbours, plus what a source puts there.',
+    f3Desc:'In the AGENT face a body has velocity. Touch, pull and release gives the first push; the law does the rest, and the orbit shows in the trail.',
+    lawsKicker:'LAWS OF THE WORLD · IN ORDER', lawsNote:'rules and laws in one list',
+    pairRule:'fish → swims', pairKind:'pair',
+    lawName:'Forces between particles', lawKind:'law · holds across the whole world', lawSwitch:'turn the law on or off',
+    signLabel:'SIGN', signLike:'Like repels', signLikeSub:'as electric charges do', signAll:'Everything attracts', signAllSub:'as gravity does',
+    repel:'push apart', attract:'pull together', attractMore:'more mass pulls harder',
+    strength:'STRENGTH', range:'RANGE', cells:'cells', readsAs:'READS AS',
+    sentLike:'Like pushes apart and unlike pulls together, up to {r} cells away.',
+    sentAll:'Everything pulls together, and more mass pulls harder, up to {r} cells away.',
+    sentOff:'The law is off: particles only keep the motion they already have.',
+    f1Live:'THE LAW AT WORK · CELLS FACE', clusters:'clusters', f1Canvas:'Particles on the grid moved by the law on the card',
+    playPause:'run or pause', shuffle:'Shuffle', openKicker:'OPEN DECISION', foundKicker:'FOUND THIS ROUND',
+    f1Open:'Without friction nothing gathers: particles pass each other and come back. Here the water slows them a little, fixed. Should that become a fourth knob on the card, or a property of the world?',
+    lensKicker:'LENS', lensOff:'Off', lensHeat:'Heat', lensArrows:'Arrows', lensBoth:'Both',
+    f2Canvas:'Grid with sources and the field they spread',
+    brush:'BRUSH', bPlus:'positive', bMinus:'negative', bMass:'mass', bBig:'big mass', bErase:'erase',
+    f2Hint:'Tap a cell to place or remove a source. The arrow shows where a test particle would be pushed.',
+    passes:'FIELD PASSES PER TICK', zero:'Zero the field',
+    passHint:'The field travels one cell per pass. With 1 pass you see the wave leave the source; with 16 it looks instant.',
+    ruleKicker:'THE FIELD RULE', ruleText:'Each cell becomes the average of its four neighbours, loses a little (the range) and adds what a source puts there. It is a true cell rule.',
+    f2Found:'A body must not feel its own field. Because the field takes time to spread, the body’s own wake pulled it back and the orbit decayed. Each source now keeps its own field and the engine subtracts it: this goes into the model contract.',
+    feelKicker:'HOW THE BODY FEELS', feelField:'Through the field', feelFieldSub:'reads the layer · rosettes', feelDirect:'Direct 1/r²', feelDirectSub:'sums the pairs · ellipses',
+    f3Canvas:'Arena with a central body; drag to launch bodies into orbit',
+    f3Hint:'Touch, pull and release: the arrow is the velocity. The dotted line shows the predicted path.',
+    launchWhat:'LAUNCH', kLight:'light', kHeavy:'heavy', kNeg:'negative', kPos:'positive',
+    evOrbit:'ORBITS', evEscape:'ESCAPES', evCapture:'CAPTURES', clear:'Clear',
+    chipField:'Law on the card: strength {s}% · range {r} cells.',
+    chipDirect:'Law on the card: strength {s}%. Range does not apply here: 1/r² has no range.',
+    f3Found:'In direct mode the Range knob disappears: each variant of the law declares its own knobs, and the card shows only those. The three counters above are events the model emits; chapter goals will read from them.'
+  }
+};
+
+// ---------------------------------------------------------------- field core
+// one layer of numbers; relax() is the whole cell rule
+function makeField(w,h){ return {w:w,h:h,phi:new Float32Array(w*h),tmp:new Float32Array(w*h),rho:new Float32Array(w*h)}; }
+function decayFor(R){ return 1/(1+4*R*R); }
+function relax(F,decay,passes){
+  var w=F.w,h=F.h,a=F.phi,b=F.tmp,rho=F.rho,k=(1-decay)*0.25;
+  for(var p=0;p<passes;p++){
+    for(var y=0;y<h;y++){ var row=y*w;
+      for(var x=0;x<w;x++){ var i=row+x,c=a[i];
+        b[i]=k*((x>0?a[i-1]:c)+(x<w-1?a[i+1]:c)+(y>0?a[i-w]:c)+(y<h-1?a[i+w]:c))+rho[i]; } }
+    var t=a;a=b;b=t; }
+  F.phi=a;F.tmp=b;
+}
+function gradCell(F,x,y){ var w=F.w,h=F.h,p=F.phi,i=y*w+x,c=p[i];
+  return [((x<w-1?p[i+1]:c)-(x>0?p[i-1]:c))/2, ((y<h-1?p[i+w]:c)-(y>0?p[i-w]:c))/2]; }
+function gradAt(F,px,py){ var w=F.w,h=F.h;
+  if(px<0||py<0||px>w-1||py>h-1) return [0,0];
+  var x0=Math.min(w-2,Math.floor(px)),y0=Math.min(h-2,Math.floor(py)),fx=px-x0,fy=py-y0;
+  var a=gradCell(F,x0,y0),b=gradCell(F,x0+1,y0),c=gradCell(F,x0,y0+1),d=gradCell(F,x0+1,y0+1);
+  return [(a[0]*(1-fx)+b[0]*fx)*(1-fy)+(c[0]*(1-fx)+d[0]*fx)*fy,(a[1]*(1-fx)+b[1]*fx)*(1-fy)+(c[1]*(1-fx)+d[1]*fx)*fy]; }
+function deposit(F,px,py,s){ var w=F.w,h=F.h;
+  if(px<0||py<0||px>w-1||py>h-1) return;
+  var x0=Math.min(w-2,Math.floor(px)),y0=Math.min(h-2,Math.floor(py)),fx=px-x0,fy=py-y0,r=F.rho,i=y0*w+x0;
+  r[i]+=s*(1-fx)*(1-fy); r[i+1]+=s*fx*(1-fy); r[i+w]+=s*(1-fx)*fy; r[i+w+1]+=s*fx*fy; }
+
+const INK='#eafaf6', A1='#79dcc4', A2='#f0a63c', A3='#a8cf4c', NEG='#3a8fb0', DARK='#07303a';
+const POS_RGB='240,166,60', NEG_RGB='58,143,176', MASS_RGB='121,220,196';
+
+function ctxFor(id,cw,ch){
+  var el=document.getElementById(id); if(!el||!el.getContext) return null;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  if(el.width!==Math.round(cw*dpr)){ el.width=Math.round(cw*dpr); el.height=Math.round(ch*dpr); }
+  var c=el.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,cw,ch); return c;
+}
+function drawHeat(c,F,cs,all,alpha){
+  var w=F.w,h=F.h,p=F.phi,mx=1.2,i;
+  for(i=0;i<p.length;i++){ var v=Math.abs(p[i]); if(v>mx) mx=v; }
+  for(var y=0;y<h;y++) for(var x=0;x<w;x++){
+    var val=p[y*w+x], a=Math.pow(Math.min(1,Math.abs(val)/mx),0.55)*alpha;
+    if(a<0.02) continue;
+    c.fillStyle='rgba('+(all?MASS_RGB:(val>0?POS_RGB:NEG_RGB))+','+a.toFixed(3)+')';
+    c.fillRect(x*cs,y*cs,cs+0.5,cs+0.5);
+  }
+}
+function drawGrid(c,w,h,cs,a){
+  c.strokeStyle='rgba(121,220,196,'+a+')'; c.lineWidth=1; c.beginPath();
+  for(var x=0;x<=w;x++){ c.moveTo(x*cs,0); c.lineTo(x*cs,h*cs); }
+  for(var y=0;y<=h;y++){ c.moveTo(0,y*cs); c.lineTo(w*cs,y*cs); }
+  c.stroke();
+}
+function drawDot(c,px,py,r,fill,glyph,glyphColor){
+  c.fillStyle=fill; c.beginPath(); c.arc(px,py,r,0,6.2832); c.fill();
+  if(glyph){ c.fillStyle=glyphColor; c.font='800 '+Math.round(r*1.7)+'px Nunito, sans-serif';
+    c.textAlign='center'; c.textBaseline='middle'; c.fillText(glyph,px,py+0.5); }
+}
+function drawArrow(c,x0,y0,x1,y1,color,wd){
+  var dx=x1-x0,dy=y1-y0,len=Math.sqrt(dx*dx+dy*dy); if(len<1.5) return;
+  var ux=dx/len,uy=dy/len,hd=Math.min(5,len*0.45);
+  c.strokeStyle=color; c.lineWidth=wd; c.lineCap='round'; c.beginPath();
+  c.moveTo(x0,y0); c.lineTo(x1,y1);
+  c.moveTo(x1,y1); c.lineTo(x1-ux*hd-uy*hd*0.6,y1-uy*hd+ux*hd*0.6);
+  c.moveTo(x1,y1); c.lineTo(x1-ux*hd+uy*hd*0.6,y1-uy*hd-ux*hd*0.6);
+  c.stroke();
+}
+
+const C_W=21, C_H=13;           // F1 cells world
+const L_W=31, L_H=21;           // F2 lens world
+const O_N=31, O_C=15;           // F3 orbit world (square), centre
+
+class Component extends DCLogic {
+  state = { lang:'pt', all:false, on:true, strength:60, range:8,
+    lens:'both', brush:'plus', passes:4,
+    direct:false, kind:'a', run1:true, run3:true,
+    clusters:0, orbits:0, escapes:0, captures:0 };
+
+  componentDidMount(){ this.seedAll(false); this.frame=0; this.loop(); }
+  componentWillUnmount(){ cancelAnimationFrame(this.raf); }
+
+  law(){ var s=this.state; return {s:s.on?s.strength/100:0, range:s.range, all:s.all}; }
+
+  // ------------------------------------------------------------ seeding
+  seedAll(all){ this.seedCells(all); this.seedLens(all); this.seedOrbit(); }
+
+  seedCells(all){
+    var F=makeField(C_W,C_H), P=[], used={}, n=all?12:14;
+    while(P.length<n){
+      var x=1+Math.floor(Math.random()*(C_W-2)), y=1+Math.floor(Math.random()*(C_H-2));
+      if(used[x+','+y]) continue; used[x+','+y]=1;
+      var i=P.length, p={x:x,y:y,vx:0,vy:0,ax:0,ay:0,self:makeField(C_W,C_H)};
+      if(all){ p.src=i<2?3:1; p.cpl=1; p.big=i<2; }
+      else { p.src=i%2?-1:1; p.cpl=-p.src; }
+      P.push(p);
+    }
+    this.cells={F:F,P:P};
+  }
+
+  seedLens(all){
+    var F=makeField(L_W,L_H), S=new Float32Array(L_W*L_H);
+    if(all){ S[10*L_W+9]=3; S[7*L_W+21]=1; S[14*L_W+23]=1; }
+    else { S[10*L_W+9]=1; S[7*L_W+21]=-1; S[14*L_W+23]=1; }
+    this.lens={F:F,S:S};
+  }
+
+  seedOrbit(){
+    var F=makeField(O_N,O_N);
+    deposit(F,O_C,O_C,1); relax(F,decayFor(this.state.range),500);
+    this.orbit={F:F,B:[]}; this.drag=null;
+    var v=this.state.direct?0.15:0.14;
+    this.addBody(O_C+8,O_C,0,v*Math.sqrt(this.state.strength/60),'a',this.state.all);
+  }
+
+  addBody(x,y,vx,vy,kind,all){
+    var b={x:x,y:y,vx:vx,vy:vy,trail:[],sum:0,rev:0,self:makeField(O_N,O_N),
+      la:Math.atan2(y-O_C,x-O_C)};
+    if(all){ b.src=kind==='a'?0.02:0.08; b.cpl=1; b.r=kind==='a'?3.5:6; b.color=A3; b.glyph=''; }
+    else if(kind==='a'){ b.src=-0.02; b.cpl=1; b.r=5.5; b.color=NEG; b.glyph='−'; b.gc=INK; }
+    else { b.src=0.02; b.cpl=-1; b.r=5.5; b.color=A2; b.glyph='+'; b.gc=DARK; }
+    this.orbit.B.push(b); if(this.orbit.B.length>12) this.orbit.B.shift();
+  }
+
+  // ------------------------------------------------------------ F1: cells face
+  tickCells(){
+    var W=this.cells, F=W.F, P=W.P, law=this.law(), d=decayFor(law.range), i, p;
+    F.rho.fill(0);
+    for(i=0;i<P.length;i++){ p=P[i]; F.rho[p.y*C_W+p.x]+=p.src; }
+    relax(F,d,6);
+    var occ={};
+    for(i=0;i<P.length;i++){ p=P[i]; occ[p.x+','+p.y]=1;
+      p.self.rho.fill(0); p.self.rho[p.y*C_W+p.x]=p.src; relax(p.self,d,6); }
+    var order=P.slice();
+    for(i=order.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=order[i]; order[i]=order[j]; order[j]=t; }
+    var S=0.15*law.s;
+    for(i=0;i<order.length;i++){ p=order[i];
+      var g=gradCell(F,p.x,p.y), g2=gradCell(p.self,p.x,p.y);
+      p.vx=(p.vx+p.cpl*S*(g[0]-g2[0]))*0.92; p.vy=(p.vy+p.cpl*S*(g[1]-g2[1]))*0.92;
+      p.vx=Math.max(-0.8,Math.min(0.8,p.vx)); p.vy=Math.max(-0.8,Math.min(0.8,p.vy));
+      p.ax+=p.vx; p.ay+=p.vy;
+      // a hop happens when the saved-up movement crosses one whole cell
+      if(Math.abs(p.ax)>=1){ var dx=p.ax>0?1:-1, nx=p.x+dx;
+        if(nx<0||nx>=C_W||occ[nx+','+p.y]){ p.vx*=-0.2; p.ax=0; }
+        else { delete occ[p.x+','+p.y]; p.x=nx; occ[p.x+','+p.y]=1; p.ax-=dx; } }
+      if(Math.abs(p.ay)>=1){ var dy=p.ay>0?1:-1, ny=p.y+dy;
+        if(ny<0||ny>=C_H||occ[p.x+','+ny]){ p.vy*=-0.2; p.ay=0; }
+        else { delete occ[p.x+','+p.y]; p.y=ny; occ[p.x+','+p.y]=1; p.ay-=dy; } }
+    }
+  }
+
+  countClusters(){
+    var P=this.cells.P, at={}, seen={}, n=0, i;
+    for(i=0;i<P.length;i++) at[P[i].x+','+P[i].y]=1;
+    for(i=0;i<P.length;i++){ var k=P[i].x+','+P[i].y; if(seen[k]) continue;
+      var stack=[[P[i].x,P[i].y]], size=0; seen[k]=1;
+      while(stack.length){ var c=stack.pop(); size++;
+        for(var dy=-1;dy<=1;dy++) for(var dx=-1;dx<=1;dx++){ var q=(c[0]+dx)+','+(c[1]+dy);
+          if(at[q]&&!seen[q]){ seen[q]=1; stack.push([c[0]+dx,c[1]+dy]); } } }
+      if(size>=2) n++; }
+    return n;
+  }
+
+  drawCells(){
+    var cw=376, cs=cw/C_W, ch=cs*C_H, c=ctxFor('fx-cells',cw,233); if(!c) return;
+    var W=this.cells, all=this.state.all;
+    drawHeat(c,W.F,cs,all,0.3); drawGrid(c,C_W,C_H,cs,0.12);
+    for(var i=0;i<W.P.length;i++){ var p=W.P[i], px=(p.x+0.5)*cs, py=(p.y+0.5)*cs;
+      if(all) drawDot(c,px,py,p.big?cs*0.44:cs*0.28,A3,'',INK);
+      else drawDot(c,px,py,cs*0.4,p.src>0?A2:NEG,p.src>0?'+':'−',p.src>0?DARK:INK); }
+  }
+
+  // ------------------------------------------------------------ F2: lens
+  tickLens(){
+    var W=this.lens; W.F.rho.set(W.S);
+    relax(W.F,decayFor(this.state.range),this.state.passes);
+  }
+  drawLens(){
+    var cw=376, cs=cw/L_W, c=ctxFor('fx-field',cw,255); if(!c) return;
+    var W=this.lens, F=W.F, s=this.state, all=s.all, x, y;
+    if(s.lens==='heat'||s.lens==='both') drawHeat(c,F,cs,all,0.85);
+    drawGrid(c,L_W,L_H,cs,0.1);
+    if(s.lens==='arrows'||s.lens==='both'){
+      var sg=all?1:-1;
+      for(y=1;y<L_H;y+=2) for(x=1;x<L_W;x+=2){
+        if(W.S[y*L_W+x]) continue;
+        var g=gradCell(F,x,y), m=Math.sqrt(g[0]*g[0]+g[1]*g[1]); if(m<0.004) continue;
+        var len=Math.min(1,Math.pow(m/0.2,0.5))*cs*0.95, ux=sg*g[0]/m, uy=sg*g[1]/m;
+        var px=(x+0.5)*cs, py=(y+0.5)*cs;
+        drawArrow(c,px-ux*len*0.5,py-uy*len*0.5,px+ux*len*0.5,py+uy*len*0.5,'rgba(234,250,246,.8)',1.3);
+      }
+    }
+    for(y=0;y<L_H;y++) for(x=0;x<L_W;x++){ var v=W.S[y*L_W+x]; if(!v) continue;
+      if(all) drawDot(c,(x+0.5)*cs,(y+0.5)*cs,v>1?cs*0.62:cs*0.42,A3,'',INK);
+      else drawDot(c,(x+0.5)*cs,(y+0.5)*cs,cs*0.52,v>0?A2:NEG,v>0?'+':'−',v>0?DARK:INK); }
+  }
+  paintField = (e)=>{
+    var r=e.currentTarget.getBoundingClientRect();
+    var x=Math.floor((e.clientX-r.left)/r.width*L_W), y=Math.floor((e.clientY-r.top)/r.height*L_H);
+    if(x<0||y<0||x>=L_W||y>=L_H) return;
+    var b=this.state.brush, i=y*L_W+x, S=this.lens.S;
+    var v=b==='erase'?0:(this.state.all?(b==='minus'?3:1):(b==='minus'?-1:1));
+    S[i]=S[i]===v?0:v;
+  };
+
+  // ------------------------------------------------------------ F3: agent face
+  accel(b,B,direct,law,F){
+    if(direct){
+      var GM=0.3*law.s, dx=O_C-b.x, dy=O_C-b.y, r2=dx*dx+dy*dy+0.05, inv=1/(r2*Math.sqrt(r2));
+      var ax=GM*b.cpl*dx*inv, ay=GM*b.cpl*dy*inv;
+      for(var j=0;j<B.length;j++){ var o=B[j]; if(o===b) continue;
+        dx=o.x-b.x; dy=o.y-b.y; r2=dx*dx+dy*dy+0.3; inv=1/(r2*Math.sqrt(r2));
+        ax+=GM*o.src*b.cpl*dx*inv; ay+=GM*o.src*b.cpl*dy*inv; }
+      return [ax,ay];
+    }
+    var S=0.1*law.s, g=gradAt(F,b.x,b.y), g2=b.self?gradAt(b.self,b.x,b.y):[0,0];
+    return [b.cpl*S*(g[0]-g2[0]), b.cpl*S*(g[1]-g2[1])];
+  }
+
+  tickOrbit(){
+    var W=this.orbit, F=W.F, B=W.B, law=this.law(), direct=this.state.direct, d=decayFor(law.range), i, b;
+    var ev={o:0,e:0,c:0};
+    for(var sub=0;sub<2;sub++){
+      // the field layer is kept current in both modes, so switching shows no jump
+      F.rho.fill(0); deposit(F,O_C,O_C,1);
+      for(i=0;i<B.length;i++) deposit(F,B[i].x,B[i].y,B[i].src);
+      relax(F,d,4);
+      for(i=0;i<B.length;i++){ b=B[i]; b.self.rho.fill(0); deposit(b.self,b.x,b.y,b.src); relax(b.self,d,4); }
+      for(i=0;i<B.length;i++){ b=B[i]; b.acc=this.accel(b,B,direct,law,F); }
+      for(i=0;i<B.length;i++){ b=B[i]; b.vx+=b.acc[0]*0.5; b.vy+=b.acc[1]*0.5; b.x+=b.vx*0.5; b.y+=b.vy*0.5; }
+    }
+    for(i=B.length-1;i>=0;i--){ b=B[i];
+      var dx=b.x-O_C, dy=b.y-O_C, r=Math.sqrt(dx*dx+dy*dy);
+      if(r<0.9){ B.splice(i,1); ev.c++; continue; }
+      if(r>26){ B.splice(i,1); ev.e++; continue; }
+      var a=Math.atan2(dy,dx), da=a-b.la; if(da>Math.PI) da-=6.2832; if(da<-Math.PI) da+=6.2832;
+      b.sum+=da; b.la=a;
+      var rev=Math.floor(Math.abs(b.sum)/6.2832); if(rev>b.rev){ ev.o+=rev-b.rev; b.rev=rev; }
+      b.trail.push(b.x,b.y); if(b.trail.length>900) b.trail.splice(0,2);
+    }
+    if(ev.o||ev.e||ev.c) this.setState(s=>({orbits:s.orbits+ev.o, escapes:s.escapes+ev.e, captures:s.captures+ev.c}));
+  }
+
+  predict(x,y,vx,vy,kind){
+    var s=this.state, law=this.law(), W=this.orbit, pts=[];
+    var g={x:x,y:y,vx:vx,vy:vy,cpl:(s.all||kind==='a')?1:-1,self:null};
+    for(var f=0;f<520;f++){
+      var a=this.accel(g,[],s.direct,law,W.F);
+      g.vx+=a[0]*0.5; g.vy+=a[1]*0.5; g.x+=g.vx*0.5; g.y+=g.vy*0.5;
+      var dx=g.x-O_C, dy=g.y-O_C, r2=dx*dx+dy*dy;
+      if(r2<0.8||r2>700) break;
+      if(f%4===0) pts.push(g.x,g.y);
+    }
+    return pts;
+  }
+
+  drawOrbit(){
+    var cw=376, cs=cw/O_N, c=ctxFor('fx-orbit',cw,cw); if(!c) return;
+    var W=this.orbit, s=this.state, i, k, b;
+    if(!s.direct) drawHeat(c,W.F,cs,s.all,0.5);
+    drawGrid(c,O_N,O_N,cs,0.05);
+    var P=(v)=>(v+0.5)*cs;
+    for(i=0;i<W.B.length;i++){ b=W.B[i]; var t=b.trail, n=t.length/2;
+      c.lineWidth=1.6; c.lineCap='round'; c.strokeStyle=b.color;
+      for(k=1;k<n;k++){ c.globalAlpha=0.08+0.72*(k/n);
+        c.beginPath(); c.moveTo(P(t[k*2-2]),P(t[k*2-1])); c.lineTo(P(t[k*2]),P(t[k*2+1])); c.stroke(); }
+      c.globalAlpha=1; }
+    drawDot(c,P(O_C),P(O_C),s.all?11:9,s.all?A3:A2,s.all?'':'+',DARK);
+    for(i=0;i<W.B.length;i++){ b=W.B[i]; drawDot(c,P(b.x),P(b.y),b.r,b.color,b.glyph,b.gc); }
+    var d=this.drag;
+    if(d){
+      var vx=(d.x1-d.x0)*0.03, vy=(d.y1-d.y0)*0.03, pts=this.predict(d.x0,d.y0,vx,vy,s.kind);
+      c.fillStyle='rgba(234,250,246,.75)';
+      for(k=0;k<pts.length;k+=2){ c.beginPath(); c.arc(P(pts[k]),P(pts[k+1]),1.4,0,6.2832); c.fill(); }
+      drawArrow(c,P(d.x0),P(d.y0),P(d.x1),P(d.y1),A2,2.4);
+      drawDot(c,P(d.x0),P(d.y0),5,INK,'',INK);
+    }
+  }
+
+  toWorld(e){
+    var r=e.currentTarget.getBoundingClientRect();
+    return [(e.clientX-r.left)/r.width*O_N-0.5, (e.clientY-r.top)/r.height*O_N-0.5];
+  }
+  dragStart = (e)=>{
+    var p=this.toWorld(e);
+    try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(err){}
+    this.drag={x0:p[0],y0:p[1],x1:p[0],y1:p[1]};
+  };
+  dragMove = (e)=>{ if(!this.drag) return; var p=this.toWorld(e); this.drag.x1=p[0]; this.drag.y1=p[1]; };
+  dragEnd = (e)=>{
+    var d=this.drag; if(!d) return; this.drag=null;
+    var dx=d.x1-d.x0, dy=d.y1-d.y0, still=Math.sqrt(dx*dx+dy*dy)<0.3;
+    this.addBody(d.x0,d.y0,still?0:dx*0.03,still?0:dy*0.03,this.state.kind,this.state.all);
+  };
+  dragCancel = ()=>{ this.drag=null; };
+
+  // ------------------------------------------------------------ loop
+  loop = ()=>{
+    this.raf=requestAnimationFrame(this.loop); this.frame++;
+    if(!this.cells) return;
+    if(this.state.run1 && this.frame%2===0) this.tickCells();
+    this.tickLens();
+    if(this.state.run3) this.tickOrbit();
+    this.drawCells(); this.drawLens(); this.drawOrbit();
+    if(this.frame%20===0){ var n=this.countClusters(); if(n!==this.state.clusters) this.setState({clusters:n}); }
+  };
+
+  setSign(all){
+    if(all===this.state.all) return;
+    this.setState({all:all, brush:'plus', kind:'a', orbits:0, escapes:0, captures:0}, ()=>this.seedAll(all));
+  }
+
+  renderVals(){
+    var s=this.state, L=COPY[s.lang]||COPY.pt;
+    var seg=(on,color,h)=>({flex:1, minHeight:(h||44)+'px', textAlign:'center', padding:'6px 4px', borderRadius:'11px',
+      fontSize:'12px', fontWeight:800, lineHeight:1.15, color:on?DARK:'rgba(223,243,251,.72)', background:on?color:'transparent'});
+    var langBtn=(on)=>({padding:'6px 13px', borderRadius:'9px', fontSize:'11.5px', fontWeight:800,
+      background:on?A1:'transparent', color:on?DARK:'rgba(223,243,251,.72)'});
+    var dot=(bg,fg,size)=>({flex:'none', width:size+'px', height:size+'px', borderRadius:'50%', background:bg, color:fg,
+      display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:Math.round(size*0.72)+'px', fontWeight:800, lineHeight:1});
+    var chip=(on)=>({display:'inline-flex', alignItems:'center', gap:'6px', minHeight:'40px', padding:'0 11px', borderRadius:'12px',
+      fontSize:'11.5px', fontWeight:800, color:on?INK:'rgba(223,243,251,.72)',
+      background:on?'rgba(121,220,196,.16)':'rgba(255,255,255,.04)', border:'1px solid '+(on?'rgba(121,220,196,.6)':'rgba(121,220,196,.16)')});
+    var fill=(str)=>str.replace('{r}',s.range).replace('{s}',s.strength);
+
+    var v={ L:L,
+      setPT:()=>this.setState({lang:'pt'}), setEN:()=>this.setState({lang:'en'}),
+      ptStyle:langBtn(s.lang==='pt'), enStyle:langBtn(s.lang==='en'),
+      lawOn:s.on, toggleLaw:()=>this.setState({on:!s.on}),
+      swStyle:{flex:'none', width:'46px', height:'28px', borderRadius:'99px', padding:'3px', display:'flex', alignItems:'center',
+        justifyContent:s.on?'flex-end':'flex-start', background:s.on?A1:'rgba(255,255,255,.08)', border:'1px solid rgba(121,220,196,.3)'},
+      knobStyle:{width:'20px', height:'20px', borderRadius:'50%', background:s.on?DARK:'rgba(223,243,251,.6)', display:'block'},
+      strengthPct:s.strength, strengthLabel:s.strength+'%', range:s.range, rangeLabel:s.range+' '+L.cells,
+      setStrength:(e)=>this.setState({strength:parseInt(e.target.value,10)}),
+      setRange:(e)=>this.setState({range:parseInt(e.target.value,10)}),
+      lawSentence:!s.on?L.sentOff:fill(s.all?L.sentAll:L.sentLike),
+      clusterLabel:L.clusters+': '+s.clusters,
+      run1Icon:s.run1?'❙❙':'▶', toggleRun1:()=>this.setState({run1:!s.run1}),
+      shuffle1:()=>this.seedCells(s.all),
+      run3Icon:s.run3?'❙❙':'▶', toggleRun3:()=>this.setState({run3:!s.run3}),
+      clear3:()=>{ this.orbit.B.length=0; this.setState({orbits:0, escapes:0, captures:0}); },
+      zeroField:()=>{ this.lens.F.phi.fill(0); this.lens.F.tmp.fill(0); },
+      paintField:this.paintField,
+      dragStart:this.dragStart, dragMove:this.dragMove, dragEnd:this.dragEnd, dragCancel:this.dragCancel,
+      lawChip:fill(s.direct?L.chipDirect:L.chipField)
+    };
+
+    v.signTabs=[[false,L.signLike,L.signLikeSub],[true,L.signAll,L.signAllSub]].map((d)=>(
+      {label:d[1], sub:d[2], on:s.all===d[0], onTap:()=>this.setSign(d[0]), style:seg(s.all===d[0],A1,48)}));
+
+    v.pairRows=s.all
+      ? [{gA:'', gB:'', dotA:dot(A3,DARK,22), dotB:dot(A3,DARK,22), arrows:'→ ←', label:L.attract},
+         {gA:'', gB:'', dotA:dot(A3,DARK,30), dotB:dot(A3,DARK,16), arrows:'⇉ ←', label:L.attractMore}]
+      : [{gA:'+', gB:'+', dotA:dot(A2,DARK,22), dotB:dot(A2,DARK,22), arrows:'← →', label:L.repel},
+         {gA:'+', gB:'−', dotA:dot(A2,DARK,22), dotB:dot(NEG,INK,22), arrows:'→ ←', label:L.attract}];
+
+    v.lensTabs=[['off',L.lensOff],['heat',L.lensHeat],['arrows',L.lensArrows],['both',L.lensBoth]].map((d)=>(
+      {label:d[1], on:s.lens===d[0], onTap:()=>this.setState({lens:d[0]}), style:seg(s.lens===d[0],A3,40)}));
+
+    var bdefs=s.all
+      ? [['plus',L.bMass,'',dot(A3,DARK,14)],['minus',L.bBig,'',dot(A3,DARK,20)],['erase',L.bErase,'×',dot('rgba(255,255,255,.1)',INK,18)]]
+      : [['plus',L.bPlus,'+',dot(A2,DARK,18)],['minus',L.bMinus,'−',dot(NEG,INK,18)],['erase',L.bErase,'×',dot('rgba(255,255,255,.1)',INK,18)]];
+    v.brushes=bdefs.map((d)=>({label:d[1], glyph:d[2], dot:d[3], on:s.brush===d[0],
+      onTap:()=>this.setState({brush:d[0]}), style:chip(s.brush===d[0])}));
+
+    v.passTabs=[1,4,16].map((n)=>({label:String(n), on:s.passes===n, onTap:()=>this.setState({passes:n}),
+      style:Object.assign(chip(s.passes===n),{minWidth:'40px', justifyContent:'center', padding:'0 8px'})}));
+
+    v.feelTabs=[[false,L.feelField,L.feelFieldSub],[true,L.feelDirect,L.feelDirectSub]].map((d)=>(
+      {label:d[1], sub:d[2], on:s.direct===d[0], onTap:()=>this.setState({direct:d[0]}), style:seg(s.direct===d[0],A2,48)}));
+
+    var kdefs=s.all
+      ? [['a',L.kLight,'',dot(A3,DARK,10)],['b',L.kHeavy,'',dot(A3,DARK,18)]]
+      : [['a',L.kNeg,'−',dot(NEG,INK,18)],['b',L.kPos,'+',dot(A2,DARK,18)]];
+    v.launchKinds=kdefs.map((d)=>({label:d[1], glyph:d[2], dot:d[3], on:s.kind===d[0],
+      onTap:()=>this.setState({kind:d[0]}), style:chip(s.kind===d[0])}));
+
+    v.eventChips=[[L.evOrbit,s.orbits,A3],[L.evEscape,s.escapes,A2],[L.evCapture,s.captures,A1]].map((d)=>(
+      {label:d[0], n:d[1], color:d[2]}));
+
+    return v;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cellula Layers Explorations</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#081419;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#79dcc4;text-decoration:none}a:hover{color:#a8ead9}
+button{font:inherit;border:0;margin:0;background:none;color:inherit;cursor:pointer;text-align:inherit}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid #f0a63c;outline-offset:2px}
+canvas{display:block;border-radius:14px;background:rgba(4,18,27,.55)}
+input[type=range]{-webkit-appearance:none;appearance:none;height:28px;background:transparent;width:100%;color:#79dcc4;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:rgba(121,220,196,.28)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:#79dcc4;border:3px solid rgba(0,0,0,.25);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:rgba(121,220,196,.28)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#79dcc4;border:3px solid rgba(0,0,0,.25)}
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:22px;padding:34px;min-width:1440px">
+
+  <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap">
+    <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:30px;color:#eafaf6;line-height:1">{{ L.pageTitle }}</div>
+    <div style="font-size:13px;font-weight:700;color:rgba(223,243,251,.62);padding-bottom:4px;flex:1;min-width:280px;text-wrap:pretty">{{ L.pageSub }}</div>
+    <div style="display:flex;gap:4px;padding:4px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);flex:none">
+      <button type="button" onClick="{{ setPT }}" style="{{ ptStyle }}">Português</button>
+      <button type="button" onClick="{{ setEN }}" style="{{ enStyle }}">English</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap">
+
+    <!-- L1 · medium -->
+    <div id="l1" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#79dcc4;padding:3px 11px;border-radius:9px">L1</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.l1Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.l1Desc }}</div>
+
+      <div style="padding:13px;border-radius:20px;background:rgba(121,220,196,.08);border:1px solid rgba(121,220,196,.34);display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;color:#eafaf6;line-height:1.15">{{ L.mediumName }}</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.62)">{{ L.mediumKind }}</div>
+        </div>
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.temp }}</span><span style="color:#eafaf6">{{ tempLabel }}</span></span>
+          <input type="range" min="0" max="100" step="5" value="{{ temp }}" onChange="{{ setTemp }}">
+        </label>
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.drag }}</span><span style="color:#eafaf6">{{ dragLabel }}</span></span>
+          <input type="range" min="2" max="30" step="1" value="{{ drag }}" onChange="{{ setDrag }}">
+        </label>
+        <div style="padding:9px 11px;border-radius:13px;background:rgba(255,255,255,.04)">
+          <div style="font-size:9.5px;font-weight:800;letter-spacing:1px;color:#79dcc4">{{ L.readsAs }}</div>
+          <div style="font-size:12px;font-weight:700;color:#eafaf6;text-wrap:pretty;margin-top:2px">{{ mediumSentence }}</div>
+        </div>
+      </div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#79dcc4">{{ L.l1Live }}</div>
+          <div style="font-size:10px;font-weight:800;color:#a8cf4c;padding:4px 9px;border-radius:8px;background:rgba(168,207,76,.14);flex:none">{{ mixLabel }}</div>
+        </div>
+        <div style="display:flex;gap:5px;padding:5px;border-radius:15px;background:rgba(4,18,27,.4)">
+          <sc-for list="{{ modeTabs }}" as="t" hint-placeholder-count="2">
+            <button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}<span style="display:block;font-size:9px;font-weight:700;opacity:.8">{{ t.sub }}</span></button>
+          </sc-for>
+        </div>
+        <canvas id="lx-drop" role="img" aria-label="{{ L.l1Canvas }}" onClick="{{ addDrop }}" style="width:376px;height:231px;cursor:crosshair"></canvas>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.66);text-wrap:pretty">{{ L.l1Hint }}</div>
+        <div style="display:flex;gap:8px">
+          <button type="button" onClick="{{ toggleLensC }}" aria-pressed="{{ lensC }}" style="{{ lensCStyle }}">{{ L.lensConc }}</button>
+          <button type="button" onClick="{{ reset1 }}" style="flex:1;height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.again }}</button>
+        </div>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.foundKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.l1Found }}</div>
+      </div>
+    </div>
+
+    <!-- L2 · membrane -->
+    <div id="l2" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#a8cf4c;padding:3px 11px;border-radius:9px">L2</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.l2Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.l2Desc }}</div>
+
+      <div style="padding:13px;border-radius:20px;background:rgba(168,207,76,.08);border:1px solid rgba(168,207,76,.34);display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:17px;color:#eafaf6;line-height:1.15">{{ L.membName }}</div>
+          <div style="font-size:10px;font-weight:700;color:rgba(223,243,251,.62)">{{ L.membKind }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);flex:none">{{ L.lets }}</div>
+          <sc-for list="{{ passChips }}" as="b" hint-placeholder-count="2">
+            <button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}"><span style="{{ b.dot }}"></span>{{ b.label }}<span style="font-size:13px;font-weight:800">{{ b.mark }}</span></button>
+          </sc-for>
+        </div>
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.pores }}</span><span style="color:#eafaf6">{{ pores }}</span></span>
+          <input type="range" min="1" max="9" step="1" value="{{ pores }}" onChange="{{ setPores }}">
+        </label>
+      </div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:11px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#a8cf4c">{{ L.l2Live }}</div>
+        <canvas id="lx-memb" role="img" aria-label="{{ L.l2Canvas }}" style="width:376px;height:231px"></canvas>
+        <sc-for list="{{ sideBars }}" as="r" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:9px">
+            <div style="flex:none;width:62px;font-size:11px;font-weight:800;color:#eafaf6">{{ r.label }}</div>
+            <div style="flex:none;width:22px;text-align:right;font-size:11.5px;font-weight:800;color:#eafaf6">{{ r.left }}</div>
+            <div style="flex:1;height:12px;border-radius:99px;background:rgba(4,18,27,.6);overflow:hidden;display:flex">
+              <div style="{{ r.fill }}"></div>
+            </div>
+            <div style="flex:none;width:22px;font-size:11.5px;font-weight:800;color:#eafaf6">{{ r.right }}</div>
+          </div>
+        </sc-for>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.66);text-wrap:pretty">{{ L.l2Hint }}</div>
+        <button type="button" onClick="{{ reset2 }}" style="height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.again }}</button>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.foundKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.l2Found }}</div>
+      </div>
+    </div>
+
+    <!-- L3 · layers together -->
+    <div id="l3" style="width:404px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Baloo 2',cursive;font-weight:800;font-size:15px;color:#07303a;background:#f0a63c;padding:3px 11px;border-radius:9px">L3</div>
+        <div style="font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#eafaf6;line-height:1.1">{{ L.l3Title }}</div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:rgba(223,243,251,.66);text-wrap:pretty;min-height:50px">{{ L.l3Desc }}</div>
+
+      <div style="border-radius:26px;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);padding:14px;display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c;margin-bottom:6px">{{ L.sceneKicker }}</div>
+          <div style="display:flex;gap:5px;padding:5px;border-radius:15px;background:rgba(4,18,27,.4)">
+            <sc-for list="{{ sceneTabs }}" as="t" hint-placeholder-count="3">
+              <button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="font-size:11.5px;font-weight:700;color:#eafaf6;text-wrap:pretty">{{ sceneText }}</div>
+
+        <canvas id="lx-mix" role="img" aria-label="{{ L.l3Canvas }}" style="width:376px;height:255px"></canvas>
+
+        <div style="font-size:11.5px;font-weight:800;color:#a8cf4c;padding:8px 11px;border-radius:13px;background:rgba(168,207,76,.12)">{{ probe3 }}</div>
+
+        <div>
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:rgba(223,243,251,.62);margin-bottom:6px">{{ L.layersKicker }}</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <sc-for list="{{ eyes }}" as="b" hint-placeholder-count="3">
+              <button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}<span style="font-size:12px;font-weight:800">{{ b.mark }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="height:1px;background:rgba(121,220,196,.16)"></div>
+
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.pull }}</span><span style="color:#eafaf6">{{ strengthLabel }}</span></span>
+          <input type="range" min="0" max="100" step="5" value="{{ strength }}" onChange="{{ setStrength }}">
+        </label>
+        <label style="display:block">
+          <span style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:.6px;color:rgba(223,243,251,.66)"><span>{{ L.temp }}</span><span style="color:#eafaf6">{{ tempLabel }}</span></span>
+          <input type="range" min="0" max="100" step="5" value="{{ temp }}" onChange="{{ setTemp }}">
+        </label>
+        <div style="font-size:11px;font-weight:700;color:rgba(223,243,251,.66);text-wrap:pretty">{{ L.l3Hint }}</div>
+        <button type="button" onClick="{{ reset3 }}" style="height:44px;border-radius:14px;text-align:center;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.05);border:1px solid rgba(121,220,196,.16);color:#79dcc4">{{ L.again }}</button>
+      </div>
+
+      <div style="border-radius:22px;background:rgba(240,166,60,.07);border:1px dashed rgba(240,166,60,.35);padding:13px">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.1px;color:#f0a63c">{{ L.openKicker }}</div>
+        <div style="font-size:11.5px;font-weight:700;color:rgba(223,243,251,.72);text-wrap:pretty;margin-top:4px">{{ L.l3Open }}</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+// ---------------------------------------------------------------- copy
+const COPY = {
+  pt:{
+    pageTitle:'Camadas · turno 1',
+    pageSub:'O segundo conceito: a concentração que busca o equilíbrio. Ninguém empurra; as partículas só se agitam. Depois, as duas ideias juntas no mesmo mundo.',
+    l1Title:'O meio', l2Title:'Membrana', l3Title:'Camadas juntas',
+    l1Desc:'Agitação e arrasto são propriedades do mundo, não de uma lei. Com agitação, uma gota se espalha sozinha até ficar por igual.',
+    l2Desc:'A membrana é terreno: ela declara quem passa pelos poros. O que passa se iguala dos dois lados; o que não passa fica onde está.',
+    l3Desc:'Os modelos empurram, um só modelo move. A força puxa para um lado, a agitação espalha, e o mundo para onde as duas se equilibram.',
+    mediumName:'O meio', mediumKind:'propriedades do mundo · valem para tudo',
+    temp:'AGITAÇÃO', drag:'ARRASTO', readsAs:'LÊ-SE ASSIM',
+    medStill:'Sem agitação nada se espalha: cada partícula fica onde foi posta.',
+    medSlow:'A água agita pouco: a gota se espalha devagar.',
+    medFast:'A água agita bastante: a gota se espalha depressa.',
+    l1Live:'UMA GOTA NA ÁGUA', mix:'mistura', l1Canvas:'Uma gota de partículas se espalhando pela grade',
+    modeP:'Partículas', modePSub:'cada uma ao acaso', modeQ:'Quantidade', modeQSub:'camada lisa de números',
+    l1Hint:'Toque na água para pingar outra gota.',
+    lensConc:'Lente: concentração', again:'De novo',
+    foundKicker:'ACHADO DESTA RODADA', openKicker:'DECISÃO EM ABERTO',
+    l1Found:'A versão lisa usa a mesma regra do campo de forças: cada casa troca com as vizinhas. A diferença é que aqui nada entra e nada some. É uma regra só, com dois ajustes, e não dois modelos.',
+    membName:'Membrana', membKind:'terreno · declara quem passa',
+    lets:'DEIXA PASSAR', kA:'sal', kB:'açúcar', pores:'POROS',
+    l2Live:'DUAS CÂMARAS', l2Canvas:'Duas câmaras separadas por uma membrana com poros',
+    l2Hint:'As barras mostram quanto de cada tipo está à esquerda e à direita. Mude quem passa e veja qual barra chega ao meio.',
+    l2Found:'A membrana não precisa de um modelo próprio. Ela é um tipo de terreno com uma lista de quem passa, lida pelo modelo de movimento. A mesma lista vai servir para as camadas de números.',
+    sceneKicker:'CENA', scSed:'Sedimento', scCloud:'Nuvem', scVolt:'Voltagem',
+    txSed:'O chão puxa todas para baixo e a agitação espalha para cima. O resultado é uma camada densa no fundo e rala no alto.',
+    txCloud:'Uma carga fixa no centro atrai as negativas, que se repelem entre si. A agitação decide o tamanho da nuvem.',
+    txVolt:'Só as positivas passam pela membrana. Elas se espalham para a direita, mas as negativas que ficaram as puxam de volta.',
+    prSed:'altura média: {a} casas acima do fundo', prCloud:'raio da nuvem: {a} casas', prVolt:'positivas à direita: {a} de {b}',
+    l3Canvas:'Partículas sob força e agitação ao mesmo tempo',
+    layersKicker:'CAMADAS À VISTA', eyeP:'partículas', eyeF:'campo', eyeC:'concentração',
+    pull:'FORÇA', l3Hint:'Ponha a força em zero e a agitação vence: tudo se iguala. Ponha a agitação em zero e a força vence.',
+    l3Open:'O puxão do chão na cena Sedimento é uma lei uniforme, diferente do cartão de forças entre partículas. Ela deve ser um segundo cartão de lei (“peso”) ou uma propriedade do meio, ao lado de agitação e arrasto?'
+  },
+  en:{
+    pageTitle:'Layers · turn 1',
+    pageSub:'The second concept: concentration seeking equilibrium. Nothing pushes; particles only jiggle. Then both ideas together in one world.',
+    l1Title:'The medium', l2Title:'Membrane', l3Title:'Layers together',
+    l1Desc:'Jiggle and drag are properties of the world, not of a law. With jiggle, a drop spreads by itself until it is even.',
+    l2Desc:'The membrane is terrain: it declares who gets through its pores. What passes evens out on both sides; what does not stays put.',
+    l3Desc:'Models push, one model moves. The force pulls one way, the jiggle spreads, and the world settles where the two balance.',
+    mediumName:'The medium', mediumKind:'world properties · apply to everything',
+    temp:'JIGGLE', drag:'DRAG', readsAs:'READS AS',
+    medStill:'With no jiggle nothing spreads: each particle stays where it was put.',
+    medSlow:'The water jiggles a little: the drop spreads slowly.',
+    medFast:'The water jiggles a lot: the drop spreads quickly.',
+    l1Live:'A DROP IN WATER', mix:'mixing', l1Canvas:'A drop of particles spreading over the grid',
+    modeP:'Particles', modePSub:'each one at random', modeQ:'Quantity', modeQSub:'smooth layer of numbers',
+    l1Hint:'Tap the water to add another drop.',
+    lensConc:'Lens: concentration', again:'Again',
+    foundKicker:'FOUND THIS ROUND', openKicker:'OPEN DECISION',
+    l1Found:'The smooth version uses the same rule as the force field: each cell trades with its neighbours. The difference is that here nothing enters and nothing is lost. It is one rule with two settings, not two models.',
+    membName:'Membrane', membKind:'terrain · declares who passes',
+    lets:'LETS THROUGH', kA:'salt', kB:'sugar', pores:'PORES',
+    l2Live:'TWO CHAMBERS', l2Canvas:'Two chambers separated by a membrane with pores',
+    l2Hint:'The bars show how much of each kind is on the left and on the right. Change who passes and see which bar reaches the middle.',
+    l2Found:'The membrane needs no model of its own. It is a kind of terrain with a list of who passes, read by the motion model. The same list will serve the number layers.',
+    sceneKicker:'SCENE', scSed:'Sediment', scCloud:'Cloud', scVolt:'Voltage',
+    txSed:'The floor pulls everything down and the jiggle spreads it up. The result is a layer that is dense at the bottom and thin on top.',
+    txCloud:'A fixed charge in the centre attracts the negatives, which repel each other. The jiggle decides how big the cloud is.',
+    txVolt:'Only positives pass the membrane. They spread to the right, but the negatives left behind pull them back.',
+    prSed:'mean height: {a} cells above the floor', prCloud:'cloud radius: {a} cells', prVolt:'positives on the right: {a} of {b}',
+    l3Canvas:'Particles under force and jiggle at the same time',
+    layersKicker:'LAYERS IN VIEW', eyeP:'particles', eyeF:'field', eyeC:'concentration',
+    pull:'STRENGTH', l3Hint:'Set strength to zero and the jiggle wins: everything evens out. Set jiggle to zero and the force wins.',
+    l3Open:'The floor’s pull in the Sediment scene is a uniform law, different from the card for forces between particles. Should it be a second law card (“weight”) or a property of the medium, beside jiggle and drag?'
+  }
+};
+
+// ---------------------------------------------------------------- number-layer core (same as the forces page)
+function makeField(w,h){ return {w:w,h:h,phi:new Float32Array(w*h),tmp:new Float32Array(w*h),rho:new Float32Array(w*h)}; }
+function decayFor(R){ return 1/(1+4*R*R); }
+function relax(F,decay,passes){
+  var w=F.w,h=F.h,a=F.phi,b=F.tmp,rho=F.rho,k=(1-decay)*0.25;
+  for(var p=0;p<passes;p++){
+    for(var y=0;y<h;y++){ var row=y*w;
+      for(var x=0;x<w;x++){ var i=row+x,c=a[i];
+        b[i]=k*((x>0?a[i-1]:c)+(x<w-1?a[i+1]:c)+(y>0?a[i-w]:c)+(y<h-1?a[i+w]:c))+rho[i]; } }
+    var t=a;a=b;b=t; }
+  F.phi=a;F.tmp=b;
+}
+function gradCell(F,x,y){ var w=F.w,h=F.h,p=F.phi,i=y*w+x,c=p[i];
+  return [((x<w-1?p[i+1]:c)-(x>0?p[i-1]:c))/2, ((y<h-1?p[i+w]:c)-(y>0?p[i-w]:c))/2]; }
+
+const INK='#eafaf6', A1='#79dcc4', A2='#f0a63c', A3='#a8cf4c', NEG='#3a8fb0', DARK='#07303a';
+const POS_RGB='240,166,60', NEG_RGB='58,143,176', TEAL_RGB='121,220,196';
+const WALL=1, PORE=2;
+const KIND = {
+  A:{color:A2, r:0.34}, B:{color:A3, r:0.46}, m:{color:A3, r:0.36},
+  pos:{color:A2, r:0.42, glyph:'+', gc:DARK}, neg:{color:NEG, r:0.42, glyph:'−', gc:INK}
+};
+
+// ---------------------------------------------------------------- one world, any mix of models
+function makeWorld(w,h){ return {w:w,h:h,T:new Uint8Array(w*h),occ:new Uint8Array(w*h),P:[],F:null,fixed:[]}; }
+function addP(W,x,y,kind,q){
+  if(x<0||y<0||x>=W.w||y>=W.h) return false;
+  var i=y*W.w+x; if(W.occ[i]||W.T[i]===WALL) return false;
+  W.occ[i]=1; W.P.push({x:x,y:y,kind:kind,q:q||0,vx:0,vy:0,ax:0,ay:0,self:null}); return true;
+}
+function canEnter(W,x,y,p,pass){
+  if(x<0||y<0||x>=W.w||y>=W.h) return false;
+  var i=y*W.w+x; if(W.occ[i]) return false;
+  var t=W.T[i]; return t===0 || (t===PORE && !!pass[p.kind]);
+}
+// o: {temp 0..1, drag 0..1, s 0..1, range, g, pass:{kind:bool}}
+// every model only ADDS to the push; the last block is the one motion model
+function stepWorld(W,o){
+  var P=W.P,w=W.w,i,p,F=W.F,useF=!!F&&o.s>0,d=decayFor(o.range||6);
+  if(useF){
+    F.rho.fill(0);
+    for(i=0;i<W.fixed.length;i++) F.rho[W.fixed[i].y*w+W.fixed[i].x]+=W.fixed[i].q;
+    for(i=0;i<P.length;i++){ p=P[i]; if(p.q) F.rho[p.y*w+p.x]+=p.q; }
+    relax(F,d,4);
+    for(i=0;i<P.length;i++){ p=P[i]; if(!p.q) continue;
+      if(!p.self) p.self=makeField(w,W.h);
+      p.self.rho.fill(0); p.self.rho[p.y*w+p.x]=p.q; relax(p.self,d,4); }
+  }
+  var order=P.slice();
+  for(i=order.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=order[i]; order[i]=order[j]; order[j]=t; }
+  var sig=0.5*o.temp, keep=1-o.drag, S=0.15*o.s;
+  for(i=0;i<order.length;i++){ p=order[i];
+    var fx=0, fy=o.g||0;                                   // weight
+    if(useF&&p.q){ var g=gradCell(F,p.x,p.y), g2=gradCell(p.self,p.x,p.y), c=p.q>0?-1:1;
+      fx+=c*S*(g[0]-g2[0]); fy+=c*S*(g[1]-g2[1]); }        // forces
+    fx+=(Math.random()*2-1)*sig; fy+=(Math.random()*2-1)*sig; // jiggle
+    p.vx=Math.max(-0.9,Math.min(0.9,(p.vx+fx)*keep));
+    p.vy=Math.max(-0.9,Math.min(0.9,(p.vy+fy)*keep));
+    p.ax+=p.vx; p.ay+=p.vy;
+    if(Math.abs(p.ax)>=1){ var dx=p.ax>0?1:-1;
+      if(canEnter(W,p.x+dx,p.y,p,o.pass||{})){ W.occ[p.y*w+p.x]=0; p.x+=dx; W.occ[p.y*w+p.x]=1; p.ax-=dx; }
+      else { p.vx*=-0.2; p.ax=0; } }
+    if(Math.abs(p.ay)>=1){ var dy=p.ay>0?1:-1;
+      if(canEnter(W,p.x,p.y+dy,p,o.pass||{})){ W.occ[p.y*w+p.x]=0; p.y+=dy; W.occ[p.y*w+p.x]=1; p.ay-=dy; }
+      else { p.vy*=-0.2; p.ay=0; } }
+  }
+}
+// conserved spread of a quantity: each cell trades with its open neighbours
+function spreadQuantity(W,Q,rate){
+  var w=W.w,h=W.h,a=Q.phi,b=Q.tmp,T=W.T;
+  for(var y=0;y<h;y++) for(var x=0;x<w;x++){ var i=y*w+x,c=a[i],s=0;
+    if(T[i]===WALL){ b[i]=c; continue; }
+    if(x>0&&T[i-1]!==WALL) s+=a[i-1]-c; if(x<w-1&&T[i+1]!==WALL) s+=a[i+1]-c;
+    if(y>0&&T[i-w]!==WALL) s+=a[i-w]-c; if(y<h-1&&T[i+w]!==WALL) s+=a[i+w]-c;
+    b[i]=c+rate*s; }
+  Q.phi=b; Q.tmp=a;
+}
+// the concentration layer is MEASURED: how many particles are near each cell
+function measure(W,out,test){
+  var w=W.w,h=W.h,P=W.P,i; out.fill(0);
+  for(i=0;i<P.length;i++){ var p=P[i]; if(test&&!test(p)) continue;
+    for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){ var x=p.x+dx,y=p.y+dy;
+      if(x>=0&&y>=0&&x<w&&y<h) out[y*w+x]+=0.04; } }
+}
+function evenness(vals){ // 1 = perfectly even over the blocks, 0 = all in one block
+  var n=vals.length,tot=0,i,dev=0; for(i=0;i<n;i++) tot+=vals[i];
+  if(tot<=0) return 0; var mean=tot/n; for(i=0;i<n;i++) dev+=Math.abs(vals[i]-mean);
+  return Math.max(0,1-dev/(2*tot*(1-1/n)));
+}
+
+// ---------------------------------------------------------------- drawing
+function ctxFor(id,cw,ch){
+  var el=document.getElementById(id); if(!el||!el.getContext) return null;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  if(el.width!==Math.round(cw*dpr)){ el.width=Math.round(cw*dpr); el.height=Math.round(ch*dpr); }
+  var c=el.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,cw,ch); return c;
+}
+function drawLayer(c,arr,w,h,cs,rgb,gain,alpha,signed){
+  for(var y=0;y<h;y++) for(var x=0;x<w;x++){ var v=arr[y*w+x], a=Math.pow(Math.min(1,Math.abs(v)*gain),0.6)*alpha;
+    if(a<0.02) continue;
+    c.fillStyle='rgba('+(signed?(v>0?POS_RGB:NEG_RGB):rgb)+','+a.toFixed(3)+')';
+    c.fillRect(x*cs,y*cs,cs+0.5,cs+0.5); }
+}
+function drawTerrain(c,W,cs,pass,poreColor){
+  for(var y=0;y<W.h;y++) for(var x=0;x<W.w;x++){ var t=W.T[y*W.w+x]; if(!t) continue;
+    if(t===WALL){ c.fillStyle='rgba(223,243,251,.34)'; c.fillRect(x*cs+1,y*cs,cs-2,cs+0.5); }
+    else { c.strokeStyle=poreColor; c.lineWidth=1.5; c.setLineDash([2,2]);
+      c.strokeRect(x*cs+1.5,y*cs+1.5,cs-3,cs-3); c.setLineDash([]); } }
+}
+function drawGrid(c,w,h,cs,a){
+  c.strokeStyle='rgba(121,220,196,'+a+')'; c.lineWidth=1; c.beginPath();
+  for(var x=0;x<=w;x++){ c.moveTo(x*cs,0); c.lineTo(x*cs,h*cs); }
+  for(var y=0;y<=h;y++){ c.moveTo(0,y*cs); c.lineTo(w*cs,y*cs); }
+  c.stroke();
+}
+function drawDot(c,px,py,r,fill,glyph,gc){
+  c.fillStyle=fill; c.beginPath(); c.arc(px,py,r,0,6.2832); c.fill();
+  if(glyph){ c.fillStyle=gc; c.font='800 '+Math.round(r*1.7)+'px Nunito, sans-serif';
+    c.textAlign='center'; c.textBaseline='middle'; c.fillText(glyph,px,py+0.5); }
+}
+function drawParticles(c,W,cs){
+  for(var i=0;i<W.P.length;i++){ var p=W.P[i], k=KIND[p.kind];
+    drawDot(c,(p.x+0.5)*cs,(p.y+0.5)*cs,cs*k.r,k.color,k.glyph,k.gc); }
+}
+
+const G_W=31, G_H=19, M_H=21, MID=15;
+
+class Component extends DCLogic {
+  state = { lang:'pt', temp:50, drag:10, mode:'p', lensC:true,
+    passA:true, passB:false, pores:4,
+    scene:'sed', strength:60, eyeP:true, eyeF:true, eyeC:false,
+    mix:0, aL:0, aR:0, bL:0, bR:0, pa:'0', pb:'0' };
+
+  componentDidMount(){ this.seedDrop(); this.seedMemb(); this.seedMix(this.state.scene); this.frame=0; this.loop(); }
+  componentWillUnmount(){ cancelAnimationFrame(this.raf); }
+
+  // ------------------------------------------------------------ L1
+  blob(W,Q,cx,cy,r){
+    for(var dy=-r;dy<=r;dy++) for(var dx=-r;dx<=r;dx++){
+      if(dx*dx+dy*dy>r*r+1) continue;
+      var x=cx+dx,y=cy+dy; if(x<0||y<0||x>=W.w||y>=W.h) continue;
+      addP(W,x,y,'A',0); Q.phi[y*W.w+x]+=1; }
+  }
+  seedDrop(){
+    var W=makeWorld(G_W,G_H), Q=makeField(G_W,G_H);
+    this.blob(W,Q,7,9,4);
+    this.drop={W:W,Q:Q,C:new Float32Array(G_W*G_H)};
+  }
+  addDrop = (e)=>{
+    var r=e.currentTarget.getBoundingClientRect();
+    var x=Math.floor((e.clientX-r.left)/r.width*G_W), y=Math.floor((e.clientY-r.top)/r.height*G_H);
+    if(this.drop.W.P.length>220) return;
+    this.blob(this.drop.W,this.drop.Q,x,y,2);
+  };
+  mixOf(){
+    var D=this.drop, bw=4, bh=2, vals=new Array(bw*bh).fill(0), i, w=G_W;
+    var bx=(x)=>Math.min(bw-1,Math.floor(x*bw/G_W)), by=(y)=>Math.min(bh-1,Math.floor(y*bh/G_H));
+    if(this.state.mode==='p'){ for(i=0;i<D.W.P.length;i++) vals[by(D.W.P[i].y)*bw+bx(D.W.P[i].x)]++; }
+    else { for(var y=0;y<G_H;y++) for(var x=0;x<G_W;x++) vals[by(y)*bw+bx(x)]+=D.Q.phi[y*w+x]; }
+    return Math.round(evenness(vals)*100);
+  }
+  drawDrop(){
+    var cw=376, cs=cw/G_W, c=ctxFor('lx-drop',cw,231); if(!c) return;
+    var D=this.drop, s=this.state;
+    if(s.mode==='q'){ drawLayer(c,D.Q.phi,G_W,G_H,cs,POS_RGB,1,0.95,false); drawGrid(c,G_W,G_H,cs,0.1); return; }
+    if(s.lensC){ measure(D.W,D.C,null); drawLayer(c,D.C,G_W,G_H,cs,POS_RGB,1.6,0.5,false); }
+    drawGrid(c,G_W,G_H,cs,0.1); drawParticles(c,D.W,cs);
+  }
+
+  // ------------------------------------------------------------ L2
+  wallColumn(W,n,x){
+    var y,k; for(y=0;y<W.h;y++) W.T[y*W.w+x]=WALL;
+    for(k=0;k<n;k++){ y=Math.min(W.h-1,Math.floor((k+0.5)*W.h/n)); W.T[y*W.w+x]=PORE; }
+  }
+  seedMemb(){
+    var W=makeWorld(G_W,G_H), n=0;
+    this.wallColumn(W,this.state.pores,MID);
+    while(n<34){ if(addP(W,Math.floor(Math.random()*MID),Math.floor(Math.random()*G_H),'A',0)) n++; }
+    n=0; while(n<26){ if(addP(W,Math.floor(Math.random()*MID),Math.floor(Math.random()*G_H),'B',0)) n++; }
+    this.memb={W:W};
+  }
+  drawMemb(){
+    var cw=376, cs=cw/G_W, c=ctxFor('lx-memb',cw,231); if(!c) return;
+    drawGrid(c,G_W,G_H,cs,0.08); drawTerrain(c,this.memb.W,cs,null,A3); drawParticles(c,this.memb.W,cs);
+  }
+  sides(W,kind){ var l=0,r=0; for(var i=0;i<W.P.length;i++){ var p=W.P[i]; if(p.kind!==kind) continue; if(p.x<MID) l++; else if(p.x>MID) r++; } return [l,r]; }
+
+  // ------------------------------------------------------------ L3
+  seedMix(scene){
+    var W=makeWorld(G_W,M_H), n=0, x, y;
+    W.F=makeField(G_W,M_H); W.C=new Float32Array(G_W*M_H);
+    if(scene==='sed'){
+      while(n<70){ if(addP(W,Math.floor(Math.random()*G_W),Math.floor(Math.random()*M_H),'m',0)) n++; }
+    } else if(scene==='cloud'){
+      W.fixed.push({x:MID,y:10,q:22}); W.T[10*G_W+MID]=WALL;
+      while(n<22){ if(addP(W,Math.floor(Math.random()*G_W),Math.floor(Math.random()*M_H),'neg',-1)) n++; }
+    } else {
+      this.wallColumn(W,5,MID);
+      while(n<20){ if(addP(W,Math.floor(Math.random()*MID),Math.floor(Math.random()*M_H),'pos',1)) n++; }
+      n=0; while(n<20){ if(addP(W,Math.floor(Math.random()*MID),Math.floor(Math.random()*M_H),'neg',-1)) n++; }
+    }
+    this.mixW=W;
+  }
+  mixOpts(){
+    var s=this.state, sc=s.scene, st=s.strength/100;
+    return {temp:s.temp/100, drag:s.drag/100, s:sc==='sed'?0:st, range:6,
+      g:sc==='sed'?0.012*st:0, pass:{pos:true,neg:false}};
+  }
+  probes3(){
+    var W=this.mixW, P=W.P, sc=this.state.scene, i, sum=0, n=0;
+    if(sc==='sed'){ for(i=0;i<P.length;i++) sum+=(M_H-1-P[i].y); return [(sum/Math.max(1,P.length)).toFixed(1),'']; }
+    if(sc==='cloud'){ for(i=0;i<P.length;i++){ var dx=P[i].x-MID, dy=P[i].y-10; sum+=Math.sqrt(dx*dx+dy*dy); }
+      return [(sum/Math.max(1,P.length)).toFixed(1),'']; }
+    for(i=0;i<P.length;i++) if(P[i].kind==='pos'){ n++; if(P[i].x>MID) sum++; }
+    return [String(sum),String(n)];
+  }
+  drawMix(){
+    var cw=376, cs=cw/G_W, c=ctxFor('lx-mix',cw,255); if(!c) return;
+    var W=this.mixW, s=this.state;
+    if(s.eyeF && s.scene!=='sed') drawLayer(c,W.F.phi,G_W,M_H,cs,TEAL_RGB,0.5,0.7,true);
+    if(s.eyeF && s.scene==='sed'){ // a uniform pull has a trivial field: draw it as arrows
+      c.strokeStyle='rgba(234,250,246,.3)'; c.lineWidth=1.2; c.beginPath();
+      for(var x=3;x<G_W;x+=5) for(var y=2;y<M_H-1;y+=4){ var px=(x+0.5)*cs, py=(y+0.5)*cs, l=cs*(0.3+0.9*s.strength/100);
+        c.moveTo(px,py); c.lineTo(px,py+l); c.moveTo(px-3,py+l-3); c.lineTo(px,py+l); c.lineTo(px+3,py+l-3); }
+      c.stroke(); }
+    if(s.eyeC){ measure(W,W.C,s.scene==='volt'?(p)=>p.kind==='pos':null); drawLayer(c,W.C,G_W,M_H,cs,TEAL_RGB,1.4,0.55,false); }
+    drawGrid(c,G_W,M_H,cs,0.08); drawTerrain(c,W,cs,null,A2);
+    if(s.scene==='cloud') drawDot(c,(MID+0.5)*cs,10.5*cs,cs*0.75,A2,'+',DARK);
+    if(s.eyeP) drawParticles(c,W,cs);
+  }
+
+  // ------------------------------------------------------------ loop
+  loop = ()=>{
+    this.raf=requestAnimationFrame(this.loop); this.frame++;
+    if(!this.drop) return;
+    var s=this.state, med={temp:s.temp/100, drag:s.drag/100, s:0, g:0};
+    if(this.frame%2===0){
+      stepWorld(this.drop.W,med);
+      spreadQuantity(this.drop.W,this.drop.Q,0.2*s.temp/100);
+      stepWorld(this.memb.W,Object.assign({},med,{pass:{A:s.passA,B:s.passB}}));
+      stepWorld(this.mixW,this.mixOpts());
+    }
+    this.drawDrop(); this.drawMemb(); this.drawMix();
+    if(this.frame%20===0){
+      var a=this.sides(this.memb.W,'A'), b=this.sides(this.memb.W,'B'), pr=this.probes3(), mix=this.mixOf();
+      if(mix!==s.mix||a[0]!==s.aL||a[1]!==s.aR||b[0]!==s.bL||b[1]!==s.bR||pr[0]!==s.pa||pr[1]!==s.pb)
+        this.setState({mix:mix,aL:a[0],aR:a[1],bL:b[0],bR:b[1],pa:pr[0],pb:pr[1]});
+    }
+  };
+
+  renderVals(){
+    var s=this.state, L=COPY[s.lang]||COPY.pt;
+    var seg=(on,color,h)=>({flex:1, minHeight:(h||44)+'px', textAlign:'center', padding:'6px 4px', borderRadius:'11px',
+      fontSize:'12px', fontWeight:800, lineHeight:1.15, color:on?DARK:'rgba(223,243,251,.72)', background:on?color:'transparent'});
+    var langBtn=(on)=>({padding:'6px 13px', borderRadius:'9px', fontSize:'11.5px', fontWeight:800,
+      background:on?A1:'transparent', color:on?DARK:'rgba(223,243,251,.72)'});
+    var chip=(on)=>({display:'inline-flex', alignItems:'center', gap:'7px', minHeight:'40px', padding:'0 11px', borderRadius:'12px',
+      fontSize:'11.5px', fontWeight:800, color:on?INK:'rgba(223,243,251,.72)',
+      background:on?'rgba(121,220,196,.16)':'rgba(255,255,255,.04)', border:'1px solid '+(on?'rgba(121,220,196,.6)':'rgba(121,220,196,.16)')});
+    var dot=(bg,size)=>({flex:'none', width:size+'px', height:size+'px', borderRadius:'50%', background:bg, display:'inline-block'});
+
+    var v={ L:L,
+      setPT:()=>this.setState({lang:'pt'}), setEN:()=>this.setState({lang:'en'}),
+      ptStyle:langBtn(s.lang==='pt'), enStyle:langBtn(s.lang==='en'),
+      temp:s.temp, tempLabel:s.temp+'%', drag:s.drag, dragLabel:s.drag+'%',
+      setTemp:(e)=>this.setState({temp:parseInt(e.target.value,10)}),
+      setDrag:(e)=>this.setState({drag:parseInt(e.target.value,10)}),
+      mediumSentence:s.temp===0?L.medStill:(s.temp<45?L.medSlow:L.medFast),
+      mixLabel:L.mix+': '+s.mix+'%',
+      addDrop:this.addDrop, lensC:s.lensC, toggleLensC:()=>this.setState({lensC:!s.lensC}),
+      lensCStyle:Object.assign(chip(s.lensC),{flex:1.4, justifyContent:'center', minHeight:'44px', borderRadius:'14px'}),
+      reset1:()=>this.seedDrop(), reset2:()=>this.seedMemb(), reset3:()=>this.seedMix(s.scene),
+      pores:s.pores,
+      setPores:(e)=>{ var n=parseInt(e.target.value,10); this.wallColumn(this.memb.W,n,MID); this.setState({pores:n}); },
+      strength:s.strength, strengthLabel:s.strength+'%',
+      setStrength:(e)=>this.setState({strength:parseInt(e.target.value,10)})
+    };
+
+    v.modeTabs=[['p',L.modeP,L.modePSub],['q',L.modeQ,L.modeQSub]].map((d)=>(
+      {label:d[1], sub:d[2], on:s.mode===d[0], onTap:()=>this.setState({mode:d[0]}), style:seg(s.mode===d[0],A1,48)}));
+
+    v.passChips=[['passA',L.kA,A2,12],['passB',L.kB,A3,16]].map((d)=>(
+      {label:d[1], dot:dot(d[2],d[3]), on:s[d[0]], mark:s[d[0]]?'✓':'✕',
+       onTap:()=>this.setState({[d[0]]:!s[d[0]]}), style:chip(s[d[0]])}));
+
+    var bar=(label,l,r,color)=>({label:label, left:l, right:r,
+      fill:{width:(l+r?Math.round(l/(l+r)*100):0)+'%', height:'100%', background:color, borderRadius:'99px', transition:'width .3s'}});
+    v.sideBars=[bar(L.kA,s.aL,s.aR,A2), bar(L.kB,s.bL,s.bR,A3)];
+
+    v.sceneTabs=[['sed',L.scSed],['cloud',L.scCloud],['volt',L.scVolt]].map((d)=>(
+      {label:d[1], on:s.scene===d[0], style:seg(s.scene===d[0],A2,40),
+       onTap:()=>{ if(s.scene===d[0]) return; this.seedMix(d[0]); this.setState({scene:d[0]}); }}));
+    v.sceneText=s.scene==='sed'?L.txSed:(s.scene==='cloud'?L.txCloud:L.txVolt);
+    v.probe3=(s.scene==='sed'?L.prSed:(s.scene==='cloud'?L.prCloud:L.prVolt)).replace('{a}',s.pa).replace('{b}',s.pb);
+
+    v.eyes=[['eyeP',L.eyeP],['eyeF',L.eyeF],['eyeC',L.eyeC]].map((d)=>(
+      {label:d[1], on:s[d[0]], mark:s[d[0]]?'●':'○', onTap:()=>this.setState({[d[0]]:!s[d[0]]}), style:chip(s[d[0]])}));
+
+    return v;
+  }
+}
+</script>
+</body>
+</html>
