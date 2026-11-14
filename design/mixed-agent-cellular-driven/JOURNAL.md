@@ -211,3 +211,29 @@ Em N3, com “5 ou mais vizinhas”, sem força formam-se uns 12 cristais de 60;
 ### Open / next
 - Ordem no ciclo: pela lista de leis (a criança arrasta) ou por fases fixas por tipo de cartão?
 - A colheita da fita ainda só propõe regras de par; propor regras de contagem fica para depois.
+
+## v1.0 — um núcleo, dois níveis
+**File:** `Cellula v5.dc.html` (v4 intocado)
+
+Primeiro corte da v5, escrito sobre um núcleo genérico em vez de editar o motor da v4. O arquivo
+tem três faixas marcadas: **KERNEL** (não conhece nenhum cenário), **CONTENT** (cenários como
+dados) e **SHELL** (skins, desenho, interface).
+
+- **Núcleo.** Tipos com propriedades (`KINDS`), terreno + corpos por cima, camadas de números,
+  uma lista de cartões de lei e um meio. Cinco modelos: regras de par, regras de contagem, forças,
+  cérebro do peixe e movimento; o meio (agitação, arrasto, peso) é propriedade do mundo.
+- **Ordem fixa por fase**, e dentro da fase a ordem da lista: 1 empurrar · 2 cérebro · 3 mover ·
+  4 pares · 5 contagem. O peso ficou no meio. (Fecha as duas decisões abertas de v0.8 e v0.9.)
+- **Dois níveis.** *Introdutório*: prateleira de 8 mundos prontos, só Início e Simular, com os
+  poucos botões que cada cenário declara. *Avançado*: abre Mundo (pintar, tamanho, casa em casa ⇄
+  livre) e Oficina (lista de leis, editor por tipo de cartão, o meio, poros) sobre o mesmo mundo.
+- **Mundos prontos**: peixe que vai e volta, aquário vivo, órbitas, poeira de estrelas, cargas,
+  duas câmaras, Jogo da Vida, cristal. Cada um é uma lista de dados; “ver como foi montado” leva
+  à Oficina com as leis dele abertas.
+- Medidas (`PROBES`) alimentam os contadores e os objetivos; nenhum modelo liga bandeira de objetivo.
+
+### Ainda não portado da v4
+- Gravar no aquário e a Fita/colheita (o editor de par aqui é o de quatro casas).
+- Corpo com sensores montados, ângulo e alcance; o grafo de ligações; P1; a bancada de teste.
+- A escada de 7 níveis (virou dois) e os capítulos c2, c4, c5 com seus objetivos.
+- Gráfico de população; rótulo PT+EN ao mesmo tempo (aqui é um idioma por vez).
