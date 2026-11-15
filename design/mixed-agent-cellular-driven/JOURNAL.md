@@ -232,8 +232,45 @@ dados) e **SHELL** (skins, desenho, interface).
   à Oficina com as leis dele abertas.
 - Medidas (`PROBES`) alimentam os contadores e os objetivos; nenhum modelo liga bandeira de objetivo.
 
+## v1.1 — gravar vale para todos os modelos
+**File:** `Cellula v5.dc.html`, Oficina › aba **Gravar**
+
+A mesa do motor, a fita e a colheita da v0.6 entraram na v5, e a colheita deixou de ser só de
+pares: cada modelo contribui com a sua leitura de duas fotos (`HARVEST` no núcleo).
+
+- **Mesa**: três ferramentas (mover, copiar, pintar/apagar) cobrem os quatro gestos da v0.6. O
+  contorno verde marca o que mudou desde a última foto. “Foto do que eu fiz” grava sem rodar o
+  mundo; “+1 passo do mundo” roda as leis ligadas e grava.
+- **Par**: o diff de dois passos da v4, com contradição (sempre / 50%) e “falta algo na foto”.
+- **Contagem**: propõe a regra quando todas as casas que mudaram viam um número que as iguais
+  que não mudaram nunca viam. Um passo do Jogo da Vida devolve “vazio com 3 vira alga” e a regra
+  de morte só com os números que apareceram na foto.
+- **Força**: lê só o sentido (corpos indo para o vizinho mais próximo, ou iguais fugindo e
+  diferentes chegando). Força e alcance ficam para o cartão.
+- **Meio**: tudo desceu vira peso; cada um para um lado, sem padrão, vira agitação.
+- Quando uma regra de contagem explica uma mudança, a leitura de par da mesma mudança some.
+
+## v1.2 — o corpo do agente
+**File:** `Cellula v5.dc.html`, Oficina › Leis › cartão **cérebro**
+
+O cartão do cérebro ganhou três abas, como o Lab da v0.4:
+
+- **Corpo**: sensores montados no peixe, com alcance e abertura; quatro lados ou ângulo livre.
+  Sensores na mesma direção empilham para fora, para nenhum ficar escondido.
+- **Ligações**: o grafo sensor → ação (toque, toque), mais a lista de prioridade com ▲: a
+  primeira que for verdade vence.
+- **Blocos**: faixa PRINCIPAL por ação, faixa **P1** (um atalho que todas as ações podem chamar) e
+  a arena de teste 7×7, um bloco de cada vez, com o bloco que acabou de rodar em destaque.
+
+Dois sensores novos leem as outras camadas: **vê vizinhos** (corpos dentro do cone) e **sente
+puxão** (a camada de campo sobe naquela direção). No teste, um peixe com “sente puxão → nadar”
+foi até a estrela. Nova lente **sensores** desenha os cones no mundo.
+
+Mudança de padrão: o sensor de alga agora olha só 1 casa à frente. Com alcance 3, o peixe
+tentava comer algas que ainda não alcançava e ficava parado.
+
 ### Ainda não portado da v4
-- Gravar no aquário e a Fita/colheita (o editor de par aqui é o de quatro casas).
-- Corpo com sensores montados, ângulo e alcance; o grafo de ligações; P1; a bancada de teste.
+- O gravador de uma regra só (escolher o par no aquário, recortes 3×3 antes/depois com ✳).
+- P1 aqui é um só para todas as ações (na v4 cada ação tinha o seu).
 - A escada de 7 níveis (virou dois) e os capítulos c2, c4, c5 com seus objetivos.
 - Gráfico de população; rótulo PT+EN ao mesmo tempo (aqui é um idioma por vez).
