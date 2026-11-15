@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cellula v5</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a1a22;font-family:Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button{font:inherit;border:0;margin:0;padding:0;background:none;color:inherit;cursor:pointer;text-align:inherit}
+button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid #f0a63c;outline-offset:2px}
+canvas{display:block}
+input[type=range]{-webkit-appearance:none;appearance:none;height:28px;background:transparent;width:100%;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:99px;background:currentColor;opacity:.28}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border-radius:50%;background:currentColor;border:3px solid rgba(0,0,0,.25);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-track{height:6px;border-radius:99px;background:currentColor;opacity:.28}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:currentColor;border:3px solid rgba(0,0,0,.25)}
+@keyframes toastIn{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+
+<div style="{{ pageStyle }}">
+
+<div style="display:flex;align-items:center;gap:12px">
+<div style="{{ logoStyle }}"></div>
+<div>
+<div style="{{ brandStyle }}">Cellula</div>
+<div style="{{ brandSubStyle }}">{{ brandSub }}</div>
+</div>
+</div>
+
+<div style="{{ frameStyle }}">
+<div style="{{ innerStyle }}">
+<div style="{{ fieldStyle }}"></div>
+
+<div style="position:relative;flex:none;padding:18px 16px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+<div style="min-width:0">
+<div style="{{ titleStyle }}">{{ title }}</div>
+<div style="{{ subStyle }}">{{ subtitle }}</div>
+</div>
+<div style="flex:none;display:flex;align-items:center;gap:6px">
+<button type="button" onClick="{{ toggleMode }}" style="{{ modeChip }}">{{ modeLabel }}<span style="{{ modeSub }}">{{ modeSubLabel }}</span></button>
+<button type="button" onClick="{{ toggleLang }}" style="{{ langChip }}" aria-label="idioma · language">{{ langLabel }}</button>
+<div style="display:flex;align-items:center;gap:5px;padding:5px;border-radius:13px;background:{{ skinTray }}">
+<sc-for list="{{ skins }}" as="s" hint-placeholder-count="4">
+<button type="button" onClick="{{ s.onTap }}" aria-label="{{ s.name }}" style="{{ s.style }}"></button>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div style="position:relative;flex:1;min-height:0;overflow-y:auto;padding:0 16px 14px">
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="{{ helpLine }}">{{ homeHelp }}</div>
+<div style="{{ sectionLabel }}">{{ shelfLabel }}</div>
+<sc-for list="{{ scenarios }}" as="c" hint-placeholder-count="8">
+<button type="button" onClick="{{ c.onTap }}" style="{{ c.row }}">
+<span style="{{ c.badge }}">{{ c.n }}</span>
+<span style="flex:1;min-width:0;display:block">
+<span style="{{ c.nameStyle }}">{{ c.name }}</span>
+<span style="{{ c.descStyle }}">{{ c.desc }}</span>
+<span style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
+<sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="2"><span style="{{ t.style }}">{{ t.label }}</span></sc-for>
+</span>
+</span>
+<span style="{{ c.stateStyle }}">{{ c.state }}</span>
+</button>
+</sc-for>
+<div style="{{ sectionLabel }}">{{ questLabel }}</div>
+<sc-for list="{{ quests }}" as="c" hint-placeholder-count="4">
+<button type="button" onClick="{{ c.onTap }}" style="{{ c.row }}">
+<span style="{{ c.badge }}">{{ c.n }}</span>
+<span style="flex:1;min-width:0;display:block">
+<span style="{{ c.nameStyle }}">{{ c.name }}</span>
+<span style="{{ c.descStyle }}">{{ c.desc }}</span>
+<span style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
+<sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="2"><span style="{{ t.style }}">{{ t.label }}</span></sc-for>
+</span>
+</span>
+<span style="{{ c.stateStyle }}">{{ c.state }}</span>
+</button>
+</sc-for>
+<sc-if value="{{ isAdv }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ newBench }}" style="{{ benchBtn }}">{{ benchLabel }}<span style="{{ benchSub }}">{{ benchSubLabel }}</span></button>
+</sc-if>
+<sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+<div style="{{ noteCard }}">{{ introNote }}</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSim }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ arenaWrap }}">
+<canvas id="cv-sim" role="img" aria-label="{{ arenaAria }}" onPointerDown="{{ simDown }}" onPointerMove="{{ simMove }}" onPointerUp="{{ simUp }}" onPointerCancel="{{ simCancel }}" style="{{ canvasStyle }}"></canvas>
+<div style="{{ clockChip }}">{{ clockLabel }}</div>
+</div>
+
+<sc-if value="{{ hasGoal }}" hint-placeholder-val="{{ true }}">
+<div style="{{ goalCard }}">
+<div style="{{ goalKicker }}">{{ goalKickerLabel }}</div>
+<div style="{{ noteBody }}">{{ goalText }}</div>
+</div>
+</sc-if>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ probes }}" as="p" hint-placeholder-count="2">
+<div style="{{ p.style }}"><span style="{{ p.num }}">{{ p.value }}</span>{{ p.label }}</div>
+</sc-for>
+</div>
+
+<div style="{{ cardRow }}">
+<button type="button" onClick="{{ toggleRun }}" aria-label="{{ runAria }}" style="{{ playStyle }}">{{ playIcon }}</button>
+<button type="button" onClick="{{ stepOnce }}" style="{{ ghostBtn }}">+1</button>
+<button type="button" onClick="{{ resetRun }}" aria-label="{{ resetAria }}" style="{{ ghostBtn }}">↻</button>
+<div style="flex:1"></div>
+<sc-for list="{{ speeds }}" as="sp" hint-placeholder-count="3">
+<button type="button" onClick="{{ sp.onTap }}" aria-pressed="{{ sp.on }}" style="{{ sp.style }}">{{ sp.label }}</button>
+</sc-for>
+</div>
+
+<div style="{{ helpLine }}">{{ tapHint }}</div>
+
+<sc-if value="{{ hasKnobs }}" hint-placeholder-val="{{ true }}">
+<div style="{{ cardBox }}">
+<div style="{{ sectionLabel }}">{{ knobsLabel }}</div>
+<sc-for list="{{ knobs }}" as="k" hint-placeholder-count="2">
+<label style="display:block;margin-top:8px;color:{{ a1 }}">
+<span style="{{ meterLabel }}"><span>{{ k.label }}</span><span>{{ k.value }}</span></span>
+<input type="range" min="{{ k.min }}" max="{{ k.max }}" step="{{ k.step }}" value="{{ k.raw }}" onChange="{{ k.onChange }}">
+</label>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+<div style="{{ sectionLabel }}">{{ lensLabel }}</div>
+<sc-for list="{{ lensChips }}" as="b" hint-placeholder-count="3">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ hasChart }}" hint-placeholder-val="{{ false }}">
+<div style="{{ cardBox }}">
+<div style="{{ sectionLabel }}">{{ chartLabel }}</div>
+<svg viewBox="0 0 300 110" preserveAspectRatio="none" role="img" aria-label="{{ chartLabel }}" style="width:100%;height:96px;display:block;margin-top:6px">
+<line x1="0" y1="104" x2="300" y2="104" stroke="{{ axis }}" stroke-width="1"></line>
+<sc-for list="{{ series }}" as="q" hint-placeholder-count="2">
+<polyline points="{{ q.points }}" fill="none" stroke="{{ q.color }}" stroke-width="2.5" stroke-dasharray="{{ q.dash }}" stroke-linecap="round" stroke-linejoin="round"></polyline>
+</sc-for>
+</svg>
+<div style="display:flex;gap:14px;padding-top:6px;flex-wrap:wrap">
+<sc-for list="{{ series }}" as="q" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:6px"><span style="{{ q.dot }}"></span><span style="{{ q.legend }}">{{ q.label }} {{ q.count }}</span></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<button type="button" onClick="{{ simNext }}" style="{{ primaryBtn }}">{{ simNextLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isWorld }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ helpLine }}">{{ worldHelp }}</div>
+<div style="{{ arenaWrap }}">
+<canvas id="cv-world" role="img" aria-label="{{ arenaAria }}" onPointerDown="{{ paintDown }}" onPointerMove="{{ paintMove }}" onPointerUp="{{ paintUp }}" onPointerCancel="{{ paintUp }}" style="{{ canvasStyle }}"></canvas>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ brushes }}" as="b" hint-placeholder-count="12">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}"><span style="{{ b.tile }}">{{ b.glyph }}</span>{{ b.label }}</button>
+</sc-for>
+</div>
+<div style="{{ cardBox }}">
+<div style="{{ sectionLabel }}">{{ sizeLabel }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+<sc-for list="{{ sizeChips }}" as="b" hint-placeholder-count="3">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<div style="{{ sectionLabelGap }}">{{ faceLabel }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+<sc-for list="{{ faceChips }}" as="b" hint-placeholder-count="2">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<div style="{{ teachHint }}">{{ faceHint }}</div>
+</div>
+<div style="display:flex;gap:10px">
+<button type="button" onClick="{{ clearWorld }}" style="{{ secondaryBtn }}">{{ clearLabel }}</button>
+<button type="button" onClick="{{ goSim }}" style="{{ primaryBtnWide }}">{{ goSimLabel }}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLab }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<sc-if value="{{ fullLab }}" hint-placeholder-val="{{ true }}">
+<div style="{{ segTray }}">
+<sc-for list="{{ labTabs }}" as="t" hint-placeholder-count="2">
+<button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}<span style="{{ t.sub }}">{{ t.subLabel }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+<div style="{{ helpLine }}">{{ labHelp }}</div>
+
+<sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ segTray }}">
+<sc-for list="{{ recModes }}" as="t" hint-placeholder-count="2">
+<button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ isOne }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ arenaWrap }}">
+<canvas id="cv-one" role="img" aria-label="{{ arenaAria }}" onClick="{{ pickPair }}" style="{{ canvasStyle }}"></canvas>
+</div>
+<div style="{{ teachHint }}">{{ oneHint }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ gesturePicks }}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ dirPicks }}" as="b" hint-placeholder-count="5">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ isPaintGesture }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:5px;flex-wrap:wrap">
+<sc-for list="{{ recPalette }}" as="b" hint-placeholder-count="12">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" aria-label="{{ b.label }}" style="{{ b.style }}"><span style="{{ b.tile }}">{{ b.glyph }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+<div style="{{ patchRow }}">
+<div>
+<div style="{{ patchGrid }}"><sc-for list="{{ patchBefore }}" as="c" hint-placeholder-count="9"><div style="{{ c.box }}"><span style="{{ c.tile }}">{{ c.glyph }}</span></div></sc-for></div>
+<div style="{{ patchCap }}">{{ beforeLabel }}</div>
+</div>
+<div style="{{ patchArrow }}">➜</div>
+<div>
+<div style="{{ patchGrid }}"><sc-for list="{{ patchAfter }}" as="c" hint-placeholder-count="9"><div style="{{ c.box }}"><span style="{{ c.tile }}">{{ c.glyph }}</span></div></sc-for></div>
+<div style="{{ patchCap }}">{{ afterLabel }}</div>
+</div>
+</div>
+<div style="{{ teachHint }}">{{ gestureNote }}</div>
+<button type="button" onClick="{{ saveOne }}" style="{{ primaryBtn }}">{{ saveOneLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isStrip }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ arenaWrap }}">
+<canvas id="cv-rec" role="img" aria-label="{{ arenaAria }}" onPointerDown="{{ recDown }}" onPointerMove="{{ recMove }}" onPointerUp="{{ recUp }}" onPointerCancel="{{ recCancel }}" style="{{ canvasStyle }}"></canvas>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ recTools }}" as="b" hint-placeholder-count="3">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ isPaintTool }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:5px;flex-wrap:wrap">
+<sc-for list="{{ recPalette }}" as="b" hint-placeholder-count="12">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" aria-label="{{ b.label }}" style="{{ b.style }}"><span style="{{ b.tile }}">{{ b.glyph }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+<div style="{{ teachHint }}">{{ recHint }}</div>
+<div style="display:flex;gap:10px">
+<button type="button" onClick="{{ recStep }}" style="{{ secondaryBtn }}">{{ recStepLabel }}</button>
+<button type="button" onClick="{{ recPhoto }}" style="{{ primaryBtnWide }}">{{ recPhotoLabel }}</button>
+</div>
+
+<div style="{{ cardBox }}">
+<div style="{{ sectionLabel }}">{{ stripLabel }}</div>
+<canvas id="cv-strip" role="img" aria-label="{{ stripLabel }}" onClick="{{ pickFrame }}" style="{{ stripStyle }}"></canvas>
+<div style="{{ teachHint }}">{{ pickInfo }}</div>
+</div>
+
+<div style="{{ sectionLabel }}">{{ harvestLabel }}</div>
+<sc-if value="{{ noHarvest }}" hint-placeholder-val="{{ true }}"><div style="{{ noteCard }}">{{ noHarvestText }}</div></sc-if>
+<sc-for list="{{ harvestRows }}" as="h" hint-placeholder-count="2">
+<div style="{{ h.card }}">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="{{ h.kind }}">{{ h.kindLabel }}</span>
+<span style="{{ h.times }}">{{ h.n }}×</span>
+<span style="{{ h.text }}">{{ h.summary }}</span>
+</div>
+<div style="{{ h.noteStyle }}">{{ h.note }}</div>
+<div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+<sc-for list="{{ h.actions }}" as="a" hint-placeholder-count="2">
+<button type="button" onClick="{{ a.onTap }}" style="{{ a.style }}">{{ a.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isLaws }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<sc-if value="{{ fullLab }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ sectionLabel }}">{{ lawsLabel }}</div>
+<sc-for list="{{ lawRows }}" as="r" hint-placeholder-count="3">
+<div style="{{ r.card }}">
+<button type="button" onClick="{{ r.onTap }}" aria-pressed="{{ r.on }}" style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;min-height:44px">
+<span style="{{ r.kind }}">{{ r.kindLabel }}</span>
+<span style="{{ r.text }}">{{ r.summary }}</span>
+</button>
+<button type="button" onClick="{{ r.toggle }}" aria-pressed="{{ r.active }}" aria-label="{{ r.toggleAria }}" style="{{ r.sw }}"><span style="{{ r.knob }}"></span></button>
+<button type="button" onClick="{{ r.remove }}" aria-label="{{ r.removeAria }}" style="{{ r.del }}">×</button>
+</div>
+</sc-for>
+<sc-if value="{{ noLaws }}" hint-placeholder-val="{{ false }}"><div style="{{ noteCard }}">{{ noLawsText }}</div></sc-if>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ addChips }}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{ b.onTap }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+
+</div>
+</sc-if>
+<sc-if value="{{ hasEditor }}" hint-placeholder-val="{{ false }}">
+<div style="{{ teachCard }}">
+<div style="{{ progName }}">{{ editTitle }}</div>
+<div style="{{ teachHint }}">{{ editHint }}</div>
+
+<sc-if value="{{ hasSlots }}" hint-placeholder-val="{{ false }}">
+<div style="{{ slotGrid }}">
+<sc-for list="{{ slots }}" as="t" hint-placeholder-count="4">
+<button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">
+<span style="{{ t.capStyle }}">{{ t.cap }}</span>
+<span style="{{ t.tile }}">{{ t.glyph }}</span>
+<span style="{{ t.nameStyle }}">{{ t.name }}</span>
+</button>
+</sc-for>
+</div>
+<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">
+<sc-for list="{{ kindPalette }}" as="b" hint-placeholder-count="12">
+<button type="button" onClick="{{ b.onTap }}" aria-label="{{ b.label }}" style="{{ b.style }}"><span style="{{ b.tile }}">{{ b.glyph }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCount }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+<div style="{{ hoodGrid }}">
+<sc-for list="{{ hoodCells }}" as="c" hint-placeholder-count="9">
+<button type="button" onClick="{{ c.onTap }}" aria-pressed="{{ c.on }}" aria-label="{{ c.aria }}" style="{{ c.style }}">{{ c.glyph }}</button>
+</sc-for>
+</div>
+<div style="flex:1;min-width:0">
+<div style="{{ teachHint }}">{{ hoodText }}</div>
+</div>
+</div>
+<div style="{{ sectionLabelGap }}">{{ numsLabel }}</div>
+<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px">
+<sc-for list="{{ numChips }}" as="n" hint-placeholder-count="9">
+<button type="button" onClick="{{ n.onTap }}" aria-pressed="{{ n.on }}" style="{{ n.style }}">{{ n.label }}</button>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBrain }}" hint-placeholder-val="{{ false }}">
+<div style="{{ segTrayGap }}">
+<sc-for list="{{ brainTabs }}" as="t" hint-placeholder-count="3">
+<button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ isBody }}" hint-placeholder-val="{{ false }}">
+<div style="{{ teachHint }}">{{ bodyHelp }}</div>
+<div style="{{ bodyStage }}">
+<div style="{{ bodyRing }}"></div>
+<div style="{{ headingMark }}">{{ frontLabel }}</div>
+<sc-for list="{{ mountCones }}" as="c" hint-placeholder-count="2"><div style="{{ c.style }}"></div></sc-for>
+<div style="{{ bodySprite }}"></div>
+<sc-for list="{{ mountPins }}" as="p" hint-placeholder-count="4">
+<button type="button" onClick="{{ p.onTap }}" aria-pressed="{{ p.on }}" aria-label="{{ p.aria }}" style="{{ p.style }}">{{ p.label }}</button>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px">
+<div style="{{ sectionLabel }}">{{ mountTitle }}</div>
+<div style="display:flex;gap:6px"><button type="button" onClick="{{ addMount }}" style="{{ advBtn }}">{{ addMountLabel }}</button><button type="button" onClick="{{ toggleAdvBody }}" aria-pressed="{{ advBody }}" style="{{ advBtn }}">{{ advLabel }}</button></div>
+</div>
+<sc-if value="{{ hasMount }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+<sc-for list="{{ sensorPick }}" as="c" hint-placeholder-count="7"><button type="button" onClick="{{ c.onTap }}" aria-pressed="{{ c.on }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+</div>
+<sc-for list="{{ mountSliders }}" as="k" hint-placeholder-count="2">
+<label style="display:block;margin-top:8px;color:{{ a1 }}">
+<span style="{{ meterLabel }}"><span>{{ k.label }}</span><span>{{ k.value }}</span></span>
+<input type="range" min="{{ k.min }}" max="{{ k.max }}" step="{{ k.step }}" value="{{ k.raw }}" onChange="{{ k.onChange }}">
+</label>
+</sc-for>
+<button type="button" onClick="{{ removeMount }}" style="{{ dangerBtn }}">{{ removeMountLabel }}</button>
+</sc-if>
+<sc-if value="{{ noMount }}" hint-placeholder-val="{{ false }}"><div style="{{ teachHint }}">{{ noMountText }}</div></sc-if>
+</sc-if>
+
+<sc-if value="{{ isWiring }}" hint-placeholder-val="{{ false }}">
+<div style="{{ teachHint }}">{{ wireHelp }}</div>
+<div style="{{ graphCard }}">
+<div style="display:flex;justify-content:space-between;padding:0 4px 8px">
+<span style="{{ colLabel }}">{{ sensorsLabel }}</span><span style="{{ colLabel }}">{{ actionsLabel }}</span>
+</div>
+<div style="display:flex;align-items:flex-start;gap:6px">
+<div style="{{ colStack }}">
+<sc-for list="{{ sensorNodes }}" as="n" hint-placeholder-count="7">
+<button type="button" onClick="{{ n.onTap }}" aria-pressed="{{ n.on }}" style="{{ n.style }}">{{ n.label }}</button>
+</sc-for>
+</div>
+<svg viewBox="{{ graphView }}" preserveAspectRatio="none" aria-hidden="true" style="{{ wireSvg }}">
+<sc-for list="{{ wirePaths }}" as="w" hint-placeholder-count="3">
+<path d="{{ w.d }}" fill="none" stroke="{{ w.stroke }}" stroke-width="2.4" stroke-linecap="round"></path>
+</sc-for>
+</svg>
+<div style="{{ colStack }}">
+<sc-for list="{{ actionNodes }}" as="n" hint-placeholder-count="5">
+<button type="button" onClick="{{ n.onTap }}" style="{{ n.style }}">{{ n.label }}</button>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="{{ sectionLabelGap }}">{{ orderLabel }}</div>
+<sc-for list="{{ wireRows }}" as="w" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+<span style="{{ w.num }}">{{ w.n }}</span>
+<span style="{{ w.text }}">{{ w.when }} → {{ w.then }}</span>
+<button type="button" onClick="{{ w.onUp }}" aria-label="{{ w.upAria }}" style="{{ w.btn }}">▲</button>
+<button type="button" onClick="{{ w.onDel }}" aria-label="{{ w.delAria }}" style="{{ w.btn }}">×</button>
+</div>
+</sc-for>
+</sc-if>
+
+<sc-if value="{{ isBlocks }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">
+<sc-for list="{{ actTabs }}" as="b" hint-placeholder-count="5">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<button type="button" onClick="{{ pickMain }}" aria-pressed="{{ mainOn }}" style="{{ stripMain }}">
+<span style="{{ stripTag }}">{{ mainLabel }}</span>
+<sc-for list="{{ progBlocks }}" as="b" hint-placeholder-count="2"><span style="{{ b.style }}">{{ b.glyph }}</span></sc-for>
+<sc-if value="{{ progEmpty }}" hint-placeholder-val="{{ false }}"><span style="{{ emptySlot }}">{{ progEmptyText }}</span></sc-if>
+</button>
+<sc-if value="{{ canP1 }}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{ pickP1 }}" aria-pressed="{{ p1On }}" style="{{ stripProc }}">
+<span style="{{ stripTag }}">{{ p1Label }}</span>
+<sc-for list="{{ procBlocks }}" as="b" hint-placeholder-count="2"><span style="{{ b.style }}">{{ b.glyph }}</span></sc-for>
+<sc-if value="{{ procEmpty }}" hint-placeholder-val="{{ true }}"><span style="{{ emptySlot }}">{{ procEmptyText }}</span></sc-if>
+</button>
+</sc-if>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+<sc-for list="{{ blockPalette }}" as="b" hint-placeholder-count="6">
+<button type="button" onClick="{{ b.onTap }}" style="{{ b.style }}"><span style="{{ b.glyphStyle }}">{{ b.glyph }}</span>{{ b.label }}</button>
+</sc-for>
+<button type="button" onClick="{{ undoBlock }}" style="{{ undoStyle }}">⌫ {{ undoLabel }}</button>
+</div>
+<div style="{{ sectionLabelGap }}">{{ testLabel }}</div>
+<div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+<div style="{{ testWrap }}"><canvas id="cv-test" role="img" aria-label="{{ testLabel }}" style="width:210px;height:210px"></canvas></div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px">
+<button type="button" onClick="{{ testStep }}" style="{{ testBtnOn }}">{{ testStepLabel }}</button>
+<button type="button" onClick="{{ testReset }}" style="{{ testBtn }}">↻</button>
+<div style="{{ teachHint }}">{{ testHint }}</div>
+</div>
+</div>
+</sc-if>
+</sc-if>
+
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+<sc-for list="{{ editChips }}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<sc-for list="{{ editSliders }}" as="k" hint-placeholder-count="1">
+<label style="display:block;margin-top:8px;color:{{ a1 }}">
+<span style="{{ meterLabel }}"><span>{{ k.label }}</span><span>{{ k.value }}</span></span>
+<input type="range" min="{{ k.min }}" max="{{ k.max }}" step="{{ k.step }}" value="{{ k.raw }}" onChange="{{ k.onChange }}">
+</label>
+</sc-for>
+<div style="{{ readsBox }}">
+<div style="{{ readsKicker }}">{{ readsLabel }}</div>
+<div style="{{ noteBody }}">{{ editSentence }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ fullLab }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ cardBox }}">
+<div style="{{ progName }}">{{ mediumTitle }}</div>
+<div style="{{ teachHint }}">{{ mediumHint }}</div>
+<sc-for list="{{ mediumSliders }}" as="k" hint-placeholder-count="3">
+<label style="display:block;margin-top:8px;color:{{ a1 }}">
+<span style="{{ meterLabel }}"><span>{{ k.label }}</span><span>{{ k.value }}</span></span>
+<input type="range" min="{{ k.min }}" max="{{ k.max }}" step="{{ k.step }}" value="{{ k.raw }}" onChange="{{ k.onChange }}">
+</label>
+</sc-for>
+<sc-if value="{{ hasPores }}" hint-placeholder-val="{{ false }}">
+<div style="{{ sectionLabelGap }}">{{ passLabel }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px">
+<sc-for list="{{ passChips }}" as="b" hint-placeholder-count="3">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}"><span style="{{ b.tile }}">{{ b.glyph }}</span>{{ b.label }}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div style="{{ noteCard }}">{{ orderNote }}</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<button type="button" onClick="{{ goSim }}" style="{{ primaryBtn }}">{{ goSimLabel }}</button>
+</div>
+</sc-if>
+
+</div>
+
+<div style="{{ tabBar }}">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}"><span style="{{ t.glyph }}"></span>{{ t.label }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+<div style="{{ toastWrap }}"><div style="{{ toastCard }}">{{ toastText }}</div></div>
+</sc-if>
+
+</div>
+</div>
+
+<div style="{{ footNote }}">{{ footText }}</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":430,"height":1010},"skin":{"editor":"enum","options":["pond","lab","meadow","slide"],"default":"pond","tsType":"string","section":"Ambiente"},"startMode":{"editor":"enum","options":["intro","adv"],"default":"intro","tsType":"string","section":"Ambiente"}}'>
+// =====================================================================
+// KERNEL — nothing below this banner knows about any particular scenario
+// =====================================================================
+
+// ---- kinds: every thing that can be in a cell, with the properties models read
+const KINDS = {
+  '_':{pt:'vazio', en:'empty'},
+  g:{pt:'vidro', en:'glass', solid:1, art:'art/glass.svg', tok:'#4aa7c4', fill:1},
+  r:{pt:'pedra', en:'rock', solid:1, art:'art/rock01.svg', tok:'#94a6b0'},
+  s:{pt:'areia', en:'sand', solid:1, art:'art/sand.svg', tok:'#e3c079', fill:1},
+  p:{pt:'planta', en:'plant', art:'art/plant01.svg', tok:'#5da53f'},
+  a:{pt:'alga', en:'alga', art:'art/cyanobacteria.svg', tok:'#2fa58c'},
+  '>':{pt:'peixe →', en:'fish →', body:1, art:'art/fish-right.svg', tok:'#e2662c'},
+  '<':{pt:'peixe ←', en:'fish ←', body:1, art:'art/fish-left.svg', tok:'#e2662c'},
+  m:{pt:'partícula', en:'particle', body:1, drift:1, mass:1, dot:'a3', r:0.34},
+  '+':{pt:'positiva', en:'positive', body:1, drift:1, mass:1, q:1, dot:'a2', r:0.42, glyph:'+'},
+  '-':{pt:'negativa', en:'negative', body:1, drift:1, mass:1, q:-1, dot:'neg', r:0.42, glyph:'−'},
+  n:{pt:'sal', en:'salt', body:1, drift:1, dot:'a2', r:0.26},
+  u:{pt:'açúcar', en:'sugar', body:1, drift:1, dot:'a3', r:0.44},
+  c:{pt:'planeta', en:'planet', body:1, drift:1, mass:0.03, dot:'a1', r:0.32},
+  S:{pt:'estrela', en:'star', solid:1, mass:2, absorb:1, dot:'a2', r:0.85},
+  x:{pt:'cristal', en:'crystal', solid:1, mass:1, sq:'a2'},
+  h:{pt:'membrana', en:'membrane', solid:1, sq:'soft'},
+  o:{pt:'poro', en:'pore', pore:1}
+};
+const BRUSHES = ['_','g','r','s','p','a','>','m','+','-','n','u','c','S','x','h','o'];
+const RULE_KINDS = ['_','g','r','s','p','a','>','<','m','+','-','n','u','x'];
+const DIRS = {right:[1,0], left:[-1,0], up:[0,-1], down:[0,1]};
+
+// ---- number layers: one rule ("trade with your neighbours") serves every field
+function makeField(w,h){ return {w:w,h:h,phi:new Float32Array(w*h),tmp:new Float32Array(w*h),rho:new Float32Array(w*h)}; }
+function decayFor(R){ return 1/(1+4*R*R); }
+function relax(F,decay,passes){
+  var w=F.w,h=F.h,a=F.phi,b=F.tmp,rho=F.rho,k=(1-decay)*0.25;
+  for(var p=0;p<passes;p++){
+    for(var y=0;y<h;y++){ var row=y*w;
+      for(var x=0;x<w;x++){ var i=row+x,c=a[i];
+        b[i]=k*((x>0?a[i-1]:c)+(x<w-1?a[i+1]:c)+(y>0?a[i-w]:c)+(y<h-1?a[i+w]:c))+rho[i]; } }
+    var t=a;a=b;b=t; }
+  F.phi=a;F.tmp=b;
+}
+function gradCell(F,x,y){ var w=F.w,h=F.h,p=F.phi,i=y*w+x,c=p[i];
+  return [((x<w-1?p[i+1]:c)-(x>0?p[i-1]:c))/2, ((y<h-1?p[i+w]:c)-(y>0?p[i-w]:c))/2]; }
+function gradAt(F,px,py){ var w=F.w,h=F.h;
+  if(px<0||py<0||px>w-1||py>h-1) return [0,0];
+  var x0=Math.min(w-2,Math.floor(px)),y0=Math.min(h-2,Math.floor(py)),fx=px-x0,fy=py-y0;
+  var a=gradCell(F,x0,y0),b=gradCell(F,x0+1,y0),c=gradCell(F,x0,y0+1),d=gradCell(F,x0+1,y0+1);
+  return [(a[0]*(1-fx)+b[0]*fx)*(1-fy)+(c[0]*(1-fx)+d[0]*fx)*fy,(a[1]*(1-fx)+b[1]*fx)*(1-fy)+(c[1]*(1-fx)+d[1]*fx)*fy]; }
+function deposit(F,px,py,s){ var w=F.w,h=F.h;
+  if(px<0||py<0||px>w-1||py>h-1) return;
+  var x0=Math.min(w-2,Math.floor(px)),y0=Math.min(h-2,Math.floor(py)),fx=px-x0,fy=py-y0,r=F.rho,i=y0*w+x0;
+  r[i]+=s*(1-fx)*(1-fy); r[i+1]+=s*fx*(1-fy); r[i+w]+=s*(1-fx)*fy; r[i+w+1]+=s*fx*fy; }
+
+// ---- the world: terrain symbols + bodies on top, any number of law cards, one medium
+function makeWorld(w,h,face){
+  return {w:w,h:h,face:face||'cells',edge:'wall',T:new Array(w*h).fill('_'),bodies:[],laws:[],
+    medium:{temp:0,drag:10,weight:0},pass:{n:true,u:false,m:true,'+':true,'-':false,c:true},
+    F:makeField(w,h),V:null,B:null,tick:0,ev:{},mem:{},lens:{grid:true}};
+}
+function addBody(W,kind,x,y,vx,vy){
+  var b={id:(W.nid=(W.nid||0)+1),kind:kind,x:x,y:y,vx:vx||0,vy:vy||0,ax:0,ay:0,fx:0,fy:0,self:null,h:kind==='<'?180:0,act:null,pc:0,trail:null,sum:0,la:null,rev:0,dead:false};
+  W.bodies.push(b); return b;
+}
+function cellOf(W,b){ var x=Math.round(b.x), y=Math.round(b.y); return (x<0||y<0||x>=W.w||y>=W.h)?-1:y*W.w+x; }
+// the view every rule reads: terrain with the bodies stamped on it
+function buildView(W){
+  var V=W.T.slice(), B=new Array(V.length).fill(null);
+  for(var i=0;i<W.bodies.length;i++){ var b=W.bodies[i], c=cellOf(W,b); if(c>=0){ V[c]=b.kind; B[c]=b; } }
+  W.V=V; W.B=B;
+}
+// a rule writes a kind into a cell; bodies are created, retyped, moved or removed as needed
+function putKind(W,i,kind,body){
+  var K=KINDS[kind], old=W.B[i];
+  if(K.body){
+    if(!body) body=addBody(W,kind,i%W.w,(i/W.w)|0);
+    if(old&&old!==body) old.dead=true;
+    if(body.kind!==kind){ body.kind=kind; if(kind==='<') body.h=180; if(kind==='>') body.h=0; }
+    body.x=i%W.w; body.y=(i/W.w)|0; W.B[i]=body; W.T[i]='_'; W.V[i]=kind;
+  } else { if(old) old.dead=true; W.B[i]=null; W.T[i]=kind; W.V[i]=kind; }
+}
+
+// ---- MODEL: pair rules (one pair at a time, random order)
+function applyPair(W,i,j,r){
+  var pool=[{b:W.B[i],k:W.V[i],slot:0},{b:W.B[j],k:W.V[j],slot:1}];
+  var pick=function(slot,kind){ var o, t;
+    var tests=[function(p){ return p.slot===slot&&p.k===kind; }, function(p){ return p.k===kind; },
+               function(p){ return p.slot===slot; }, function(){ return true; }];
+    for(t=0;t<4;t++) for(o=0;o<2;o++){ var p=pool[o]; if(p.b&&!p.used&&tests[t](p)){ p.used=true; return p.b; } }
+    return null; };
+  var b0=KINDS[r.a[0]].body?pick(0,r.a[0]):null, b1=KINDS[r.a[1]].body?pick(1,r.a[1]):null;
+  pool.forEach(function(p){ if(p.b&&!p.used) p.b.dead=true; });
+  W.B[i]=null; W.B[j]=null;
+  putKind(W,i,r.a[0],b0); putKind(W,j,r.a[1],b1);
+}
+function pairsStep(W,rules){
+  if(!rules.length) return;
+  var n=W.w*W.h, used=new Uint8Array(n), order=new Array(n), i, k;
+  for(i=0;i<n;i++) order[i]=i;
+  for(i=n-1;i>0;i--){ k=Math.floor(Math.random()*(i+1)); var t=order[i]; order[i]=order[k]; order[k]=t; }
+  var D=[[1,0],[-1,0],[0,1],[0,-1]];
+  for(var o=0;o<n;o++){ i=order[o]; if(used[i]) continue;
+    for(k=0;k<rules.length;k++){ var r=rules[k]; if(W.V[i]!==r.b[0]) continue;
+      var d=r.dir==='any'?D[Math.floor(Math.random()*4)]:DIRS[r.dir];
+      var nx=i%W.w+d[0], ny=((i/W.w)|0)+d[1];
+      if(nx<0||ny<0||nx>=W.w||ny>=W.h) continue;
+      var j=ny*W.w+nx; if(used[j]||W.V[j]!==r.b[1]) continue;
+      if(Math.random()*100>r.prob) continue;
+      applyPair(W,i,j,r); used[i]=1; used[j]=1; break; } }
+}
+
+// ---- MODEL: count rules (all at once, any neighbourhood up to 5x5)
+function maskOf(kind){ var m=new Array(25).fill(0);
+  for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){ if(!dx&&!dy) continue;
+    var on=kind==='4'?(Math.abs(dx)+Math.abs(dy)===1):kind==='8'?(Math.abs(dx)<=1&&Math.abs(dy)<=1):true;
+    m[(dy+2)*5+dx+2]=on?1:0; } return m; }
+function numsOf(list){ var n=new Array(25).fill(false); list.forEach(function(k){ n[k]=true; }); return n; }
+function maskSize(m){ var n=0; for(var i=0;i<25;i++) n+=m[i]; return n; }
+function isWide(m){ for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++) if((Math.abs(dx)>1||Math.abs(dy)>1)&&m[(dy+2)*5+dx+2]) return true; return false; }
+function countAt(V,w,h,i,mask,what){ var n=0, x=i%w, y=(i/w)|0;
+  for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){ if(!mask[(dy+2)*5+dx+2]) continue;
+    var cx=x+dx, cy=y+dy; if(cx<0||cy<0||cx>=w||cy>=h) continue; if(V[cy*w+cx]===what) n++; } return n; }
+function countStep(W,rules){
+  if(!rules.length) return;
+  var V0=W.V.slice(), ch=[], i, k;
+  for(i=0;i<V0.length;i++){ var c=V0[i];
+    for(k=0;k<rules.length;k++){ var r=rules[k]; if(r.from!==c||r.to===c) continue;
+      if(!r.nums[countAt(V0,W.w,W.h,i,r.mask,r.what)]) continue;
+      if(r.prob<100&&Math.random()*100>r.prob) continue;
+      ch.push([i,r.to]); break; } }
+  for(k=0;k<ch.length;k++){ i=ch[k][0]; var b=W.B[i]; W.B[i]=null;
+    if(KINDS[ch[k][1]].body) putKind(W,i,ch[k][1],b); else { if(b) b.dead=true; putKind(W,i,ch[k][1],null); } }
+}
+
+// ---- MODEL: forces (a field layer, or direct 1/r² in the free face). It only pushes.
+function srcOf(card,kind){ var K=KINDS[kind]; return card.sign==='all'?(K.mass||0):(K.q||0); }
+function forceOn(W,card,b,q){
+  var all=card.sign==='all', s=card.strength/100, cpl=all?1:(q>0?-1:1), free=W.face==='free';
+  if(free&&card.direct){
+    var G=0.15*s, ax=0, ay=0, i, dx, dy, r2, inv;
+    for(i=0;i<W.srcCells.length;i++){ var c=W.srcCells[i];
+      dx=c.x-b.x; dy=c.y-b.y; r2=dx*dx+dy*dy+0.05; inv=1/(r2*Math.sqrt(r2)); ax+=G*c.q*cpl*dx*inv; ay+=G*c.q*cpl*dy*inv; }
+    for(i=0;i<W.bodies.length;i++){ var o=W.bodies[i]; if(o===b||o.dead) continue; var oq=srcOf(card,o.kind); if(!oq) continue;
+      dx=o.x-b.x; dy=o.y-b.y; r2=dx*dx+dy*dy+0.3; inv=1/(r2*Math.sqrt(r2)); ax+=G*oq*cpl*dx*inv; ay+=G*oq*cpl*dy*inv; }
+    return [ax,ay];
+  }
+  var K=(all?0.06:0.15)*s, g, g2=[0,0];
+  if(free){ g=gradAt(W.F,b.x,b.y); if(b.self) g2=gradAt(b.self,b.x,b.y); }
+  else { var x=Math.round(b.x), y=Math.round(b.y); g=gradCell(W.F,x,y); if(b.self) g2=gradCell(b.self,x,y); }
+  // a body must not feel its own field: the engine keeps each body's field and subtracts it
+  return [cpl*K*(g[0]-g2[0]), cpl*K*(g[1]-g2[1])];
+}
+function forcePush(W,card){
+  if(!card.strength) return;
+  var F=W.F, w=W.w, d=decayFor(card.range), free=W.face==='free', i, b, q;
+  W.srcCells=[];
+  for(i=0;i<W.T.length;i++){ q=srcOf(card,W.T[i]); if(q) W.srcCells.push({x:i%w,y:(i/w)|0,q:q,i:i}); }
+  if(!(free&&card.direct)){
+    F.rho.fill(0);
+    for(i=0;i<W.srcCells.length;i++) F.rho[W.srcCells[i].i]+=W.srcCells[i].q;
+    // a new world starts with the field of its fixed sources already spread, so nothing has to wait for it
+    if(!W.warm){ W.warm=true; if(W.srcCells.length) relax(F,d,400); }
+    for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; q=srcOf(card,b.kind); if(!q) continue;
+      if(free) deposit(F,b.x,b.y,q); else { var c=cellOf(W,b); if(c>=0) F.rho[c]+=q; } }
+    relax(F,d,4);
+    for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; q=srcOf(card,b.kind); if(!q||!KINDS[b.kind].drift) continue;
+      if(!b.self||b.self.w!==w||b.self.h!==W.h) b.self=makeField(w,W.h);
+      b.self.rho.fill(0);
+      if(free) deposit(b.self,b.x,b.y,q); else { var c2=cellOf(W,b); if(c2>=0) b.self.rho[c2]=q; }
+      relax(b.self,d,4); }
+  }
+  for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; if(!KINDS[b.kind].drift) continue; q=srcOf(card,b.kind); if(!q) continue;
+    var f=forceOn(W,card,b,q); b.fx+=f[0]; b.fy+=f[1]; }
+}
+
+// ---- MODEL: the medium (jiggle and weight push; drag is applied by motion)
+function mediumPush(W,dt){
+  var sig=0.5*W.medium.temp/100*Math.sqrt(dt), g=0.012*W.medium.weight/100;
+  if(!sig&&!g) return;
+  for(var i=0;i<W.bodies.length;i++){ var b=W.bodies[i]; if(!KINDS[b.kind].drift) continue;
+    b.fx+=(Math.random()*2-1)*sig; b.fy+=(Math.random()*2-1)*sig+g; }
+}
+
+// ---- MODEL: the fish brain (sensors wired to block programs)
+const SENSORS = { free:['frente livre','front is free'], wall:['parede','wall'], food:['vê alga','sees alga'], plant:['vê planta','sees a plant'],
+  crowd:['vê vizinhos','sees neighbours'], pull:['sente puxão','feels a pull'], dice:['1 em 4','1 in 4'] };
+const ACTIONS = { fwd:['nadar','swim'], turn:['dar meia-volta','turn around'], rand:['virar','turn'], eat:['comer','eat'], wait:['esperar','wait'] };
+const BLOCKS = { step:['↑','passo','step'], left:['↺','esquerda','left'], right:['↻','direita','right'], act:['◉','agir','act'], wait:['❙❙','esperar','wait'], p1:['P1','chamar P1','call P1'] };
+// a mount places a sensor on the body: angle from the front (90 = right), range in cells, opening in degrees
+function mountById(card,id){ var M=card.mounts||[]; for(var i=0;i<M.length;i++) if(M[i].id===id) return M[i]; return null; }
+function dirCell(b,ang,d){ var rad=(b.h+ang)*Math.PI/180; return [Math.round(b.x+Math.cos(rad)*d), Math.round(b.y+Math.sin(rad)*d)]; }
+function coneCells(b,ang,r,f){ var out=[], seen={}, step=Math.max(10,f/6);
+  for(var d=1;d<=Math.ceil(r);d++) for(var o=-f/2;o<=f/2+0.01;o+=step){ var p=dirCell(b,ang+o,Math.min(d,r)), k=p[0]+','+p[1]; if(!seen[k]){ seen[k]=1; out.push(p); } }
+  return out; }
+function aheadOf(b,d){ return dirCell(b,0,d); }
+function openCell(W,x,y){ if(x<0||y<0||x>=W.w||y>=W.h) return false; var i=y*W.w+x; return !KINDS[W.T[i]].solid && !W.B[i]; }
+function terrainAt(W,x,y){ return (x<0||y<0||x>=W.w||y>=W.h)?'g':W.T[y*W.w+x]; }
+function senses(W,b,m){
+  var id=m.s, ang=m.a, r=m.r, f=m.f, p, d, i, cells;
+  if(id==='free'){ p=dirCell(b,ang,1); return openCell(W,p[0],p[1]); }
+  if(id==='wall'){ for(d=1;d<=Math.max(1,Math.round(r));d++){ p=dirCell(b,ang,d); if(KINDS[terrainAt(W,p[0],p[1])].solid) return true; } return false; }
+  if(id==='food'||id==='plant'){ var k=id==='food'?'a':'p';
+    if(Math.abs(ang)<1&&terrainAt(W,Math.round(b.x),Math.round(b.y))===k) return true;   // a front sensor also feels what it is on
+    cells=coneCells(b,ang,r,f); for(i=0;i<cells.length;i++) if(terrainAt(W,cells[i][0],cells[i][1])===k) return true; return false; }
+  if(id==='crowd'){ var n=0; cells=coneCells(b,ang,r,f);
+    for(i=0;i<cells.length;i++){ var x=cells[i][0], y=cells[i][1]; if(x<0||y<0||x>=W.w||y>=W.h) continue; var o=W.B[y*W.w+x]; if(o&&o!==b) n++; } return n>=2; }
+  if(id==='pull'){ var g=gradCell(W.F,Math.max(0,Math.min(W.w-1,Math.round(b.x))),Math.max(0,Math.min(W.h-1,Math.round(b.y)))), rad=(b.h+ang)*Math.PI/180;
+    return g[0]*Math.cos(rad)+g[1]*Math.sin(rad)>0.01; }   // the field layer rises that way
+  if(id==='dice') return Math.random()<0.25;
+  return false;
+}
+// the next block of the running action, following a call into P1 and back
+function nextBlock(card,b){ var main=card.programs[b.act]||[], p1=card.p1||[], guard=0;
+  while(guard++<20){
+    if(b.pp>=0){ if(b.pp<p1.length){ b.last=['p1',b.pp]; return p1[b.pp++]; } b.pp=-1; continue; }
+    if(b.pc<main.length){ var k=main[b.pc++]; if(k==='p1'){ if(p1.length) b.pp=0; continue; } b.last=['main',b.pc-1]; return k; }
+    return null; }
+  return null; }
+function brainAct(W,card){
+  var list=W.bodies.slice();
+  for(var n=0;n<list.length;n++){ var b=list[n]; if(b.dead||(b.kind!=='>'&&b.kind!=='<')) continue;
+    if(b.pp===undefined) b.pp=-1;
+    var main=card.programs[b.act]||[], p1=card.p1||[];
+    var busy=!!b.act&&((b.pp>=0&&b.pp<p1.length)||b.pc<main.length);
+    if(!busy){ // an action runs to the end before sensors are read again
+      var hit=null; for(var k=0;k<card.wires.length;k++){ var mt=mountById(card,card.wires[k][0]); if(mt&&senses(W,b,mt)){ hit=card.wires[k]; break; } }
+      b.act=card.only||(hit?hit[1]:'fwd'); b.pc=0; b.pp=-1; }
+    var blk=nextBlock(card,b); if(!blk) continue;
+    var x=Math.round(b.x), y=Math.round(b.y), i=y*W.w+x, p;
+    if(blk==='step'){ p=aheadOf(b,1);
+      if(openCell(W,p[0],p[1])){ W.B[i]=null; W.V[i]=W.T[i]; b.x=p[0]; b.y=p[1]; var j=p[1]*W.w+p[0]; W.B[j]=b; W.V[j]=b.kind; } }
+    else if(blk==='left'||blk==='right'){ b.h=(b.h+(blk==='left'?270:90))%360;
+      var c=Math.cos(b.h*Math.PI/180); if(c>0.5) b.kind='>'; else if(c<-0.5) b.kind='<'; W.V[i]=b.kind; }
+    else if(blk==='act'){ // eats where it is and the three cells in front of its mouth
+      [[x,y],aheadOf(b,1),dirCell(b,-45,1.42),dirCell(b,45,1.42)].forEach(function(q){ if(terrainAt(W,q[0],q[1])==='a'&&q[0]>=0&&q[1]>=0&&q[0]<W.w&&q[1]<W.h){ var e=q[1]*W.w+q[0];
+        W.T[e]='_'; if(!W.B[e]) W.V[e]='_'; W.ev.eat=(W.ev.eat||0)+1; } }); }
+  }
+}
+
+// ---- MODEL: motion — the only model that moves drifting bodies
+function canEnter(W,x,y,b){
+  if(x<0||y<0||x>=W.w||y>=W.h) return false;
+  var i=y*W.w+x; if(W.B[i]) return false;
+  var t=W.T[i]; if(t==='_') return true;
+  return !!KINDS[t].pore && !!W.pass[b.kind];
+}
+function moveCells(W){
+  var P=W.bodies.filter(function(b){ return KINDS[b.kind].drift&&!b.dead; }), keep=1-W.medium.drag/100, i;
+  for(i=P.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=P[i]; P[i]=P[j]; P[j]=t; }
+  for(i=0;i<P.length;i++){ var b=P[i], w=W.w;
+    b.vx=Math.max(-0.9,Math.min(0.9,(b.vx+b.fx)*keep)); b.vy=Math.max(-0.9,Math.min(0.9,(b.vy+b.fy)*keep));
+    b.ax+=b.vx; b.ay+=b.vy;
+    if(Math.abs(b.ax)>=1){ var dx=b.ax>0?1:-1; // a hop happens when the saved-up movement crosses a whole cell
+      if(canEnter(W,b.x+dx,b.y,b)){ var c=b.y*w+b.x; W.B[c]=null; W.V[c]=W.T[c]; b.x+=dx; c=b.y*w+b.x; W.B[c]=b; W.V[c]=b.kind; b.ax-=dx; }
+      else { b.vx*=-0.2; b.ax=0; } }
+    if(Math.abs(b.ay)>=1){ var dy=b.ay>0?1:-1;
+      if(canEnter(W,b.x,b.y+dy,b)){ var c3=b.y*w+b.x; W.B[c3]=null; W.V[c3]=W.T[c3]; b.y+=dy; c3=b.y*w+b.x; W.B[c3]=b; W.V[c3]=b.kind; b.ay-=dy; }
+      else { b.vy*=-0.2; b.ay=0; } }
+  }
+}
+function moveFree(W,dt){
+  var keep=1-W.medium.drag/100*dt, star=null, i;
+  for(i=0;i<W.T.length;i++) if(KINDS[W.T[i]].absorb){ star={x:i%W.w,y:(i/W.w)|0}; break; }
+  for(i=0;i<W.bodies.length;i++){ var b=W.bodies[i]; if(!KINDS[b.kind].drift||b.dead) continue;
+    b.vx=(b.vx+b.fx*dt)*keep; b.vy=(b.vy+b.fy*dt)*keep;
+    var ox=b.x, oy=b.y; b.x+=b.vx*dt; b.y+=b.vy*dt;
+    var cx=Math.round(b.x), cy=Math.round(b.y), inside=cx>=0&&cy>=0&&cx<W.w&&cy<W.h;
+    if(inside){ var K=KINDS[W.T[cy*W.w+cx]];
+      if(K.absorb){ var ddx=b.x-cx, ddy=b.y-cy; if(ddx*ddx+ddy*ddy<0.8){ b.dead=true; W.ev.capture=(W.ev.capture||0)+1; continue; } }
+      else if(K.solid||(K.pore&&!W.pass[b.kind])){ if(Math.round(ox)!==cx){ b.vx=-b.vx*0.8; b.x=ox; } if(Math.round(oy)!==cy){ b.vy=-b.vy*0.8; b.y=oy; } } }
+    else if(W.edge==='wall'){ if(cx<0||cx>=W.w){ b.vx=-b.vx*0.8; b.x=ox; } if(cy<0||cy>=W.h){ b.vy=-b.vy*0.8; b.y=oy; } }
+    else if(b.x<-12||b.y<-12||b.x>W.w+12||b.y>W.h+12){ b.dead=true; W.ev.escape=(W.ev.escape||0)+1; continue; }
+    if(star){ var a=Math.atan2(b.y-star.y,b.x-star.x);
+      if(b.la!==null){ var da=a-b.la; if(da>Math.PI) da-=6.2832; if(da<-Math.PI) da+=6.2832; b.sum+=da;
+        var rev=Math.floor(Math.abs(b.sum)/6.2832); if(rev>b.rev){ W.ev.orbit=(W.ev.orbit||0)+rev-b.rev; b.rev=rev; } }
+      b.la=a; }
+    if(!b.trail) b.trail=[]; b.trail.push(b.x,b.y); if(b.trail.length>700) b.trail.splice(0,2);
+  }
+}
+
+// ---- THE ENGINE: fixed phases, and within a phase the order of the cards in the list
+function stepWorld(W){
+  var L=W.laws.filter(function(c){ return c.on; }), free=W.face==='free', subs=free?2:1, dt=free?0.5:1, i, s;
+  buildView(W);
+  for(s=0;s<subs;s++){
+    for(i=0;i<W.bodies.length;i++){ W.bodies[i].fx=0; W.bodies[i].fy=0; }
+    for(i=0;i<L.length;i++) if(L[i].type==='force') forcePush(W,L[i]);      // 1 · push
+    mediumPush(W,dt);
+    if(s===0) for(i=0;i<L.length;i++) if(L[i].type==='brain') brainAct(W,L[i]); // 2 · act
+    if(free) moveFree(W,dt); else moveCells(W);                               // 3 · move
+  }
+  if(free){ W.bodies=W.bodies.filter(function(b){ return !b.dead; }); buildView(W); }
+  pairsStep(W,L.filter(function(c){ return c.type==='pair'; }));             // 4 · rules, one pair at a time
+  countStep(W,L.filter(function(c){ return c.type==='count'; }));            // 5 · rules, all at once
+  W.bodies=W.bodies.filter(function(b){ return !b.dead; });
+  for(i=0;i<W.bodies.length;i++){ var b=W.bodies[i]; if(b.kind==='>'||b.kind==='<'){ if(b.x<=1) W.mem.hitL=1; if(b.x>=W.w-2) W.mem.hitR=1; } }
+  W.tick++;
+}
+
+// ---- probes: what charts and goals read (never flags set inside a model)
+function biggestCluster(W){
+  var at={}, seen={}, big=0, i;
+  for(i=0;i<W.bodies.length;i++) if(KINDS[W.bodies[i].kind].drift) at[Math.round(W.bodies[i].x)+','+Math.round(W.bodies[i].y)]=1;
+  for(var k in at){ if(seen[k]) continue; var st=[k], n=0; seen[k]=1;
+    while(st.length){ var c=st.pop().split(','), x=+c[0], y=+c[1]; n++;
+      for(var dy=-1;dy<=1;dy++) for(var dx=-1;dx<=1;dx++){ var q=(x+dx)+','+(y+dy); if(at[q]&&!seen[q]){ seen[q]=1; st.push(q); } } }
+    if(n>big) big=n; }
+  return big;
+}
+const PROBES = {
+  tick:function(W){ return W.tick; },
+  walls:function(W){ return (W.mem.hitL?1:0)+(W.mem.hitR?1:0); },
+  orbits:function(W){ return W.ev.orbit||0; }, escapes:function(W){ return W.ev.escape||0; }, captures:function(W){ return W.ev.capture||0; },
+  eaten:function(W){ return W.ev.eat||0; },
+  reach:function(W,arg){ var t=arg.split(','), tx=+t[0], ty=+t[1];
+    for(var i=0;i<W.bodies.length;i++){ var b=W.bodies[i]; if((b.kind==='>'||b.kind==='<')&&Math.abs(b.x-tx)<=1&&Math.abs(b.y-ty)<=1) return 1; } return 0; },
+  blocks:function(W){ var n=0; W.laws.forEach(function(c){ if(c.type!=='brain') return; n+=(c.p1||[]).length; for(var k in c.programs) n+=c.programs[k].length; }); return n; },
+  biggest:biggestCluster,
+  count:function(W,k){ var n=0, i; for(i=0;i<W.T.length;i++) if(W.T[i]===k) n++; for(i=0;i<W.bodies.length;i++) if(W.bodies[i].kind===k) n++; return n; },
+  right:function(W,k){ var n=0, mid=(W.w-1)/2; for(var i=0;i<W.bodies.length;i++) if(W.bodies[i].kind===k&&W.bodies[i].x>mid) n++; return n; }
+};
+
+function goalMet(W,goal){ return goal.tests.every(function(t){ var p=t[0].split(':'), v=PROBES[p[0]](W,p[1]); return t[1]==='<='?v<=t[2]:v>=t[2]; }); }
+
+// ---- saving and restoring a world (this is all a scenario is: data)
+function snapshot(W){
+  return JSON.stringify({w:W.w,h:W.h,face:W.face,edge:W.edge,T:W.T.join(''),
+    bodies:W.bodies.map(function(b){ return [b.kind,b.x,b.y,b.vx,b.vy]; }),laws:W.laws,medium:W.medium,pass:W.pass,lens:W.lens});
+}
+function restore(json){
+  var d=JSON.parse(json), W=makeWorld(d.w,d.h,d.face);
+  W.edge=d.edge; W.T=d.T.split(''); W.laws=d.laws; W.medium=d.medium; W.pass=d.pass; W.lens=d.lens;
+  d.bodies.forEach(function(b){ addBody(W,b[0],b[1],b[2],b[3],b[4]); });
+  buildView(W); return W;
+}
+
+// ---- recording: a photograph of the world, and what each model can read from two of them
+function photo(W){ buildView(W); var pos={};
+  W.bodies.forEach(function(b){ pos[b.id]=[Math.round(b.x),Math.round(b.y),b.kind]; });
+  return {w:W.w,h:W.h,V:W.V.slice(),pos:pos}; }
+function movesBetween(A,B){ var M=[];
+  for(var id in A.pos){ var a=A.pos[id], b=B.pos[id]; if(!b) continue; var dx=b[0]-a[0], dy=b[1]-a[1]; if(!dx&&!dy) continue;
+    M.push({id:id,kind:a[2],ax:a[0],ay:a[1],bx:b[0],by:b[1],dx:dx,dy:dy,far:Math.abs(dx)+Math.abs(dy)>1}); }
+  return M; }
+const HARVEST = {
+  // pair rules: something next to something became something else (v4's two-pass diff)
+  pair:function(A,B,M){
+    var w=A.w,h=A.h,b=A.V,a=B.V,groups={},taken={},skip={},i,x,y,d,NB={right:[1,0],left:[-1,0],down:[0,1],up:[0,-1]};
+    M.forEach(function(m){ if(m.far){ skip[m.ay*w+m.ax]=1; skip[m.by*w+m.bx]=1; } });
+    var add=function(bp,ap,dir){ if(bp[0]===ap[0]&&bp[1]===ap[1]) return; var key='pair:'+bp.join('')+'>'+ap.join('')+':'+dir;
+      if(!groups[key]) groups[key]={type:'pair',key:key,n:0,b:bp,a:ap,dir:dir}; groups[key].n++; };
+    for(i=0;i<b.length;i++){ if(b[i]===a[i]||b[i]==='_'||taken[i]||skip[i]) continue; x=i%w; y=(i/w)|0;
+      for(d in NB){ var nx=x+NB[d][0], ny=y+NB[d][1]; if(nx<0||ny<0||nx>=w||ny>=h) continue; var j=ny*w+nx; if(taken[j]||skip[j]) continue;
+        if(a[j]===b[i]&&b[j]!==a[j]){ add([b[i],b[j]],[a[i],a[j]],d); taken[i]=1; taken[j]=1; break; } } }
+    for(i=0;i<b.length;i++){ if(b[i]===a[i]||taken[i]||skip[i]) continue; x=i%w; y=(i/w)|0; var best=null, fb=null;
+      for(d in NB){ var cx=x+NB[d][0], cy=y+NB[d][1]; if(cx<0||cy<0||cx>=w||cy>=h) continue; var q=cy*w+cx; if(b[q]!==a[q]) continue;
+        if(b[q]!=='_'){ best=[q,d]; break; } if(!fb) fb=[q,d]; }
+      var ch=best||fb; if(!ch) continue; add([b[i],b[ch[0]]],[a[i],a[ch[0]]],ch[1]); taken[i]=1; }
+    var list=Object.keys(groups).map(function(k){ return groups[k]; }), seen={};
+    list.forEach(function(g){ var k=g.b.join('')+':'+g.dir; seen[k]=(seen[k]||0)+1; });
+    list.forEach(function(g){ g.clash=seen[g.b.join('')+':'+g.dir]>1; g.thin=g.b[0]==='_'&&g.b[1]==='_';
+      g.card={type:'pair',on:true,b:g.b,a:g.a,dir:g.dir,prob:g.n>1?100:60}; });
+    return list.sort(function(p,q){ return q.n-p.n; }).slice(0,4);
+  },
+  // count rules: the cells that changed all saw a number the unchanged ones never saw
+  count:function(A,B,M){
+    var w=A.w,h=A.h,b=A.V,a=B.V,skip={},groups={},i,out=[],m8=maskOf('8'),kinds={};
+    M.forEach(function(m){ skip[m.ay*w+m.ax]=1; skip[m.by*w+m.bx]=1; });
+    for(i=0;i<b.length;i++){ if(b[i]!=='_') kinds[b[i]]=1; if(b[i]===a[i]||skip[i]) continue; var k=b[i]+'>'+a[i]; (groups[k]=groups[k]||[]).push(i); }
+    Object.keys(groups).forEach(function(k){ var cells=groups[k]; if(cells.length<2) return; var from=k[0], to=k[2];
+      var order=[to,from].concat(Object.keys(kinds)).filter(function(q,n,arr){ return q!=='_'&&arr.indexOf(q)===n; });
+      for(var o=0;o<order.length;o++){ var what=order[o], cs={}, us={}, clean=true, c;
+        cells.forEach(function(q){ cs[countAt(b,w,h,q,m8,what)]=1; });
+        for(c=0;c<b.length;c++) if(b[c]===from&&a[c]===from&&!skip[c]) us[countAt(b,w,h,c,m8,what)]=1;
+        for(c in cs) if(us[c]) clean=false;
+        if(!clean||!Object.keys(us).length) continue;
+        var nums=Object.keys(cs).map(Number);
+        out.push({type:'count',key:'count:'+k+':'+what+':'+nums.join(','),n:cells.length,
+          card:{type:'count',on:true,from:from,what:what,nums:numsOf(nums),to:to,mask:m8.slice(),prob:100}}); break; } });
+    return out;
+  },
+  // forces: bodies moved toward or away from their nearest neighbour. Only the sign can be read.
+  force:function(A,B,M){
+    var D=M.filter(function(m){ return KINDS[m.kind].drift; }), t={n:0,app:0,likeAway:0,likeApp:0,unApp:0,unAway:0};
+    D.forEach(function(m){ var best=null, bd=1e9, id;
+      for(id in A.pos){ if(id===m.id||!KINDS[A.pos[id][2]].drift) continue; var o=A.pos[id], d=Math.hypot(o[0]-m.ax,o[1]-m.ay); if(d<bd){ bd=d; best=o; } }
+      if(!best) return; var d1=Math.hypot(best[0]-m.bx,best[1]-m.by); if(Math.abs(d1-bd)<0.01) return;
+      var app=d1<bd, qa=KINDS[m.kind].q||0, qb=KINDS[best[2]].q||0; t.n++; if(app) t.app++;
+      if(qa&&qb){ if(qa*qb>0){ if(app) t.likeApp++; else t.likeAway++; } else { if(app) t.unApp++; else t.unAway++; } } });
+    var out=[];
+    if(t.likeAway+t.unApp>=2&&!t.likeApp&&!t.unAway) out.push({type:'force',key:'force:like',n:t.likeAway+t.unApp,card:{type:'force',on:true,sign:'like',strength:60,range:6,direct:false}});
+    else if(t.n>=2&&t.app===t.n) out.push({type:'force',key:'force:all',n:t.n,card:{type:'force',on:true,sign:'all',strength:60,range:6,direct:false}});
+    return out;
+  },
+  // the medium: everything sank (weight), or everything wandered with no pattern (jiggle)
+  medium:function(A,B,M){
+    var D=M.filter(function(m){ return KINDS[m.kind].drift; }), n=D.length, sx=0, sy=0, len=0, down=0;
+    if(n<3) return [];
+    D.forEach(function(m){ sx+=m.dx; sy+=m.dy; len+=Math.hypot(m.dx,m.dy); if(m.dy>0&&Math.abs(m.dy)>=Math.abs(m.dx)) down++; });
+    if(down===n) return [{type:'medium',key:'medium:weight',n:n,medium:{weight:50}}];
+    if(n>=4&&Math.hypot(sx,sy)/len<0.45) return [{type:'medium',key:'medium:temp',n:n,medium:{temp:40}}];
+    return [];
+  }
+};
+function harvestAll(A,B){ if(!A||!B||A.w!==B.w||A.h!==B.h) return []; var M=movesBetween(A,B), out=[];
+  ['pair','count','force','medium'].forEach(function(k){ out=out.concat(HARVEST[k](A,B,M)); });
+  // a count rule that explains a change makes the pair reading of the same change redundant
+  var cov={}; out.forEach(function(g){ if(g.type==='count') cov[g.card.from+'>'+g.card.to]=1; });
+  out=out.filter(function(g){ if(g.type!=='pair') return true;
+    for(var k=0;k<2;k++) if(g.b[k]!==g.a[k]&&!cov[g.b[k]+'>'+g.a[k]]) return true; return false; });
+  return out.sort(function(p,q){ return q.n-p.n; }); }
+
+// =====================================================================
+// CONTENT — scenarios are data built on the kernel. Adding one touches nothing above.
+// =====================================================================
+function pair(b0,b1,a0,a1,dir,prob){ return {type:'pair',on:true,b:[b0,b1],a:[a0,a1],dir:dir,prob:prob||100}; }
+function count(from,what,list,to,mask,prob){ return {type:'count',on:true,from:from,what:what,nums:numsOf(list),to:to,mask:maskOf(mask||'8'),prob:prob||100}; }
+function force(sign,strength,range,direct){ return {type:'force',on:true,sign:sign,strength:strength,range:range,direct:!!direct}; }
+// when no wire is true the fish runs "fwd", so swimming needs no wire of its own
+function brain(o){ o=o||{}; return {type:'brain',on:true,nid:3,
+  mounts:[{id:'m1',s:'wall',a:0,r:1,f:40},{id:'m2',s:'food',a:0,r:1,f:40}],
+  wires:o.wires||[['m1','turn'],['m2','eat']], p1:[],
+  programs:o.programs||{fwd:['step'],turn:['left','left'],rand:['right'],eat:['act'],wait:['wait']}}; }
+function put(W,x,y,k,vx,vy){ if(KINDS[k].body) addBody(W,k,x,y,vx,vy); else W.T[y*W.w+x]=k; }
+function tank(W){ for(var y=0;y<W.h;y++){ W.T[y*W.w]='g'; W.T[y*W.w+W.w-1]='g'; } for(var x=1;x<W.w-1;x++) W.T[(W.h-1)*W.w+x]='s'; }
+function scatter(W,k,n,x0,x1){ var tries=0; buildView(W);
+  while(n>0&&tries++<5000){ var x=x0+Math.floor(Math.random()*(x1-x0+1)), y=Math.floor(Math.random()*W.h), i=y*W.w+x;
+    if(W.V[i]!=='_') continue; put(W,x,y,k); W.V[i]=k; n--; } }
+function wallColumn(W,x,step){ for(var y=0;y<W.h;y++) W.T[y*W.w+x]=(y%step===Math.floor(step/2))?'o':'h'; }
+
+const SCENARIOS = [
+  { id:'fish', pt:'O peixe que vai e volta', en:'The fish that turns around',
+    dpt:'Quatro regras de par fazem o peixe nadar e bater no vidro.', den:'Four pair rules make the fish swim and bounce off the glass.',
+    tags:['pair'], every:16, probes:[['walls','paredes tocadas','walls touched']], goal:{tests:[['walls','>=',2]],pt:'Faça o peixe tocar as duas paredes de vidro.',en:'Make the fish touch both glass walls.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,3,7,'p'); put(W,8,7,'p');
+      W.laws=[pair('>','_','_','>','right'),pair('>','g','<','g','right'),pair('<','_','_','<','left'),pair('<','g','>','g','left')]; return W; } },
+  { id:'tank', pt:'Aquário vivo', en:'A living aquarium',
+    dpt:'As plantas crescem por regras; o peixe tem um cérebro e come as algas.', den:'Plants grow by rules; the fish has a brain and eats the algae.',
+    tags:['pair','brain'], every:12, lens:['cones','grid'], probes:[['eaten','algas comidas','algae eaten'],['count:p','plantas','plants']], chart:['count:p','count:a'], goal:{tests:[['eaten','>=',5]],pt:'Deixe o peixe comer 5 algas.',en:'Let the fish eat 5 algae.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,3,7,'p'); put(W,8,7,'p'); put(W,6,3,'a'); put(W,4,5,'a');
+      W.lens={grid:true,cones:true};
+      W.laws=[brain(),pair('p','_','p','p','any',6),pair('p','p','p','_','any',5),pair('s','_','s','a','up',6),pair('a','_','_','a','up',20)]; return W; } },
+  { id:'orbit', pt:'Órbitas', en:'Orbits',
+    dpt:'Uma estrela puxa tudo. Lance planetas e veja quem entra em órbita.', den:'A star pulls everything. Launch planets and see which ones go into orbit.',
+    tags:['force'], every:1, tap:'launch:c', knobs:['force.strength'], lens:['trails','grid'],
+    probes:[['orbits','órbitas','orbits'],['escapes','fugas','escapes'],['captures','capturas','captures']], goal:{tests:[['orbits','>=',3]],pt:'Consiga 3 voltas completas.',en:'Get 3 full orbits.'},
+    make:function(){ var W=makeWorld(31,31,'free'); W.edge='open'; W.medium.drag=0; put(W,15,15,'S'); put(W,23,15,'c',0,0.15);
+      W.laws=[force('all',60,12,true)]; W.lens={grid:false,trails:true}; return W; } },
+  { id:'dust', pt:'Poeira de estrelas', en:'Stardust',
+    dpt:'Todas as partículas se atraem, e a água as agita. Quem vence?', den:'Every particle attracts the others, and the water jiggles them. Who wins?',
+    tags:['force','medium'], every:2, knobs:['force.strength','medium.temp'], lens:['field','conc','grid'], chart:['biggest'], probes:[['biggest','maior grupo','biggest group']],
+    make:function(){ var W=makeWorld(31,21); scatter(W,'m',60,0,30); W.medium.temp=45; W.laws=[force('all',60,4)]; W.lens={grid:true,field:true}; return W; } },
+  { id:'charge', pt:'Cargas', en:'Charges',
+    dpt:'Iguais se afastam, diferentes se atraem. Aqueça e os pares se soltam.', den:'Like repels, unlike attracts. Heat it and the pairs come apart.',
+    tags:['force','medium'], every:2, knobs:['medium.temp','force.strength'], lens:['field','grid'], probes:[['biggest','maior grupo','biggest group']],
+    make:function(){ var W=makeWorld(31,21); scatter(W,'+',16,0,30); scatter(W,'-',16,0,30); W.medium.temp=30; W.laws=[force('like',60,6)]; W.lens={grid:true,field:true}; return W; } },
+  { id:'memb', pt:'Duas câmaras', en:'Two chambers',
+    dpt:'O sal passa pelos poros; o açúcar não. Veja o que se iguala.', den:'Salt passes the pores; sugar does not. See what evens out.',
+    tags:['medium'], every:2, knobs:['medium.temp'], lens:['conc','grid'], chart:['right:n','right:u'], probes:[['right:n','sal à direita','salt on the right'],['right:u','açúcar à direita','sugar on the right']],
+    make:function(){ var W=makeWorld(31,19); wallColumn(W,15,4); scatter(W,'n',34,0,14); scatter(W,'u',24,0,14); W.medium.temp=50; return W; } },
+  { id:'life', pt:'Jogo da Vida', en:'Game of Life',
+    dpt:'Cada casa conta as vizinhas e decide: nasce, morre ou fica.', den:'Each cell counts its neighbours and decides: born, dies or stays.',
+    tags:['count'], every:7, tap:'paint:a', lens:['numbers','grid'], chart:['count:a'], probes:[['tick','passo','step'],['count:a','algas','algae']],
+    make:function(){ var W=makeWorld(31,21); for(var i=0;i<W.T.length;i++) if(Math.random()<0.28) W.T[i]='a';
+      W.laws=[count('_','a',[3],'a'),count('a','a',[0,1,4,5,6,7,8],'_')]; return W; } },
+  { id:'crystal', pt:'Cristal', en:'Crystal',
+    dpt:'Força, agitação e contagem juntas: quem fica cercada vira cristal.', den:'Force, jiggle and counting together: whoever gets surrounded becomes crystal.',
+    tags:['force','medium','count'], every:2, knobs:['force.strength','medium.temp'], lens:['field','grid'], chart:['count:x'], probes:[['count:x','cristais','crystals']],
+    make:function(){ var W=makeWorld(31,21); scatter(W,'m',60,0,30); W.medium.temp=45;
+      W.laws=[force('all',60,4),count('m','m',[5,6,7,8],'x'),count('m','x',[2,3,4,5,6,7,8],'x')]; return W; } }
+];
+// challenges: a ready world plus ONE small tool, declared in `edit`
+const ONLY_FWD = function(list){ return {fwd:list,turn:[],rand:[],eat:[],wait:[]}; };
+const QUESTS = [
+  { id:'walk', pt:'Um peixe que anda', en:'A fish that walks',
+    dpt:'Leve o peixe até a planta só com blocos de passo e giro.', den:'Take the fish to the plant with step and turn blocks only.',
+    tags:['brain'], every:10, edit:{tabs:['blocks'],acts:['fwd'],noP1:true}, probes:[['blocks','blocos usados','blocks used']],
+    goal:{tests:[['reach:8,7','>=',1]],pt:'Chegue à planta do outro lado.',en:'Reach the plant on the other side.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,8,7,'p'); W.laws=[brain({wires:[],programs:ONLY_FWD(['step'])})]; return W; } },
+  { id:'twin', pt:'O mesmo peixe, outro cérebro', en:'Same fish, another brain',
+    dpt:'O problema do primeiro mundo, agora com um sensor ligado a uma ação.', den:'The first world’s problem, now with a sensor wired to an action.',
+    tags:['brain'], every:10, edit:{tabs:['wiring']}, lens:['cones','grid'], probes:[['walls','paredes tocadas','walls touched']],
+    goal:{tests:[['walls','>=',2]],pt:'Faça o peixe tocar as duas paredes: ligue um sensor a “dar meia-volta”.',en:'Make the fish touch both walls: wire a sensor to “turn around”.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,3,7,'p'); W.lens={grid:true,cones:true}; W.laws=[brain({wires:[]})]; return W; } },
+  { id:'eyes', pt:'Olhos que giram', en:'Eyes that turn',
+    dpt:'As algas estão fora da linha do peixe. Monte um sensor de lado.', den:'The algae are off the fish’s line. Mount a sensor on its side.',
+    tags:['brain'], every:8, edit:{tabs:['body','wiring']}, lens:['cones','grid'], probes:[['eaten','algas comidas','algae eaten']],
+    goal:{tests:[['eaten','>=',2]],pt:'Coma as 2 algas. Dica: um sensor “vê alga” à direita, ligado a “virar”.',en:'Eat both algae. Hint: a “sees alga” sensor on the right, wired to “turn”.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,4,6,'a'); put(W,6,2,'a'); W.lens={grid:true,cones:true}; W.laws=[brain()]; return W; } },
+  { id:'short', pt:'Atalhos que se repetem', en:'Shortcuts that repeat',
+    dpt:'Quatro algas, no máximo 6 blocos. Guarde o trecho repetido em P1.', den:'Four algae, at most 6 blocks. Put the repeated part in P1.',
+    tags:['brain'], every:8, edit:{tabs:['blocks'],acts:['fwd']}, probes:[['eaten','algas comidas','algae eaten'],['blocks','blocos usados','blocks used']],
+    goal:{tests:[['eaten','>=',4],['blocks','<=',6]],pt:'Coma as 4 algas usando no máximo 6 blocos ao todo.',en:'Eat all 4 algae using at most 6 blocks in total.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,2,'>'); put(W,4,2,'a'); put(W,6,2,'a'); put(W,6,4,'a'); put(W,6,6,'a'); W.laws=[brain({wires:[],programs:ONLY_FWD(['step'])})]; return W; } }
+];
+const BENCH = { id:'bench', pt:'Bancada livre', en:'Free bench', dpt:'', den:'', tags:[], every:4, lens:['grid','field','conc','trails','numbers','cones'], probes:[['tick','passo','step']],
+  make:function(){ var W=makeWorld(21,15); for(var y=0;y<W.h;y++){ W.T[y*W.w]='g'; W.T[y*W.w+W.w-1]='g'; } for(var x=0;x<W.w;x++){ W.T[x]='g'; W.T[(W.h-1)*W.w+x]='g'; } W.medium.temp=40; return W; } };
+
+// =====================================================================
+// SHELL — skins, drawing and the two levels of interface
+// =====================================================================
+const SKINS = {
+  pond:{name:'Pond', page:'radial-gradient(120% 80% at 20% 0%,#0d3a44 0%,#071c28 55%,#04121b 100%)',
+    bezel:'linear-gradient(160deg,#20505c,#0a2028)', shell:'#08202c',
+    field:'radial-gradient(90% 55% at 30% 12%,#1d6f6b 0%,#0f4450 45%,#08202c 100%)', water:'#0e4a54',
+    ink:'#eafaf6', soft:'rgba(223,243,251,.68)', faint:'rgba(223,243,251,.6)',
+    panel:'rgba(255,255,255,.05)', panel2:'rgba(255,255,255,.035)', line:'rgba(121,220,196,.16)',
+    a1:'#79dcc4', a2:'#f0a63c', a3:'#a8cf4c', neg:'#3a8fb0', onA1:'#07303a', bar:'rgba(4,18,27,.55)', dark:true},
+  lab:{name:'Lab', page:'linear-gradient(170deg,#dceef6 0%,#cfe6f0 100%)',
+    bezel:'linear-gradient(160deg,#ffffff,#bcd9e4)', shell:'#f2fafd',
+    field:'linear-gradient(170deg,#f4fbfe 0%,#e2f1f8 70%,#d7ebf4 100%)', water:'#e3f2f8',
+    ink:'#123742', soft:'rgba(18,55,66,.74)', faint:'rgba(18,55,66,.66)',
+    panel:'#ffffff', panel2:'rgba(18,55,66,.045)', line:'rgba(18,55,66,.14)',
+    a1:'#1c7f93', a2:'#b06c00', a3:'#4d8418', neg:'#2a6f8c', onA1:'#ffffff', bar:'rgba(255,255,255,.86)', dark:false},
+  meadow:{name:'Meadow', page:'linear-gradient(170deg,#e2f3dc 0%,#cfe9c8 100%)',
+    bezel:'linear-gradient(160deg,#ffffff,#bcd9b4)', shell:'#f4fcf1',
+    field:'linear-gradient(170deg,#f6fdf3 0%,#e6f5e0 70%,#d8eed1 100%)', water:'#e6f5e0',
+    ink:'#1c3a1c', soft:'rgba(28,58,28,.74)', faint:'rgba(28,58,28,.66)',
+    panel:'#ffffff', panel2:'rgba(28,58,28,.05)', line:'rgba(28,58,28,.14)',
+    a1:'#2f7a38', a2:'#a85f10', a3:'#557d12', neg:'#2a6f8c', onA1:'#ffffff', bar:'rgba(255,255,255,.86)', dark:false},
+  slide:{name:'Slide', flat:true, page:'linear-gradient(170deg,#eef3f4 0%,#e4ecee 100%)',
+    bezel:'linear-gradient(160deg,#ffffff,#c8d6da)', shell:'#ffffff', field:'#ffffff', water:'#f4f8f9',
+    ink:'#14313a', soft:'rgba(20,49,58,.74)', faint:'rgba(20,49,58,.66)',
+    panel:'#ffffff', panel2:'rgba(20,49,58,.05)', line:'rgba(20,49,58,.16)',
+    a1:'#146069', a2:'#a8520f', a3:'#4f7c22', neg:'#2a6f8c', onA1:'#ffffff', bar:'rgba(255,255,255,.9)', dark:false}
+};
+const IMG = {};
+function art(k){ var K=KINDS[k]; if(!K.art||typeof Image==='undefined') return null;
+  if(!IMG[k]){ IMG[k]=new Image(); IMG[k].src=K.art; } return (IMG[k].complete&&IMG[k].naturalWidth)?IMG[k]:null; }
+function hexA(hex,a){ var n=parseInt(hex.slice(1),16); return 'rgba('+(n>>16)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+function ctxFor(id,cw,ch){
+  var el=document.getElementById(id); if(!el||!el.getContext) return null;
+  var dpr=Math.min(2,window.devicePixelRatio||1);
+  if(el.width!==Math.round(cw*dpr)||el.height!==Math.round(ch*dpr)){ el.width=Math.round(cw*dpr); el.height=Math.round(ch*dpr); }
+  var c=el.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,cw,ch); return c;
+}
+function drawKind(c,k,px,py,cs,T,h){ // px,py = top-left of the cell
+  var K=KINDS[k]; if(k==='_') return;
+  if(K.dot){ c.fillStyle=T[K.dot]; c.beginPath(); c.arc(px+cs/2,py+cs/2,Math.max(2,cs*K.r),0,6.2832); c.fill();
+    if(K.glyph&&cs>=9){ c.fillStyle=K.dot==='neg'?'#ffffff':T.onA1; c.font='800 '+Math.round(cs*0.7)+'px Nunito, sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(K.glyph,px+cs/2,py+cs/2+0.5); }
+    return; }
+  if(K.sq){ c.fillStyle=K.sq==='soft'?T.soft:T[K.sq]; c.fillRect(px+1,py+(K.sq==='soft'?0:1),cs-2,cs-(K.sq==='soft'?0:2)); return; }
+  if(K.pore){ c.strokeStyle=T.a3; c.lineWidth=1.5; c.setLineDash([2,2]); c.strokeRect(px+1.5,py+1.5,cs-3,cs-3); c.setLineDash([]); return; }
+  var im=T.flat?null:art(k);
+  if(im){ var pad=K.fill?0:cs*0.08;
+    if(K.body&&h!==undefined&&Math.abs(Math.cos(h*Math.PI/180))<0.5){ c.save(); c.translate(px+cs/2,py+cs/2); c.rotate((Math.sin(h*Math.PI/180)>0?1:-1)*0.95*(k==='<'?-1:1)); c.drawImage(im,-cs/2+pad,-cs/2+pad,cs-2*pad,cs-2*pad); c.restore(); }
+    else c.drawImage(im,px+pad,py+pad,cs-2*pad,cs-2*pad);
+    return; }
+  c.fillStyle=K.tok||T.soft;
+  if(K.body){ c.beginPath(); c.arc(px+cs/2,py+cs/2,cs*0.38,0,6.2832); c.fill(); c.fillStyle=T.ink; c.beginPath(); c.arc(px+cs*(k==='<'?0.3:0.7),py+cs/2,cs*0.08,0,6.2832); c.fill(); }
+  else if(K.fill) c.fillRect(px,py,cs,cs); else { c.beginPath(); c.arc(px+cs/2,py+cs/2,cs*0.36,0,6.2832); c.fill(); }
+}
+function drawWorld(c,W,cw,T,opt){
+  var w=W.w, h=W.h, cs=cw/w, x, y, i, b, lens=W.lens||{};
+  c.fillStyle=T.water; c.fillRect(0,0,cw,cs*h);
+  if(lens.field){ var p=W.F.phi, mx=1.2; for(i=0;i<p.length;i++){ var av=Math.abs(p[i]); if(av>mx) mx=av; }
+    for(y=0;y<h;y++) for(x=0;x<w;x++){ var val=p[y*w+x], al=Math.pow(Math.min(1,Math.abs(val)/mx),0.55)*0.6; if(al<0.03) continue;
+      c.fillStyle=hexA(val>0?T.a2:T.neg,al.toFixed(3)); c.fillRect(x*cs,y*cs,cs+0.5,cs+0.5); } }
+  if(lens.conc){ var C=new Float32Array(w*h);
+    for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; if(!KINDS[b.kind].drift) continue; var bx=Math.round(b.x), by=Math.round(b.y);
+      for(var dy=-2;dy<=2;dy++) for(var dx=-2;dx<=2;dx++){ x=bx+dx; y=by+dy; if(x>=0&&y>=0&&x<w&&y<h) C[y*w+x]+=0.04; } }
+    for(y=0;y<h;y++) for(x=0;x<w;x++){ var cv=Math.pow(Math.min(1,C[y*w+x]*1.5),0.6)*0.5; if(cv<0.03) continue;
+      c.fillStyle=hexA(T.a1,cv.toFixed(3)); c.fillRect(x*cs,y*cs,cs+0.5,cs+0.5); } }
+  if(lens.grid){ c.strokeStyle=hexA(T.a1,T.dark?0.12:0.22); c.lineWidth=1; c.beginPath();
+    for(x=0;x<=w;x++){ c.moveTo(x*cs,0); c.lineTo(x*cs,h*cs); } for(y=0;y<=h;y++){ c.moveTo(0,y*cs); c.lineTo(w*cs,y*cs); } c.stroke(); }
+  for(y=0;y<h;y++) for(x=0;x<w;x++){ var k=W.T[y*w+x]; if(k!=='_') drawKind(c,k,x*cs,y*cs,cs,T); }
+  if(lens.trails){ c.lineWidth=1.5; c.lineCap='round';
+    for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; var t=b.trail; if(!t) continue; var n=t.length/2; c.strokeStyle=T[KINDS[b.kind].dot]||T.a1;
+      for(var q=1;q<n;q++){ c.globalAlpha=0.1+0.7*(q/n); c.beginPath(); c.moveTo((t[q*2-2]+0.5)*cs,(t[q*2-1]+0.5)*cs); c.lineTo((t[q*2]+0.5)*cs,(t[q*2+1]+0.5)*cs); c.stroke(); } }
+    c.globalAlpha=1; }
+  if(lens.cones&&opt&&opt.brain){ var MM=opt.brain.mounts||[];
+    for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; if(b.kind!=='>'&&b.kind!=='<') continue;
+      for(var mi=0;mi<MM.length;mi++){ var mm=MM[mi], a0=(b.h+mm.a-mm.f/2)*Math.PI/180, a1=(b.h+mm.a+mm.f/2)*Math.PI/180, ox=(b.x+0.5)*cs, oy=(b.y+0.5)*cs;
+        c.fillStyle=hexA(mi===opt.mountIdx?T.a2:T.a1,0.3); c.beginPath(); c.moveTo(ox,oy); c.arc(ox,oy,(mm.r+0.5)*cs,a0,a1); c.closePath(); c.fill(); } } }
+  for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; drawKind(c,b.kind,b.x*cs,b.y*cs,cs,T,b.h); }
+  if(lens.numbers&&opt&&opt.countCard&&cs>=9&&W.V){ var r=opt.countCard; c.font='800 '+Math.max(7,Math.round(cs*0.62))+'px Nunito, sans-serif'; c.textAlign='center'; c.textBaseline='middle';
+    for(i=0;i<W.V.length;i++){ var nn=countAt(W.V,w,h,i,r.mask,r.what); if(!nn&&W.V[i]==='_') continue;
+      c.fillStyle=W.V[i]==='_'?T.ink:'#ffffff'; c.strokeStyle='rgba(0,0,0,.55)'; c.lineWidth=2;
+      var tx=(i%w+0.5)*cs, ty=(((i/w)|0)+0.5)*cs+0.5; if(W.V[i]!=='_') c.strokeText(String(nn),tx,ty); c.fillText(String(nn),tx,ty); } }
+  if(opt&&opt.diff&&W.V&&opt.diff.V.length===W.V.length){ c.strokeStyle=T.a3; c.lineWidth=1.5;
+    for(i=0;i<W.V.length;i++) if(W.V[i]!==opt.diff.V[i]) c.strokeRect((i%w)*cs+1,((i/w)|0)*cs+1,cs-2,cs-2); }
+  if(opt&&opt.pair){ c.strokeStyle=T.a2; c.lineWidth=2.5; opt.pair.forEach(function(q){ c.strokeRect((q%w)*cs+1.5,((q/w)|0)*cs+1.5,cs-3,cs-3); }); }
+  if(opt&&opt.drag){ var d=opt.drag, P=function(v){ return (v+0.5)*cs; };
+    c.fillStyle=T.ink; for(i=0;i<d.path.length;i+=2){ c.beginPath(); c.arc(P(d.path[i]),P(d.path[i+1]),1.4,0,6.2832); c.fill(); }
+    c.strokeStyle=T.a2; c.lineWidth=2.4; c.lineCap='round'; c.beginPath(); c.moveTo(P(d.x0),P(d.y0)); c.lineTo(P(d.x1),P(d.y1)); c.stroke();
+    c.fillStyle=T.a2; c.beginPath(); c.arc(P(d.x1),P(d.y1),3.5,0,6.2832); c.fill();
+    c.fillStyle=T.ink; c.beginPath(); c.arc(P(d.x0),P(d.y0),4.5,0,6.2832); c.fill(); }
+}
+
+function drawStrip(c,frames,pick,T,cw){
+  var slot=52, gap=5, i, x, y;
+  for(i=0;i<frames.length;i++){ var F=frames[i], cs=slot/F.w, x0=i*(slot+gap), on=i===pick||i===pick+1, hh=cs*F.h;
+    c.fillStyle=T.water; c.fillRect(x0,0,slot,hh);
+    for(y=0;y<F.h;y++) for(x=0;x<F.w;x++){ var k=F.V[y*F.w+x]; if(k==='_') continue; var K=KINDS[k];
+      c.fillStyle=K.dot?T[K.dot]:(K.sq?(K.sq==='soft'?T.soft:T[K.sq]):(K.tok||T.a3)); c.fillRect(x0+x*cs,y*cs,Math.max(1.2,cs),Math.max(1.2,cs)); }
+    c.strokeStyle=on?T.a3:T.line; c.lineWidth=on?2:1; c.strokeRect(x0+1,1,slot-2,hh-2);
+    c.fillStyle=on?T.ink:T.soft; c.font='800 10px Nunito, sans-serif'; c.textAlign='center'; c.textBaseline='top'; c.fillText('t'+(i+1),x0+slot/2,hh+3); }
+}
+const CW = 338; // arena width inside the phone
+const TYPE_NAME = { pair:['par','pair'], count:['contar','count'], force:['força','force'], brain:['cérebro','brain'], medium:['meio','medium'] };
+const LENSES = { grid:['grade','grid'], field:['campo','field'], conc:['concentração','concentration'], trails:['rastros','trails'], numbers:['números','numbers'], cones:['sensores','sensors'] };
+const KNOBS = { 'force.strength':['FORÇA','STRENGTH',0,100,5,'%'], 'force.range':['ALCANCE','RANGE',2,12,1,''], 'medium.temp':['AGITAÇÃO','JIGGLE',0,100,5,'%'], 'medium.drag':['ARRASTO','DRAG',0,30,1,'%'], 'medium.weight':['PESO','WEIGHT',0,100,5,'%'] };
+
+class Component extends DCLogic {
+  state = { screen:'home', mode:(this.props.startMode==='adv'?'adv':'intro'), lang:'pt',
+    skin:(SKINS[this.props.skin]?this.props.skin:'pond'), running:false, speed:1,
+    sel:-1, slot:null, wide:false, brush:'p', act:'fwd', done:{}, toast:null, pulse:0,
+    labTab:'laws', recMode:'strip', teach:{dir:'right',gesture:'drag'}, pairSel:null, brainTab:'body', mountIdx:0, advBody:false, wireSel:null, progSlot:'main', tool:'move', recBrush:'p', framePick:null, dropped:[] };
+
+  componentDidMount(){ this.load(SCENARIOS[0]); this.frame=0; this.clock=0; this.loop(); }
+  componentWillUnmount(){ cancelAnimationFrame(this.raf); }
+
+  tr(pt,en){ return this.state.lang==='pt'?pt:en; }
+  kn(k){ return KINDS[k][this.state.lang]; }
+  say(pt,en){ this.setState({toast:this.tr(pt,en)}); clearTimeout(this.toastT); this.toastT=setTimeout(()=>this.setState({toast:null}),2600); }
+
+  load(sc){ this.sc=sc; this.W=sc.make(); buildView(this.W); this.saved=snapshot(this.W); this.drag=null; this.clock=0; this.frames=null; this.hist=[]; this.test=null;
+    this.setState({sel:-1, slot:null, running:false, framePick:null, dropped:[], pairSel:null, wireSel:null, mountIdx:0}); }
+  keep(){ buildView(this.W); this.saved=snapshot(this.W); this.forceUpdate(); }   // an edit becomes the new starting point
+  reset(){ this.W=restore(this.saved); this.drag=null; this.clock=0; this.frames=null; this.hist=[]; this.forceUpdate(); }
+
+  card(type){ return this.W.laws.find((c)=>c.type===type); }
+  getKnob(key){ var p=key.split('.'); if(p[0]==='medium') return this.W.medium[p[1]]; var c=this.card(p[0]); return c?c[p[1]]:0; }
+  setKnob(key,v){ var p=key.split('.'); if(p[0]==='medium') this.W.medium[p[1]]=v; else { var c=this.card(p[0]); if(c) c[p[1]]=v; } this.saved=this.patchSaved(key,v); this.forceUpdate(); }
+  patchSaved(key,v){ var d=JSON.parse(this.saved), p=key.split('.'); if(p[0]==='medium') d.medium[p[1]]=v; else { var c=d.laws.find((x)=>x.type===p[0]); if(c) c[p[1]]=v; } return JSON.stringify(d); }
+
+  loop = ()=>{
+    this.raf=requestAnimationFrame(this.loop); this.frame++;
+    if(!this.W) return;
+    var s=this.state, T=SKINS[s.skin];
+    if(s.running&&s.screen==='sim'){ this.clock+=s.speed/(this.sc.every||4); var n=0; while(this.clock>=1&&n++<8){ this.clock-=1; stepWorld(this.W); this.sample(); } }
+    var id=s.screen==='sim'?'cv-sim':(s.screen==='world'?'cv-world':null);
+    if(id){ var c=ctxFor(id,CW,CW*this.W.h/this.W.w);
+      if(c){ if(this.drag) this.drag.path=this.predict();
+        drawWorld(c,this.W,CW,T,{drag:s.screen==='sim'?this.drag:null, countCard:this.countCard(), brain:this.card('brain')}); } }
+    if(s.screen==='lab'&&s.labTab==='rec'&&s.recMode==='one'){ var oc=ctxFor('cv-one',CW,CW*this.W.h/this.W.w);
+      if(oc){ buildView(this.W); drawWorld(oc,this.W,CW,T,{pair:this.pairCells()}); } }
+    if(s.screen==='lab'&&s.labTab==='rec'&&s.recMode==='strip'){
+      if(!this.frames||!this.frames.length||this.frames[0].w!==this.W.w||this.frames[0].h!==this.W.h){ this.frames=[photo(this.W)]; this.forceUpdate(); }
+      var F=this.frames, rc=ctxFor('cv-rec',CW,CW*this.W.h/this.W.w);
+      if(rc){ buildView(this.W); drawWorld(rc,this.W,CW,T,{diff:F[F.length-1], drag:this.hold&&this.hold.x1!==undefined?{x0:this.hold.x,y0:this.hold.y,x1:this.hold.x1,y1:this.hold.y1,path:[]}:null}); }
+      var sc2=ctxFor('cv-strip',CW-30,52*this.W.h/this.W.w+18);
+      if(sc2) drawStrip(sc2,F,s.framePick==null?Math.max(0,F.length-2):Math.min(s.framePick,Math.max(0,F.length-2)),T,CW-30);
+    }
+    if(s.screen==='lab'&&s.labTab==='laws'&&s.brainTab==='blocks'&&this.test){ var tcx=ctxFor('cv-test',210,210);
+      if(tcx) drawWorld(tcx,this.test.W,210,T,{brain:this.test.card}); }
+    if(this.frame%12===0&&s.screen==='sim'){ this.checkGoal(); this.setState({pulse:s.pulse+1}); }
+  };
+  countCard(){ var L=this.W.laws, s=this.state.sel; if(s>=0&&L[s]&&L[s].type==='count') return L[s]; return L.find((c)=>c.type==='count')||null; }
+  probe(spec){ var p=spec.split(':'); return PROBES[p[0]](this.W,p[1]); }
+  chartSpecs(){ return this.sc.chart||[]; }
+  sample(){ var cs=this.chartSpecs(); if(!cs.length||this.W.tick%4) return; if(!this.hist) this.hist=[];
+    this.hist.push(cs.map((c)=>this.probe(c))); if(this.hist.length>60) this.hist.shift(); }
+  checkGoal(){ var g=this.sc.goal; if(!g||this.state.done[this.sc.id]) return;
+    if(goalMet(this.W,g)){ this.setState((s)=>({done:Object.assign({},s.done,{[this.sc.id]:true})})); this.say('Conseguiu!','You did it!'); } }
+
+  // ---- pointer: launch in the free face, paint elsewhere
+  at(e){ var r=e.currentTarget.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*this.W.w-0.5,(e.clientY-r.top)/r.height*this.W.h-0.5]; }
+  predict(){ var d=this.drag, W=this.W, card=this.card('force'), pts=[]; if(!card||!card.on||!d) return pts;
+    var q=srcOf(card,d.kind); if(!q) return pts; if(!W.srcCells) forcePush(W,card);
+    var g={x:d.x0,y:d.y0,vx:(d.x1-d.x0)*0.03,vy:(d.y1-d.y0)*0.03,self:null};
+    for(var f=0;f<480;f++){ var a=forceOn(W,card,g,q); g.vx+=a[0]*0.5; g.vy+=a[1]*0.5; g.x+=g.vx*0.5; g.y+=g.vy*0.5;
+      var cx=Math.round(g.x), cy=Math.round(g.y); if(cx<-8||cy<-8||cx>W.w+8||cy>W.h+8) break;
+      if(cx>=0&&cy>=0&&cx<W.w&&cy<W.h&&KINDS[W.T[cy*W.w+cx]].solid) break;
+      if(f%4===0) pts.push(g.x,g.y); }
+    return pts; }
+  simDown = (e)=>{ var tap=this.sc.tap||(this.W.face==='free'?'launch:c':null); if(!tap) return; var p=this.at(e), t=tap.split(':');
+    try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(err){}
+    if(t[0]==='launch') this.drag={x0:p[0],y0:p[1],x1:p[0],y1:p[1],kind:t[1],path:[]};
+    else { this.painting=t[1]; this.paintAt(p,t[1],true); } };
+  simMove = (e)=>{ var p=this.at(e); if(this.drag){ this.drag.x1=p[0]; this.drag.y1=p[1]; } else if(this.painting) this.paintAt(p,this.painting,false); };
+  simUp = ()=>{ var d=this.drag; this.painting=null; if(!d) return; this.drag=null;
+    var dx=d.x1-d.x0, dy=d.y1-d.y0, still=Math.sqrt(dx*dx+dy*dy)<0.3;
+    if(this.W.bodies.length<40) addBody(this.W,d.kind,d.x0,d.y0,still?0:dx*0.03,still?0:dy*0.03); };
+  simCancel = ()=>{ this.drag=null; this.painting=null; };
+  paintAt(p,k,first){ var W=this.W, x=Math.round(p[0]), y=Math.round(p[1]); if(x<0||y<0||x>=W.w||y>=W.h) return;
+    var i=y*W.w+x; buildView(W);
+    if(first) this.paintErase=(W.V[i]===k&&k!=='_');
+    var to=this.paintErase?'_':k; if(W.V[i]===to) return;
+    var b=W.B[i]; if(b){ W.bodies=W.bodies.filter((o)=>o!==b); W.B[i]=null; }
+    if(KINDS[to].body){ W.T[i]='_'; addBody(W,to,x,y); } else W.T[i]=to;
+    buildView(W); }
+  paintDown = (e)=>{ try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(err){} this.painting=this.state.brush; this.paintAt(this.at(e),this.state.brush,true); };
+  paintMove = (e)=>{ if(this.painting) this.paintAt(this.at(e),this.painting,false); };
+  paintUp = ()=>{ if(this.painting){ this.painting=null; this.keep(); } };
+
+  // ---- the single-rule recorder: pick a pair on the world, choose a gesture, the after is computed
+  pairCells(){ var ps=this.state.pairSel, W=this.W, d=DIRS[this.state.teach.dir]||DIRS.right; if(!ps) return null;
+    var x=ps.x+d[0], y=ps.y+d[1]; if(x<0||y<0||x>=W.w||y>=W.h) return null; return [ps.y*W.w+ps.x, y*W.w+x]; }
+  pickPair = (e)=>{ var p=this.at(e), x=Math.round(p[0]), y=Math.round(p[1]), W=this.W; if(x<0||y<0||x>=W.w||y>=W.h) return;
+    this.setState({pairSel:{x:x,y:y}}, ()=>{ if(!this.pairCells()) this.say('A vizinha nessa direção está fora do mundo: troque a seta.','The neighbour in that direction is outside the world: change the arrow.'); }); };
+
+  // ---- the test arena: one action's program, one block at a time
+  testReset(cur,act){ var W=makeWorld(7,7); W.lens={grid:true,cones:true}; put(W,5,1,'r'); put(W,5,5,'r'); put(W,4,3,'a'); put(W,3,5,'a'); put(W,1,3,'>'); buildView(W);
+    this.test={W:W, act:act, card:{type:'brain',on:true,wires:[],programs:cur.programs,p1:cur.p1||[],mounts:cur.mounts||[],only:act}}; }
+  testStep(cur,act){ if(!this.test||this.test.act!==act) this.testReset(cur,act);
+    this.test.card.programs=cur.programs; this.test.card.p1=cur.p1||[]; this.test.card.mounts=cur.mounts||[];
+    buildView(this.test.W); brainAct(this.test.W,this.test.card); this.forceUpdate(); }
+
+  // ---- recording: the child is the engine; every photo is a frame of the strip
+  shoot(step){ if(step) stepWorld(this.W); if(!this.frames) this.frames=[]; this.frames.push(photo(this.W)); if(this.frames.length>6) this.frames.shift();
+    this.saved=snapshot(this.W); this.setState({framePick:null}); }
+  recDown = (e)=>{ var p=this.at(e), W=this.W, x=Math.round(p[0]), y=Math.round(p[1]); if(x<0||y<0||x>=W.w||y>=W.h) return;
+    try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(err){}
+    if(this.state.tool==='paint'){ this.painting=this.state.recBrush; this.paintAt(p,this.painting,true); return; }
+    buildView(W); var i=y*W.w+x; if(W.V[i]==='_') return;
+    this.hold={x:x,y:y,x1:x,y1:y,kind:W.V[i],body:W.B[i],copy:this.state.tool==='copy'}; };
+  recMove = (e)=>{ var p=this.at(e); if(this.hold){ this.hold.x1=Math.round(p[0]); this.hold.y1=Math.round(p[1]); } else if(this.painting) this.paintAt(p,this.painting,false); };
+  recUp = ()=>{ var hd=this.hold, W=this.W; this.hold=null; this.painting=null; if(!hd) return;
+    var x=hd.x1, y=hd.y1; if(x<0||y<0||x>=W.w||y>=W.h||(x===hd.x&&y===hd.y)) return;
+    buildView(W); var j=y*W.w+x; if(W.V[j]!=='_'){ this.say('Essa casa já está ocupada.','That cell is already taken.'); return; }
+    if(hd.copy){ if(KINDS[hd.kind].body) addBody(W,hd.kind,x,y); else W.T[j]=hd.kind; }
+    else if(hd.body){ hd.body.x=x; hd.body.y=y; hd.body.ax=0; hd.body.ay=0; hd.body.vx=0; hd.body.vy=0; }
+    else { W.T[hd.y*W.w+hd.x]='_'; W.T[j]=hd.kind; }
+    buildView(W); this.forceUpdate(); };
+  recCancel = ()=>{ this.hold=null; this.painting=null; };
+  pickFrame = (e)=>{ var r=e.currentTarget.getBoundingClientRect(), i=Math.floor((e.clientX-r.left)/57), n=(this.frames||[]).length;
+    if(i>=0&&i<n) this.setState({framePick:Math.min(i,Math.max(0,n-2))}); };
+  accept(g,prob){ var W=this.W;
+    if(g.type==='medium') Object.assign(W.medium,g.medium);
+    else if(g.type==='force'){ var f=this.card('force'); if(f){ f.sign=g.card.sign; f.on=true; } else W.laws.push(JSON.parse(JSON.stringify(g.card))); }
+    else { var c=JSON.parse(JSON.stringify(g.card)); if(prob) c.prob=prob; W.laws.push(c); }
+    this.saved=snapshot(W); this.setState({dropped:this.state.dropped.concat([g.key])}); this.say('Entrou na lista de leis.','Added to the list of laws.'); }
+
+  // ---- text for a law card
+  listNums(nums,max){ var parts=[], k=0;
+    while(k<=max){ if(!nums[k]){ k++; continue; } var e=k; while(e+1<=max&&nums[e+1]) e++; parts.push(e>k+1?(k+'–'+e):(e===k?String(k):(k+', '+e))); k=e+1; }
+    return parts.length?parts.join(', '):null; }
+  summary(c){
+    if(c.type==='pair') return this.kn(c.b[0])+' + '+this.kn(c.b[1])+' → '+this.kn(c.a[0])+' + '+this.kn(c.a[1])+(c.prob<100?' · '+c.prob+'%':'');
+    if(c.type==='count'){ var n=this.listNums(c.nums,maskSize(c.mask)); return this.tr(this.kn(c.from)+' com '+(n===null?'nenhum':n)+' de '+this.kn(c.what)+' vira '+this.kn(c.to), this.kn(c.from)+' with '+(n===null?'no':n)+' of '+this.kn(c.what)+' becomes '+this.kn(c.to)); }
+    if(c.type==='force') return (c.sign==='all'?this.tr('tudo se atrai','everything attracts'):this.tr('iguais se afastam','like repels'))+' · '+c.strength+'%';
+    return this.tr('peixe: ','fish: ')+(c.mounts||[]).length+this.tr(' sensores, ',' sensors, ')+c.wires.length+this.tr(' ligações',' wires');
+  }
+
+  renderVals(){
+    var s=this.state, T=SKINS[s.skin], sc=s.screen, W=this.W, S=this.sc||SCENARIOS[0], adv=s.mode==='adv', tr=(a,b)=>this.tr(a,b);
+    var card={padding:'14px', borderRadius:'20px', background:T.panel, border:'1px solid '+T.line, boxShadow:T.dark?'none':'0 4px 14px rgba(18,55,66,.07)'};
+    var label={fontSize:'11px', fontWeight:800, letterSpacing:'1.1px', color:T.faint};
+    var chip=(on,h)=>({display:'inline-flex', alignItems:'center', gap:'6px', minHeight:(h||40)+'px', padding:'0 11px', borderRadius:'12px', fontSize:'11.5px', fontWeight:800,
+      color:on?T.ink:T.soft, background:on?hexA(T.a1,0.18):T.panel2, border:'1px solid '+(on?T.a1:T.line)});
+    var tile=(k,size)=>{ var K=KINDS[k], st={flex:'none', width:size+'px', height:size+'px', borderRadius:Math.round(size*0.24)+'px', display:'inline-flex',
+        alignItems:'center', justifyContent:'center', fontSize:Math.round(size*0.6)+'px', fontWeight:800, lineHeight:1, color:K.dot==='neg'?'#ffffff':T.onA1, background:'transparent'};
+      if(k==='_') st.border='1.5px dashed '+T.faint;
+      else if(K.dot){ st.background=T[K.dot]; st.borderRadius='50%'; var sz=Math.max(8,Math.round(size*Math.min(1,K.r*2.2))); st.width=sz+'px'; st.height=sz+'px'; st.margin=((size-sz)/2)+'px'; }
+      else if(K.sq) st.background=K.sq==='soft'?T.soft:T[K.sq];
+      else if(K.pore) st.border='1.5px dashed '+T.a3;
+      else if(K.art&&!T.flat){ st.backgroundImage='url("'+K.art+'")'; st.backgroundSize=K.fill?'100% 100%':'88% 88%'; st.backgroundPosition='center'; st.backgroundRepeat='no-repeat'; }
+      else st.background=K.tok;
+      return st; };
+    var slider=(lab,raw,min,max,step,unit,onChange)=>({label:lab, raw:raw, value:raw+unit, min:min, max:max, step:step, onChange:(e)=>onChange(parseFloat(e.target.value))});
+    var titles={home:['Cellula',adv?tr('cenários e bancada livre','scenarios and free bench'):tr('escolha um mundo e rode','pick a world and run it')],
+      sim:[tr(S.pt,S.en),tr('simular','simulate')], world:[tr('Mundo','World'),tr('pinte o que existe','paint what exists')], lab:[tr('Oficina','Workshop'),tr('as leis e o meio','the laws and the medium')]};
+    var t=titles[sc]||titles.home, ah=W?Math.round(CW*W.h/W.w):270;
+
+    var limited=!adv&&!!S.edit;
+    var v={ a1:T.a1, axis:T.faint, title:t[0], subtitle:t[1],
+      isHome:sc==='home', isSim:sc==='sim', isWorld:sc==='world', isLab:sc==='lab', isAdv:adv, isIntro:!adv,
+      brandSub:tr('um núcleo, muitos modelos','one kernel, many models'),
+      pageStyle:{minHeight:'100vh', padding:'28px 16px 40px', display:'flex', flexDirection:'column', alignItems:'center', gap:'18px', background:T.page},
+      logoStyle:{width:'34px', height:'34px', borderRadius:'12px', background:'radial-gradient(circle at 32% 28%,#8ff0d6,'+T.a1+' 55%,'+(T.dark?'#14555c':'#1b6c7d')+')'},
+      brandStyle:{fontFamily:"'Baloo 2',cursive", fontWeight:800, fontSize:'22px', lineHeight:1, color:T.ink},
+      brandSubStyle:{fontSize:'11px', fontWeight:600, color:T.soft},
+      frameStyle:{position:'relative', width:'390px', maxWidth:'100%', height:'844px', borderRadius:'44px', padding:'10px', background:T.bezel,
+        boxShadow:'0 30px 70px rgba(0,0,0,'+(T.dark?'.55':'.22')+'), 0 0 0 1px '+T.line},
+      innerStyle:{position:'relative', width:'100%', height:'100%', borderRadius:'35px', overflow:'hidden', background:T.shell, display:'flex', flexDirection:'column'},
+      fieldStyle:{position:'absolute', inset:0, background:T.field, pointerEvents:'none'},
+      titleStyle:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'22px', color:T.ink, lineHeight:1.1},
+      subStyle:{fontSize:'11.5px', fontWeight:600, color:T.soft},
+      sectionLabel:label, sectionLabelGap:Object.assign({marginTop:'12px'},label),
+      helpLine:{fontSize:'12px', fontWeight:700, color:T.soft, textWrap:'pretty'},
+      teachHint:{fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty', marginTop:'4px'},
+      noteBody:{fontSize:'12.5px', fontWeight:700, color:T.ink, textWrap:'pretty'},
+      noteCard:{padding:'11px 13px', borderRadius:'16px', background:hexA(T.a2,0.1), border:'1px dashed '+hexA(T.a2,0.5), fontSize:'11.5px', fontWeight:700, color:T.soft, textWrap:'pretty'},
+      progName:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'17px', color:T.ink, lineHeight:1.2},
+      meterLabel:{display:'flex', justifyContent:'space-between', fontSize:'10.5px', fontWeight:800, letterSpacing:'.6px', color:T.soft},
+      cardBox:card, cardRow:Object.assign({},card,{display:'flex', alignItems:'center', gap:'8px', padding:'10px 12px'}),
+      teachCard:Object.assign({},card,{background:hexA(T.a1,0.08), border:'1px solid '+hexA(T.a1,0.4)}),
+      skinTray:T.panel2,
+      modeChip:{minHeight:'40px', padding:'5px 10px', borderRadius:'12px', textAlign:'right', background:hexA(adv?T.a2:T.a1,0.16), border:'1px solid '+(adv?T.a2:T.a1),
+        color:T.ink, fontSize:'10.5px', fontWeight:800, lineHeight:1.15},
+      modeSub:{fontSize:'8.5px', fontWeight:700, color:T.soft, display:'block'},
+      modeLabel:adv?tr('Avançado','Advanced'):tr('Introdutório','Introductory'), modeSubLabel:tr('toque para trocar','tap to switch'),
+      toggleMode:()=>{ var m=adv?'intro':'adv'; this.setState({mode:m, screen:(m==='intro'&&(sc==='world'||(sc==='lab'&&!S.edit)))?'sim':sc});
+        this.say(m==='adv'?'Avançado: Mundo e Oficina destravados.':'Introdutório: só escolher e rodar.', m==='adv'?'Advanced: World and Workshop unlocked.':'Introductory: just pick and run.'); },
+      langChip:{minWidth:'40px', minHeight:'40px', borderRadius:'12px', textAlign:'center', fontSize:'11px', fontWeight:800, color:T.ink, background:T.panel2, border:'1px solid '+T.line},
+      langLabel:s.lang==='pt'?'PT':'EN', toggleLang:()=>this.setState({lang:s.lang==='pt'?'en':'pt'}),
+      skins:Object.keys(SKINS).map((k)=>({name:SKINS[k].name, onTap:()=>this.setState({skin:k}),
+        style:{width:'16px', height:'16px', borderRadius:'50%', background:SKINS[k].a1, border:'2px solid '+(s.skin===k?T.ink:'transparent'), boxShadow:'inset 0 0 0 2px '+SKINS[k].shell}})),
+      primaryBtn:{textAlign:'center', padding:'13px', borderRadius:'15px', fontSize:'13px', fontWeight:800, background:T.a1, color:T.onA1, minHeight:'44px'},
+      primaryBtnWide:{flex:2, textAlign:'center', padding:'12px', borderRadius:'15px', fontSize:'12.5px', fontWeight:800, background:T.a1, color:T.onA1, minHeight:'44px'},
+      secondaryBtn:{flex:1, textAlign:'center', padding:'12px', borderRadius:'15px', fontSize:'12.5px', fontWeight:800, background:T.panel2, border:'1px solid '+T.line, color:T.ink, minHeight:'44px'},
+      goSim:()=>this.setState({screen:'sim'}), goSimLabel:tr('Ir simular','Go simulate'),
+      tabBar:{position:'relative', flex:'none', display:'grid', gridTemplateColumns:'repeat('+(adv?4:(limited?3:2))+',1fr)', gap:'3px', padding:'8px 8px 20px', background:T.bar, borderTop:'1px solid '+T.line},
+      toastOn:!!s.toast, toastText:s.toast||'',
+      toastWrap:{position:'absolute', left:'14px', right:'14px', bottom:'92px', pointerEvents:'none'},
+      toastCard:{padding:'11px 14px', borderRadius:'16px', background:T.dark?'rgba(6,32,42,.96)':'rgba(255,255,255,.97)', border:'1px solid '+T.a1,
+        boxShadow:'0 14px 30px rgba(0,0,0,.3)', animation:'toastIn .2s ease-out', fontSize:'12.5px', fontWeight:800, color:T.ink},
+      footNote:{maxWidth:'390px', fontSize:'11.5px', fontWeight:600, lineHeight:1.6, color:T.soft, textWrap:'pretty'},
+      footText:tr('Um só núcleo: tipos com propriedades, camadas de números, cartões de lei e um meio. Cada cenário é só uma lista de dados sobre esse núcleo; no Avançado, a mesma lista fica aberta para mexer e misturar.',
+        'One kernel: kinds with properties, number layers, law cards and a medium. Each scenario is just a list of data on that kernel; in Advanced, the same list is open to edit and mix.'),
+      arenaWrap:{position:'relative', borderRadius:T.flat?'8px':'18px', overflow:'hidden', border:'1px solid '+T.line, width:CW+'px', height:ah+'px'},
+      canvasStyle:{width:CW+'px', height:ah+'px', cursor:'crosshair', touchAction:'none'},
+      arenaAria:tr('o mundo','the world')
+    };
+
+    var tabDefs=[['home',tr('Início','Home')],['world',tr('Mundo','World')],['sim',tr('Simular','Run')],['lab',tr('Oficina','Workshop')]].filter((d)=>adv||d[0]==='home'||d[0]==='sim'||(d[0]==='lab'&&limited));
+    v.tabs=tabDefs.map((d,i)=>{ var on=sc===d[0];
+      return {label:d[1], on:on, onTap:()=>this.setState({screen:d[0]}),
+        style:{display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', padding:'7px 2px', minHeight:'44px', borderRadius:'12px', fontSize:'11px', fontWeight:800,
+          color:on?T.onA1:T.soft, background:on?T.a1:'transparent'},
+        glyph:{width:'11px', height:'11px', display:'block', background:on?T.onA1:T.soft, borderRadius:{home:'3px',world:'2px',sim:'50%',lab:'40% 60% 55% 45%'}[d[0]]}}; });
+
+    if(sc==='home'){
+      v.homeHelp=adv?tr('Abra um cenário pronto e mexa em tudo, ou comece do zero na bancada.','Open a ready scenario and change anything, or start from scratch on the bench.')
+                    :tr('Os mundos já vêm montados: toque e aperte ▶. Nos desafios você ganha uma ferramenta para resolver.','Worlds come ready: tap and press ▶. In challenges you get one tool to solve them.');
+      v.shelfLabel=tr('MUNDOS PARA RODAR','WORLDS TO RUN'); v.questLabel=tr('DESAFIOS · UMA FERRAMENTA DE CADA VEZ','CHALLENGES · ONE TOOL AT A TIME');
+      var shelf=(c,i)=>{ var on=S.id===c.id, done=!!s.done[c.id];
+        return {n:i+1, name:tr(c.pt,c.en), desc:tr(c.dpt,c.den), state:done?'✓':'',
+          tags:c.tags.map((g)=>({label:tr(TYPE_NAME[g][0],TYPE_NAME[g][1]), style:{fontSize:'9.5px', fontWeight:800, padding:'3px 8px', borderRadius:'8px', background:T.panel2, color:T.soft, border:'1px solid '+T.line}})),
+          onTap:()=>{ this.load(c); this.setState({screen:'sim', running:!c.edit}); },
+          row:{display:'flex', gap:'12px', alignItems:'flex-start', padding:'12px', borderRadius:'18px', width:'100%', background:on?hexA(T.a1,0.12):T.panel, border:'1px solid '+(on?T.a1:T.line)},
+          badge:{flex:'none', width:'30px', height:'30px', borderRadius:'11px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Baloo 2',cursive", fontWeight:700,
+            fontSize:'15px', color:done?T.onA1:T.ink, background:done?T.a1:hexA(T.a1,0.2)},
+          nameStyle:{display:'block', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'16px', color:T.ink, lineHeight:1.2},
+          descStyle:{display:'block', fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty'},
+          stateStyle:{flex:'none', fontSize:'14px', fontWeight:800, color:T.a3}}; };
+      v.scenarios=SCENARIOS.map(shelf); v.quests=QUESTS.map(shelf);
+      v.newBench=()=>{ this.load(BENCH); this.setState({screen:'world'}); };
+      v.benchBtn={textAlign:'center', padding:'14px', borderRadius:'18px', background:hexA(T.a2,0.14), border:'1px solid '+T.a2, color:T.ink, fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'16px'};
+      v.benchSub={display:'block', fontFamily:'Nunito,sans-serif', fontSize:'11px', fontWeight:700, color:T.soft};
+      v.benchLabel=tr('Bancada livre','Free bench'); v.benchSubLabel=tr('mundo vazio, nenhuma lei: monte o seu','empty world, no laws: build your own');
+      v.introNote=tr('Quer mudar as regras? Toque em “Introdutório” lá em cima para abrir o modo Avançado.','Want to change the rules? Tap “Introductory” at the top to open Advanced mode.');
+    }
+
+    if(sc==='sim'&&W){
+      var g=S.goal, done=!!s.done[S.id];
+      v.hasGoal=!!g; v.goalText=g?tr(g.pt,g.en):'';
+      v.goalCard={padding:'11px 13px', borderRadius:'16px', background:hexA(done?T.a3:T.a2,0.12), border:'1px solid '+hexA(done?T.a3:T.a2,0.6)};
+      v.goalKicker={fontSize:'10px', fontWeight:800, letterSpacing:'1px', color:T.ink}; v.goalKickerLabel=done?tr('✓ RESOLVIDO','✓ SOLVED'):tr('OBJETIVO','GOAL');
+      v.probes=(S.probes||[]).map((p)=>({value:this.probe(p[0]), label:tr(p[1],p[2]),
+        style:{display:'flex', alignItems:'baseline', gap:'6px', padding:'6px 10px', borderRadius:'11px', background:T.panel, border:'1px solid '+T.line, fontSize:'11px', fontWeight:800, color:T.soft},
+        num:{fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'16px', color:T.ink}}));
+      v.clockChip={position:'absolute', right:'8px', top:'8px', padding:'4px 9px', borderRadius:'11px', background:T.bar, fontSize:'10.5px', fontWeight:800, color:T.ink};
+      v.clockLabel=tr('ciclo ','tick ')+W.tick;
+      v.playIcon=s.running?'❙❙':'▶'; v.runAria=tr('rodar ou pausar','run or pause'); v.resetAria=tr('recomeçar','restart');
+      v.toggleRun=()=>this.setState({running:!s.running}); v.stepOnce=()=>{ stepWorld(this.W); this.forceUpdate(); }; v.resetRun=()=>this.reset();
+      v.playStyle={flex:'none', width:'44px', height:'44px', borderRadius:'14px', textAlign:'center', fontSize:'14px', fontWeight:800, background:s.running?T.panel2:T.a1, color:s.running?T.ink:T.onA1, border:'1px solid '+T.line};
+      v.ghostBtn={flex:'none', minWidth:'44px', height:'44px', padding:'0 10px', borderRadius:'14px', textAlign:'center', fontSize:'14px', fontWeight:800, background:T.panel2, border:'1px solid '+T.line, color:T.ink};
+      v.speeds=[1,2,4].map((n)=>({label:n+'×', on:s.speed===n, onTap:()=>this.setState({speed:n}),
+        style:{minWidth:'40px', height:'40px', borderRadius:'12px', textAlign:'center', fontSize:'11.5px', fontWeight:800, color:s.speed===n?T.onA1:T.soft, background:s.speed===n?T.a1:T.panel2, border:'1px solid '+T.line}}));
+      var tap=S.tap||(W.face==='free'?'launch:c':null);
+      v.tapHint=!tap?tr('Aperte ▶ e observe. Use +1 para ir um passo de cada vez.','Press ▶ and watch. Use +1 to go one step at a time.')
+        :(tap.indexOf('launch')===0?tr('Toque, puxe e solte para lançar: a seta é a velocidade.','Touch, pull and release to launch: the arrow is the velocity.')
+        :tr('Toque no mundo para pintar ou apagar.','Tap the world to paint or erase.'));
+      var keys=(S.knobs||[]).filter((k)=>k.indexOf('medium')===0||this.card(k.split('.')[0]));
+      v.hasKnobs=keys.length>0; v.knobsLabel=tr('BOTÕES DESTE MUNDO','KNOBS FOR THIS WORLD');
+      v.knobs=keys.map((k)=>{ var d=KNOBS[k]; return slider(tr(d[0],d[1]),this.getKnob(k),d[2],d[3],d[4],d[5],(x)=>this.setKnob(k,x)); });
+      v.lensLabel=tr('LENTES','LENSES');
+      v.lensChips=(adv?Object.keys(LENSES):(S.lens||['grid'])).map((k)=>({label:tr(LENSES[k][0],LENSES[k][1]), on:!!W.lens[k], style:chip(!!W.lens[k],36),
+        onTap:()=>{ W.lens[k]=!W.lens[k]; var d=JSON.parse(this.saved); d.lens=W.lens; this.saved=JSON.stringify(d); this.forceUpdate(); }}));
+      var CS=this.chartSpecs(), H=this.hist||[], cols=[T.a3,T.a1,T.a2];
+      v.hasChart=CS.length>0&&H.length>1; v.chartLabel=tr('AO LONGO DO TEMPO','OVER TIME');
+      var mx=1; H.forEach((r)=>r.forEach((x)=>{ if(x>mx) mx=x; }));
+      v.series=CS.map((c,k)=>{ var pr=(S.probes||[]).find((q)=>q[0]===c), nm=pr?tr(pr[1],pr[2]):(c.indexOf('count:')===0?this.kn(c.split(':')[1]):c);
+        return {label:nm, count:H.length?H[H.length-1][k]:0, color:cols[k%3], dash:k===1?'6 4':'none',   // second series is dashed, so colour is not the only cue
+          points:H.map((r,i)=>(i/(H.length-1)*300).toFixed(1)+','+(104-r[k]/mx*96).toFixed(1)).join(' '),
+          dot:{width:'14px', height:'0', borderTop:(k===1?'3px dashed ':'3px solid ')+cols[k%3], display:'block'}, legend:{fontSize:'11px', fontWeight:700, color:T.soft}}; });
+      v.simNextLabel=adv?tr('Abrir a Oficina deste mundo','Open this world’s Workshop'):(S.edit?tr('Abrir a ferramenta deste desafio','Open this challenge’s tool'):tr('Ver como este mundo foi montado','See how this world was built'));
+      v.simNext=()=>{ if(limited){ this.setState({screen:'lab', running:false}); return; } if(!adv) this.say('Avançado: as leis deste mundo estão na Oficina.','Advanced: this world’s laws are in the Workshop.'); this.setState({mode:'adv', screen:'lab', running:false}); };
+    }
+
+    if(sc==='world'&&W){
+      v.worldHelp=tr('Escolha um pincel e pinte. Pintar de novo no mesmo lugar apaga.','Pick a brush and paint. Painting the same spot again erases.');
+      v.brushes=BRUSHES.map((k)=>({label:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,20), on:s.brush===k, style:chip(s.brush===k,40), onTap:()=>this.setState({brush:k})}));
+      v.sizeLabel=tr('TAMANHO DO MUNDO','WORLD SIZE'); v.faceLabel=tr('COMO OS CORPOS SE MOVEM','HOW BODIES MOVE');
+      v.sizeChips=[[11,9],[21,15],[31,21]].map((d)=>({label:d[0]+' × '+d[1], on:W.w===d[0]&&W.h===d[1], style:chip(W.w===d[0]&&W.h===d[1]),
+        onTap:()=>{ if(W.w===d[0]&&W.h===d[1]) return; var N=makeWorld(d[0],d[1],W.face); N.laws=W.laws; N.medium=W.medium; N.pass=W.pass; N.lens=W.lens; N.edge=W.edge; this.W=N; this.keep();
+          this.say('Mundo novo, mesmas leis.','New world, same laws.'); }}));
+      v.faceChips=[['cells',tr('de casa em casa','cell to cell')],['free',tr('livre','free')]].map((d)=>({label:d[1], on:W.face===d[0], style:chip(W.face===d[0]),
+        onTap:()=>{ W.face=d[0]; W.bodies.forEach((b)=>{ b.x=Math.round(b.x); b.y=Math.round(b.y); b.ax=0; b.ay=0; b.trail=null; }); this.keep(); }}));
+      v.faceHint=W.face==='free'?tr('Livre: os corpos têm posição contínua. É aqui que as órbitas aparecem.','Free: bodies have continuous positions. This is where orbits appear.')
+        :tr('De casa em casa: cada corpo ocupa uma casa e pula para a vizinha.','Cell to cell: each body occupies one cell and hops to a neighbour.');
+      v.clearLabel=tr('Limpar','Clear');
+      v.clearWorld=()=>{ W.T.fill('_'); W.bodies=[]; this.keep(); };
+    }
+
+    if(sc==='lab'&&W){
+      var L=W.laws, si=s.sel>=0&&s.sel<L.length?s.sel:-1, rec=s.labTab==='rec'&&!limited;
+      if(limited) si=L.findIndex((c)=>c.type==='brain');     // a challenge opens straight on its one tool
+      var cur=si>=0?L[si]:null;
+      v.isRec=rec; v.isLaws=!rec; v.fullLab=!limited;
+      v.segTray={display:'flex', gap:'6px', padding:'5px', borderRadius:'15px', background:T.panel2};
+      v.labTabs=[['laws',tr('Leis','Laws'),tr('a lista e os cartões','the list and the cards')],['rec',tr('Gravar','Record'),tr('mostre, e o mundo propõe','show it, the world proposes')]].map((d)=>({label:d[1], subLabel:d[2], on:s.labTab===d[0],
+        onTap:()=>this.setState({labTab:d[0]}), sub:{display:'block', fontSize:'9px', fontWeight:700, opacity:0.85},
+        style:{flex:1, textAlign:'center', padding:'7px 4px', minHeight:'44px', borderRadius:'11px', fontSize:'12px', fontWeight:800, color:s.labTab===d[0]?T.onA1:T.soft, background:s.labTab===d[0]?T.a1:'transparent'}}));
+      v.labHelp=rec?tr('Você é o motor: mexa no mundo com a mão e tire uma foto. A colheita compara duas fotos e propõe cartões.','You are the engine: change the world by hand and take a photo. The harvest compares two photos and proposes cards.')
+        :(limited?tr(S.goal.pt,S.goal.en):tr('Cada cartão é uma lei. Ligue, desligue, some outras: todas valem no mesmo mundo.','Each card is a law. Switch them on or off, add more: they all apply to the same world.'));
+      if(rec){
+        v.recModes=[['strip',tr('Fita: eu mexo, ela grava','Strip: I move, it records')],['one',tr('Uma regra de cada vez','One rule at a time')]].map((d)=>({label:d[1], on:s.recMode===d[0], onTap:()=>this.setState({recMode:d[0]}),
+          style:{flex:1, textAlign:'center', padding:'6px 4px', minHeight:'40px', borderRadius:'11px', fontSize:'11.5px', fontWeight:800, color:s.recMode===d[0]?T.onA1:T.soft, background:s.recMode===d[0]?T.a1:'transparent'}}));
+        v.isOne=s.recMode==='one'; v.isStrip=!v.isOne;
+        if(v.isOne){
+          var te=s.teach, gk=te.gesture, pc=this.pairCells(), dkey=DIRS[te.dir]?te.dir:'right';
+          buildView(W);
+          var bef=pc?[W.V[pc[0]],W.V[pc[1]]]:['>','_'];
+          var aft=gk==='copy'?[bef[0],bef[0]]:(gk==='paint'?[bef[0],s.recBrush]:(gk==='erase'?['_',bef[1]]:['_',bef[0]]));
+          v.pickPair=this.pickPair;
+          v.oneHint=pc?tr('Par escolhido: esta casa e a vizinha na direção da seta. As casas ✳ não importam.','Pair chosen: this cell and its neighbour in the arrow’s direction. The ✳ cells do not matter.')
+            :tr('Toque em uma casa do mundo: ela e a vizinha na direção da seta formam o par da regra.','Tap a cell of the world: it and its neighbour in the arrow’s direction form the rule’s pair.');
+          v.gesturePicks=[['drag',tr('✋ arrastar · anda','✋ drag · moves')],['copy',tr('✌ copiar · duplica','✌ copy · duplicates')],['paint',tr('● pintar · torna-se','● paint · becomes')],['erase',tr('⌫ apagar · some','⌫ erase · vanishes')]]
+            .map((d)=>({label:d[1], on:gk===d[0], style:chip(gk===d[0]), onTap:()=>this.setState({teach:Object.assign({},te,{gesture:d[0]})})}));
+          v.dirPicks=[['right','→'],['left','←'],['up','↑'],['down','↓']].map((d)=>({label:d[1], on:dkey===d[0], style:Object.assign(chip(dkey===d[0]),{minWidth:'40px', justifyContent:'center'}), onTap:()=>this.setState({teach:Object.assign({},te,{dir:d[0]})})}));
+          v.isPaintGesture=gk==='paint';
+          v.recPalette=RULE_KINDS.map((k)=>({label:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,22), on:s.recBrush===k, onTap:()=>this.setState({recBrush:k}),
+            style:{width:'36px', height:'36px', borderRadius:'10px', display:'inline-flex', alignItems:'center', justifyContent:'center', background:s.recBrush===k?hexA(T.a1,0.2):T.panel2, border:'1px solid '+(s.recBrush===k?T.a1:T.line)}}));
+          var slotOf={right:5,left:3,up:1,down:7}[dkey];
+          var patch=(pr)=>{ var out=[]; for(var q=0;q<9;q++){ var k=q===4?pr[0]:(q===slotOf?pr[1]:null);
+            out.push({glyph:k===null?'✳':(KINDS[k].glyph||''), tile:k===null?{fontSize:'12px', fontWeight:800, color:T.faint}:tile(k,22),
+              box:{width:'30px', height:'30px', borderRadius:'7px', display:'flex', alignItems:'center', justifyContent:'center', border:k===null?'1px dashed '+T.line:'1px solid '+T.a2, background:k===null?'transparent':T.panel}}); } return out; };
+          v.patchBefore=patch(bef); v.patchAfter=patch(aft);
+          v.patchRow={display:'flex', alignItems:'center', justifyContent:'center', gap:'12px', padding:'12px', borderRadius:'16px', background:T.panel2};
+          v.patchGrid={display:'grid', gridTemplateColumns:'repeat(3,30px)', gap:'3px'};
+          v.patchCap={fontSize:'9.5px', fontWeight:800, letterSpacing:'.6px', color:T.soft, textAlign:'center', marginTop:'5px'};
+          v.patchArrow={fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'19px', color:T.ink};
+          v.beforeLabel=tr('ANTES','BEFORE'); v.afterLabel=tr('DEPOIS','AFTER');
+          v.gestureNote=gk==='copy'?tr('A original continua ali: por isso é duplicar, e não andar.','The original stays there: that is why it is duplicating, not moving.')
+            :(gk==='erase'?tr('Apagar é a regra de sumir: o que estava aqui deixa de estar.','Erasing is the rule for vanishing: what was here is gone.')
+            :(gk==='paint'?tr('Pintar troca o tipo da vizinha: é assim que uma coisa faz outra aparecer.','Painting changes the neighbour’s kind: this is how one thing makes another appear.')
+            :tr('Arrastar é mover: a casa de origem fica vazia e a seta diz para onde.','Dragging is moving: the origin cell empties and the arrow says where to.')));
+          v.saveOneLabel=tr('Salvar regra','Save rule');
+          v.saveOne=()=>{ if(bef[0]===aft[0]&&bef[1]===aft[1]){ this.say('Antes e depois estão iguais: essa regra não muda nada.','Before and after are the same: this rule changes nothing.'); return; }
+            W.laws.push(pair(bef[0],bef[1],aft[0],aft[1],dkey,60)); this.saved=snapshot(W); this.say('Regra salva na lista de leis.','Rule saved to the list of laws.'); this.forceUpdate(); };
+        }
+        if(v.isStrip){
+        v.recDown=this.recDown; v.recMove=this.recMove; v.recUp=this.recUp; v.recCancel=this.recCancel; v.pickFrame=this.pickFrame;
+        v.recTools=[['move',tr('✋ mover','✋ move')],['copy',tr('✌ copiar','✌ copy')],['paint',tr('● pintar / apagar','● paint / erase')]].map((d)=>({label:d[1], on:s.tool===d[0], style:chip(s.tool===d[0]), onTap:()=>this.setState({tool:d[0]})}));
+        v.isPaintTool=s.tool==='paint';
+        v.recPalette=RULE_KINDS.map((k)=>({label:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,22), on:s.recBrush===k, onTap:()=>this.setState({recBrush:k}),
+          style:{width:'36px', height:'36px', borderRadius:'10px', display:'inline-flex', alignItems:'center', justifyContent:'center', background:s.recBrush===k?hexA(T.a1,0.2):T.panel2, border:'1px solid '+(s.recBrush===k?T.a1:T.line)}}));
+        v.recHint=tr('O contorno verde marca o que mudou desde a última foto.','The green outline marks what changed since the last photo.');
+        v.recPhotoLabel=tr('Foto do que eu fiz','Photo of what I did'); v.recStepLabel=tr('+1 passo do mundo','+1 world step');
+        v.recPhoto=()=>this.shoot(false); v.recStep=()=>this.shoot(true);
+        var FR=this.frames||[], maxPick=Math.max(0,FR.length-2), pick=s.framePick==null?maxPick:Math.min(s.framePick,maxPick);
+        v.stripLabel=tr('FITA DO TEMPO','TIMELINE'); v.stripStyle={width:(CW-30)+'px', height:Math.round(52*W.h/W.w+18)+'px', marginTop:'8px', cursor:'pointer'};
+        v.pickInfo=FR.length<2?tr('A fita precisa de duas fotos. Mexa no mundo e tire a primeira.','The strip needs two photos. Change the world and take the first.')
+          :tr('Comparando t'+(pick+1)+' → t'+(pick+2)+'. Toque em outro quadro para comparar outro par.','Comparing t'+(pick+1)+' → t'+(pick+2)+'. Tap another frame to compare another pair.');
+        var cand=FR.length<2?[]:harvestAll(FR[pick],FR[pick+1]).filter((g)=>s.dropped.indexOf(g.key)<0);
+        v.harvestLabel=tr('COLHEITA · O QUE AS FOTOS MOSTRAM','HARVEST · WHAT THE PHOTOS SHOW');
+        v.noHarvest=cand.length===0;
+        v.noHarvestText=FR.length<2?tr('Nada colhido ainda.','Nothing harvested yet.'):tr('Entre estas duas fotos nada mudou, ou você já respondeu a tudo.','Nothing changed between these two photos, or you have answered everything.');
+        var tc={pair:T.a1, count:T.a3, force:T.a2, medium:T.neg};
+        var btn=(lab,on,fn)=>({label:lab, onTap:fn, style:{minHeight:'40px', padding:'0 13px', borderRadius:'12px', fontSize:'11.5px', fontWeight:800, color:on?T.onA1:T.ink, background:on?T.a1:T.panel2, border:'1px solid '+(on?T.a1:T.line)}});
+        v.harvestRows=cand.map((g)=>{ var drop=btn(tr('Jogar fora','Discard'),false,()=>this.setState({dropped:s.dropped.concat([g.key])})), acts, note;
+          if(g.type==='pair'){
+            if(g.thin){ note=tr('As duas casas estavam vazias antes: assim a regra valeria em qualquer lugar. Falta na foto o que causou isso. Se foi um corpo vindo de longe, veja se há uma proposta de força.','Both cells were empty before: the rule would apply anywhere. The photo is missing the cause. If a body came from far away, check for a force proposal.'); acts=[drop]; }
+            else if(g.clash){ note=tr('Isso aconteceu de mais de um jeito. O que você quis dizer?','This happened in more than one way. What did you mean?'); acts=[btn(tr('sempre assim','always'),true,()=>this.accept(g,100)),btn(tr('com chance 50%','50% chance'),false,()=>this.accept(g,50)),drop]; }
+            else { note=tr('Uma coisa ao lado de outra virou outra coisa: regra de par.','One thing next to another became something else: a pair rule.'); acts=[btn(tr('Aceitar','Accept'),true,()=>this.accept(g)),drop]; } }
+          else if(g.type==='count'){ note=tr('Todas as casas que mudaram viam um número que as outras não viam. Os números que não apareceram na foto ficaram de fora.','Every cell that changed saw a number the others did not. Numbers that did not show up in the photo are left out.'); acts=[btn(tr('Aceitar','Accept'),true,()=>this.accept(g)),drop]; }
+          else if(g.type==='force'){ note=tr('Os corpos foram na direção uns dos outros (ou fugiram). A foto só mostra o sentido: a força e o alcance você afina no cartão.','Bodies moved toward each other (or away). The photo only shows the direction: you tune strength and range on the card.'); acts=[btn(tr('Aceitar','Accept'),true,()=>this.accept(g)),drop]; }
+          else { note=g.medium.weight?tr('Tudo desceu: parece peso, uma propriedade do meio.','Everything went down: it looks like weight, a property of the medium.'):tr('Cada um foi para um lado, sem padrão: parece agitação do meio.','Each went its own way, with no pattern: it looks like jiggle in the medium.'); acts=[btn(tr('Aceitar','Accept'),true,()=>this.accept(g)),drop]; }
+          return {n:g.n, kindLabel:tr(TYPE_NAME[g.type][0],TYPE_NAME[g.type][1]), note:note, actions:acts,
+            summary:g.type==='medium'?(g.medium.weight?tr('peso 50%','weight 50%'):tr('agitação 40%','jiggle 40%')):this.summary(g.card),
+            card:{padding:'11px 12px', borderRadius:'16px', background:T.panel, border:'1px solid '+((g.clash||g.thin)?T.a2:T.line)},
+            kind:{flex:'none', fontSize:'9.5px', fontWeight:800, padding:'3px 7px', borderRadius:'8px', color:T.ink, background:hexA(tc[g.type],0.22), border:'1px solid '+tc[g.type]},
+            times:{flex:'none', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'14px', color:T.ink},
+            text:{flex:1, minWidth:0, fontSize:'11.5px', fontWeight:800, color:T.ink, textWrap:'pretty'},
+            noteStyle:{fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty', marginTop:'6px'}}; });
+        }
+      }
+      v.lawsLabel=tr('LEIS DO MUNDO','LAWS OF THE WORLD'); v.noLaws=L.length===0;
+      v.noLawsText=tr('Nenhuma lei ainda. Só o meio age. Some um cartão abaixo.','No laws yet. Only the medium acts. Add a card below.');
+      var typeColor={pair:T.a1, count:T.a3, force:T.a2, brain:T.neg};
+      v.lawRows=L.map((c,i)=>({on:i===si, active:c.on, kindLabel:tr(TYPE_NAME[c.type][0],TYPE_NAME[c.type][1]), summary:this.summary(c),
+        toggleAria:tr('ligar ou desligar','switch on or off'), removeAria:tr('tirar esta lei','remove this law'),
+        onTap:()=>this.setState({sel:i===si?-1:i, slot:null}),
+        toggle:()=>{ c.on=!c.on; this.keep(); },
+        remove:()=>{ L.splice(i,1); this.setState({sel:-1}); this.keep(); },
+        card:{display:'flex', alignItems:'center', gap:'8px', padding:'6px 8px 6px 10px', borderRadius:'16px', background:i===si?hexA(T.a1,0.12):T.panel, border:'1px solid '+(i===si?T.a1:T.line), opacity:c.on?1:0.6},
+        kind:{flex:'none', fontSize:'9.5px', fontWeight:800, padding:'3px 7px', borderRadius:'8px', color:T.ink, background:hexA(typeColor[c.type],0.22), border:'1px solid '+typeColor[c.type]},
+        text:{flex:1, minWidth:0, fontSize:'11.5px', fontWeight:800, color:T.ink, textWrap:'pretty'},
+        sw:{flex:'none', width:'44px', height:'28px', borderRadius:'99px', padding:'3px', display:'flex', alignItems:'center', justifyContent:c.on?'flex-end':'flex-start', background:c.on?T.a1:T.panel2, border:'1px solid '+T.line},
+        knob:{width:'20px', height:'20px', borderRadius:'50%', background:c.on?T.onA1:T.soft, display:'block'},
+        del:{flex:'none', width:'32px', height:'32px', borderRadius:'10px', textAlign:'center', fontSize:'15px', fontWeight:800, color:T.ink, background:hexA(T.a2,0.18)}}));
+      var add=(c)=>()=>{ L.push(c); this.setState({sel:L.length-1, slot:null}); this.keep(); };
+      v.addChips=[['+ '+tr('par','pair'),add(pair('>','_','_','>','right'))],['+ '+tr('contar','count'),add(count('_','a',[3],'a'))]]
+        .concat(this.card('force')?[]:[['+ '+tr('força','force'),add(force('all',60,4))]])
+        .concat(this.card('brain')?[]:[['+ '+tr('cérebro','brain'),add(brain())]])
+        .map((d)=>({label:d[0], onTap:d[1], style:chip(false,40)}));
+
+      v.hasEditor=!!cur; v.isCount=!!cur&&cur.type==='count'; v.isBrain=!!cur&&cur.type==='brain';
+      v.hasSlots=!!cur&&(cur.type==='pair'||cur.type==='count');
+      v.readsLabel=tr('LÊ-SE ASSIM','READS AS'); v.readsKicker={fontSize:'9.5px', fontWeight:800, letterSpacing:'1px', color:T.faint};
+      v.readsBox={marginTop:'10px', padding:'9px 11px', borderRadius:'13px', background:T.panel2};
+      v.editChips=[]; v.editSliders=[]; v.slots=[]; v.kindPalette=[];
+      if(cur){
+        v.editTitle=tr('Lei ','Law ')+(si+1)+' · '+tr(TYPE_NAME[cur.type][0],TYPE_NAME[cur.type][1]);
+        v.editSentence=this.summary(cur);
+        var chance=slider(tr('CHANCE','CHANCE'),cur.prob,5,100,5,'%',(x)=>{ cur.prob=x; this.keep(); });
+        var slotBtn=(key,cap,k)=>({cap:cap, name:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,28), on:s.slot===key, onTap:()=>this.setState({slot:s.slot===key?null:key}),
+          style:{display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', padding:'8px 2px', borderRadius:'13px', minHeight:'44px', background:s.slot===key?hexA(T.a2,0.2):T.panel2, border:'1px solid '+(s.slot===key?T.a2:T.line)},
+          capStyle:{fontSize:'8.5px', fontWeight:800, letterSpacing:'.5px', color:T.soft}, nameStyle:{fontSize:'10px', fontWeight:800, color:T.ink}});
+        var setSlot=(k)=>{ var key=s.slot; if(!key) return;
+          if(cur.type==='pair'){ var arr=key[0]==='b'?cur.b:cur.a; arr[+key[1]]=k; } else cur[key]=k; this.keep(); };
+        if(v.hasSlots) v.kindPalette=RULE_KINDS.map((k)=>({label:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,22), onTap:()=>setSlot(k),
+          style:{width:'36px', height:'36px', borderRadius:'10px', display:'inline-flex', alignItems:'center', justifyContent:'center', background:T.panel2, border:'1px solid '+T.line, opacity:s.slot?1:0.5}}));
+        if(cur.type==='pair'){
+          v.editHint=tr('Toque em uma casa da regra e depois em um tipo para trocá-la.','Tap a cell of the rule, then a kind to change it.');
+          v.slotGrid={display:'grid', gridTemplateColumns:'repeat(4,minmax(0,1fr))', gap:'6px', marginTop:'10px'};
+          v.slots=[slotBtn('b0',tr('ANTES','BEFORE'),cur.b[0]),slotBtn('b1',tr('VIZINHA','NEIGHBOUR'),cur.b[1]),slotBtn('a0',tr('DEPOIS','AFTER'),cur.a[0]),slotBtn('a1',tr('VIZINHA','NEIGHBOUR'),cur.a[1])];
+          v.editChips=[['right','→'],['left','←'],['up','↑'],['down','↓'],['any','✳']].map((d)=>({label:d[1], on:cur.dir===d[0], style:Object.assign(chip(cur.dir===d[0],40),{minWidth:'40px', justifyContent:'center'}), onTap:()=>{ cur.dir=d[0]; this.keep(); }}));
+          v.editSliders=[chance];
+        } else if(cur.type==='count'){
+          v.editHint=tr('Uma casa que é [isto], com [tantos] de [aquilo] na vizinhança, vira [isto].','A cell that is [this], with [so many] of [that] around it, becomes [this].');
+          v.slotGrid={display:'grid', gridTemplateColumns:'repeat(3,minmax(0,1fr))', gap:'6px', marginTop:'10px'};
+          v.slots=[slotBtn('from',tr('QUANDO É','WHEN IT IS'),cur.from),slotBtn('what',tr('CONTA','COUNTS'),cur.what),slotBtn('to',tr('VIRA','BECOMES'),cur.to)];
+          var wide=s.wide||isWide(cur.mask), span=wide?2:1, px=wide?30:38, N=maskSize(cur.mask);
+          var trim=()=>{ var n=maskSize(cur.mask); for(var q=n+1;q<25;q++) cur.nums[q]=false; };
+          v.hoodGrid={display:'grid', gridTemplateColumns:'repeat('+(wide?5:3)+','+px+'px)', gap:'4px', flex:'none'};
+          v.hoodCells=[];
+          for(var dy=-span;dy<=span;dy++) for(var dx=-span;dx<=span;dx++){ var idx=(dy+2)*5+dx+2, centre=!dx&&!dy, on=!!cur.mask[idx];
+            v.hoodCells.push({on:on, glyph:centre?tr('eu','me'):'', aria:centre?tr('eu','me'):(on?tr('conta','counts'):tr('não conta','does not count')),
+              onTap:centre?(()=>{}):((q)=>()=>{ cur.mask[q]=cur.mask[q]?0:1; trim(); this.keep(); })(idx),
+              style:{width:px+'px', height:px+'px', borderRadius:'8px', textAlign:'center', fontSize:'10px', fontWeight:800, color:T.ink,
+                background:centre?T.panel:(on?T.a3:'transparent'), border:centre?'1.5px solid '+T.ink:(on?'1.5px solid '+T.a3:'1.5px dashed '+T.faint)}}); }
+          v.hoodText=tr(N+' casas contam. Toque para ligar ou desligar.',N+' cells count. Tap to switch on or off.');
+          v.numsLabel=tr('QUANTOS','HOW MANY');
+          v.numChips=[]; for(var q=0;q<=N;q++) v.numChips.push({label:String(q), on:!!cur.nums[q],
+            onTap:((n)=>()=>{ cur.nums[n]=!cur.nums[n]; this.keep(); })(q),
+            style:{width:'36px', height:'36px', borderRadius:'10px', textAlign:'center', fontSize:'13px', fontWeight:800, color:cur.nums[q]?T.onA1:T.soft, background:cur.nums[q]?T.a1:T.panel2, border:'1px solid '+(cur.nums[q]?T.a1:T.line)}});
+          v.editChips=[['4','4'],['8','8']].concat(wide?[['24','24']]:[]).map((d)=>({label:d[1], on:false, style:chip(false,36), onTap:()=>{ cur.mask=maskOf(d[0]); trim(); this.keep(); }}));
+          v.editChips.push({label:wide?'3×3':'5×5', on:false, style:chip(false,36),
+            onTap:()=>{ if(wide){ var m8=maskOf('8'); for(var z=0;z<25;z++) if(!m8[z]) cur.mask[z]=0; trim(); this.setState({wide:false}); this.keep(); } else this.setState({wide:true}); }});
+          v.editSliders=[chance];
+        } else if(cur.type==='force'){
+          v.editHint=tr('Uma lei vale no mundo inteiro. Você só afina os botões.','A law holds across the whole world. You only tune the knobs.');
+          v.editChips=[['like',tr('iguais se afastam','like repels')],['all',tr('tudo se atrai','everything attracts')]].map((d)=>({label:d[1], on:cur.sign===d[0], style:chip(cur.sign===d[0]), onTap:()=>{ cur.sign=d[0]; this.keep(); }}));
+          if(W.face==='free') v.editChips.push({label:tr('direto 1/r²','direct 1/r²'), on:cur.direct, style:chip(cur.direct), onTap:()=>{ cur.direct=!cur.direct; this.keep(); }});
+          v.editSliders=[slider(tr('FORÇA','STRENGTH'),cur.strength,0,100,5,'%',(x)=>{ cur.strength=x; this.keep(); })]
+            .concat(W.face==='free'&&cur.direct?[]:[slider(tr('ALCANCE','RANGE'),cur.range,2,12,1,tr(' casas',' cells'),(x)=>{ cur.range=x; this.keep(); })]);
+        } else {
+          var li=s.lang==='pt'?0:1, sk=Object.keys(SENSORS), ak=Object.keys(ACTIONS), mounts=cur.mounts||(cur.mounts=[]), p1=cur.p1||(cur.p1=[]), bt=s.brainTab;
+          var ed=limited?S.edit:{}, okTabs=ed.tabs||['body','wiring','blocks']; if(okTabs.indexOf(bt)<0) bt=okTabs[0];
+          var okActs=ed.acts||ak, actNow=okActs.indexOf(s.act)<0?okActs[0]:s.act;
+          var side=(a)=>({0:tr('frente','front'),90:tr('direita','right'),180:tr('trás','back'),270:tr('esquerda','left')}[Math.round(a)]||Math.round(a)+'°');
+          var mlabel=(m)=>SENSORS[m.s][li]+(m.s==='dice'?'':' · '+side(m.a));
+          var seg=(on)=>({flex:1, textAlign:'center', minHeight:'40px', borderRadius:'11px', fontSize:'12px', fontWeight:800, color:on?T.onA1:T.soft, background:on?T.a1:'transparent'});
+          v.editHint=tr('O corpo sente, as ligações decidem, os blocos agem.','The body senses, the wires decide, the blocks act.');
+          v.segTrayGap={display:'flex', gap:'6px', padding:'5px', borderRadius:'15px', background:T.panel2, marginTop:'10px'};
+          v.brainTabs=[['body',tr('Corpo','Body')],['wiring',tr('Ligações','Wiring')],['blocks',tr('Blocos','Blocks')]].filter((d)=>okTabs.indexOf(d[0])>=0).map((d)=>({label:d[1], on:bt===d[0], style:seg(bt===d[0]), onTap:()=>this.setState({brainTab:d[0]})}));
+          v.isBody=bt==='body'; v.isWiring=bt==='wiring'; v.isBlocks=bt==='blocks';
+          if(v.isBody){
+            var mi=Math.min(s.mountIdx,Math.max(0,mounts.length-1)), R=64, cm=mounts[mi];
+            var cone=(color,angle,rangePx,fov,op)=>{ var hh=Math.max(10,rangePx*2*Math.tan(Math.min(80,fov)/2*Math.PI/180));
+              return {position:'absolute', left:'50%', top:'50%', width:rangePx+'px', height:hh+'px', marginTop:-(hh/2)+'px', opacity:op, pointerEvents:'none',
+                transform:'rotate('+angle+'deg)', transformOrigin:'0 50%', background:'linear-gradient(90deg,'+color+','+hexA(color,0.1)+' 88%,transparent)', clipPath:'polygon(0% 50%,100% 0%,100% 100%)'}; };
+            v.bodyHelp=s.advBody?tr('Livre: gire cada sensor para onde quiser.','Free: turn each sensor wherever you like.'):tr('Toque em frente, direita, trás ou esquerda para montar um sensor ali.','Tap front, right, back or left to mount a sensor there.');
+            v.bodyStage={position:'relative', height:'250px', borderRadius:'18px', overflow:'hidden', background:T.panel2, border:'1px solid '+T.line, display:'flex', alignItems:'center', justifyContent:'center', marginTop:'8px'};
+            v.bodyRing={position:'absolute', left:'50%', top:'50%', width:(R*2)+'px', height:(R*2)+'px', marginLeft:-R+'px', marginTop:-R+'px', borderRadius:'50%', border:'1px dashed '+T.faint};
+            v.headingMark={position:'absolute', left:'10px', top:'8px', fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.soft};
+            v.frontLabel=tr('↑ FRENTE','↑ FRONT');
+            v.mountCones=mounts.map((m,i)=>({style:cone(i===mi?T.a2:T.a1,m.a-90,Math.max(14,m.r*24),m.f,i===mi?0.5:0.22)}));
+            v.bodySprite=T.flat?{position:'relative', width:'46px', height:'46px', borderRadius:'50%', background:KINDS['>'].tok}
+              :{position:'relative', width:'64px', height:'64px', backgroundImage:'url("'+KINDS['>'].art+'")', backgroundSize:'contain', backgroundPosition:'center', backgroundRepeat:'no-repeat', transform:'rotate(-90deg)'};
+            var short=(id)=>SENSORS[id][li];
+            // sensors sharing a direction stack outward, so none hides behind another
+            var slots=[], seenAng={};
+            mounts.forEach((m,i)=>{ var key=Math.round(m.a); seenAng[key]=(seenAng[key]||0)+1; slots.push({angle:m.a, i:i, label:short(m.s), k:seenAng[key]-1}); });
+            if(!s.advBody) [0,90,180,270].forEach((ang)=>{ if(!seenAng[ang]) slots.push({angle:ang, i:-1, label:'+', k:0}); });
+            v.mountPins=slots.map((sl)=>{ var rad=(sl.angle-90)*Math.PI/180, on=sl.i===mi&&sl.i>=0, RR=R+40*Math.min(1,sl.k);
+              return {label:sl.label, on:on, aria:sl.i<0?tr('montar sensor a ','mount a sensor at ')+sl.angle+'°':sl.label,
+                onTap:()=>{ if(sl.i>=0){ this.setState({mountIdx:sl.i}); return; } mounts.push({id:'m'+(cur.nid=(cur.nid||10)+1),s:'food',a:sl.angle,r:4,f:50}); this.setState({mountIdx:mounts.length-1}); this.keep(); },
+                style:{position:'absolute', left:'50%', top:'50%', transform:'translate(-50%,-50%) translate('+(Math.cos(rad)*RR)+'px,'+(Math.sin(rad)*RR)+'px)', minWidth:'40px', minHeight:'32px', padding:'0 8px',
+                  borderRadius:'11px', textAlign:'center', fontSize:'10.5px', fontWeight:800, whiteSpace:'nowrap', background:on?T.a2:T.shell, color:on?'#1a1205':T.ink, border:'1px solid '+(on?T.a2:T.line)}}; });
+            v.hasMount=!!cm; v.noMount=!cm; v.noMountText=tr('Nenhum sensor montado. Toque em um + em volta do peixe.','No sensor mounted. Tap a + around the fish.');
+            v.addMountLabel=tr('+ sensor','+ sensor'); v.addMount=()=>{ if(mounts.length<6){ mounts.push({id:'m'+(cur.nid=(cur.nid||10)+1),s:'food',a:s.advBody?40:0,r:2,f:50}); this.setState({mountIdx:mounts.length-1}); this.keep(); } };
+            v.mountTitle=cm?tr('SENSOR A ','SENSOR AT ')+Math.round(cm.a)+'°':tr('NENHUM SENSOR','NO SENSOR');
+            v.advBody=s.advBody; v.toggleAdvBody=()=>this.setState({advBody:!s.advBody}); v.advLabel=s.advBody?tr('ângulo livre','free angle'):tr('quatro lados','four sides');
+            v.advBtn=chip(false,36);
+            v.sensorPick=cm?sk.map((id)=>({label:SENSORS[id][li], on:cm.s===id, style:chip(cm.s===id,36), onTap:()=>{ cm.s=id; this.keep(); }})):[];
+            v.mountSliders=cm?[slider(tr('ALCANCE','RANGE'),cm.r,1,5,0.5,tr(' casas',' cells'),(x)=>{ cm.r=x; this.keep(); }),
+              slider(tr('ABERTURA','OPENING'),cm.f,20,150,5,'°',(x)=>{ cm.f=x; this.keep(); })]
+              .concat(s.advBody?[slider(tr('DIREÇÃO','DIRECTION'),cm.a,0,350,10,'°',(x)=>{ cm.a=x; this.keep(); })]:[]):[];
+            v.removeMountLabel=tr('Tirar este sensor','Remove this sensor');
+            v.removeMount=()=>{ var gone=mounts.splice(mi,1)[0]; cur.wires=cur.wires.filter((w)=>w[0]!==gone.id); this.setState({mountIdx:0, wireSel:null}); this.keep(); };
+            v.dangerBtn={display:'block', width:'100%', marginTop:'10px', textAlign:'center', minHeight:'40px', borderRadius:'12px', fontSize:'12px', fontWeight:800, color:T.ink, background:hexA(T.a2,0.16), border:'1px solid '+T.a2};
+          }
+          if(v.isWiring){
+            var H=Math.max(mounts.length,ak.length)*46-8, yy=(i)=>i*46+19, wired={}, mIdx=(id)=>mounts.findIndex((m)=>m.id===id), selM=mountById(cur,s.wireSel);
+            cur.wires.forEach((w)=>{ wired[w[0]]=1; wired['>'+w[1]]=1; });
+            v.wireHelp=selM?tr('Agora toque em uma ação para ligar “'+mlabel(selM)+'”.','Now tap an action to wire “'+mlabel(selM)+'”.')
+              :tr('Toque em um sensor e depois em uma ação. Tocar de novo desfaz. Se nenhum for verdade, o peixe nada.','Tap a sensor, then an action. Tapping again undoes it. If none is true, the fish swims.');
+            v.graphCard={padding:'10px', borderRadius:'16px', background:T.panel2, border:'1px solid '+T.line, marginTop:'8px'};
+            v.colLabel={fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.soft}; v.sensorsLabel=tr('SENSORES DO CORPO','BODY SENSORS'); v.actionsLabel=tr('AÇÕES','ACTIONS');
+            v.colStack={flex:1, minWidth:0, display:'flex', flexDirection:'column', gap:'8px'};
+            v.wireSvg={flex:'none', width:'38px', height:H+'px', overflow:'visible', pointerEvents:'none'}; v.graphView='0 0 38 '+H;
+            v.wirePaths=cur.wires.filter((w)=>mIdx(w[0])>=0).map((w)=>{ var a=mIdx(w[0]), b=ak.indexOf(w[1]); return {d:'M0 '+yy(a)+' C 15 '+yy(a)+', 23 '+yy(b)+', 38 '+yy(b), stroke:T.a1}; });
+            var node=(sel,on,col)=>({width:'100%', height:'38px', padding:'0 6px', borderRadius:'12px', fontSize:'10.5px', fontWeight:800, lineHeight:1.1, textAlign:'center', color:T.ink,
+              background:sel?hexA(col,0.3):(on?T.panel:'transparent'), border:'1px solid '+(sel||on?col:T.line)});
+            v.sensorNodes=mounts.map((m)=>({label:mlabel(m), on:s.wireSel===m.id, style:node(s.wireSel===m.id,!!wired[m.id],T.a1), onTap:()=>this.setState({wireSel:s.wireSel===m.id?null:m.id})}));
+            v.actionNodes=ak.map((id)=>({label:ACTIONS[id][li], style:node(false,!!wired['>'+id],T.a2),
+              onTap:()=>{ if(!selM) return; var k=cur.wires.findIndex((w)=>w[0]===selM.id&&w[1]===id);
+                if(k>=0) cur.wires.splice(k,1); else { cur.wires=cur.wires.filter((w)=>w[0]!==selM.id); cur.wires.push([selM.id,id]); } this.setState({wireSel:null}); this.keep(); }}));
+            v.orderLabel=tr('A PRIMEIRA QUE FOR VERDADE VENCE','THE FIRST ONE THAT IS TRUE WINS');
+            var sbtn={flex:'none', width:'32px', height:'32px', borderRadius:'10px', textAlign:'center', fontSize:'12px', fontWeight:800, color:T.ink, background:T.panel2, border:'1px solid '+T.line};
+            v.wireRows=cur.wires.map((w,i)=>({n:i+1, when:mountById(cur,w[0])?mlabel(mountById(cur,w[0])):'?', then:ACTIONS[w[1]][li], btn:sbtn, upAria:tr('subir','move up'), delAria:tr('tirar ligação','remove wire'),
+              num:{flex:'none', width:'16px', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'13px', color:T.soft},
+              text:{flex:1, minWidth:0, fontSize:'11.5px', fontWeight:800, color:T.ink},
+              onUp:()=>{ if(i>0){ var t0=cur.wires[i-1]; cur.wires[i-1]=cur.wires[i]; cur.wires[i]=t0; this.keep(); } },
+              onDel:()=>{ cur.wires.splice(i,1); this.keep(); }}));
+          }
+          if(v.isBlocks){
+            var prog=cur.programs[actNow]||(cur.programs[actNow]=[]), toP1=s.progSlot==='p1'&&!ed.noP1, tb=this.test&&this.test.act===actNow?this.test.W.bodies[0]:null, last=tb&&tb.last?tb.last:null;
+            v.canP1=!ed.noP1; v.actTabs=okActs.map((a)=>({label:ACTIONS[a][li], on:actNow===a, style:chip(actNow===a,36), onTap:()=>this.setState({act:a})}));
+            var strip=(on,col)=>({display:'flex', flexWrap:'wrap', gap:'6px', alignItems:'center', width:'100%', minHeight:'56px', padding:'8px', marginTop:'8px', borderRadius:'14px',
+              background:hexA(col,on?0.16:0.06), border:(on?'2px solid ':'1px solid ')+(on?col:T.line)});
+            var blk=(b,hot,col)=>({glyph:BLOCKS[b][0], style:{display:'inline-flex', alignItems:'center', justifyContent:'center', minWidth:'38px', height:'38px', padding:'0 6px', borderRadius:'11px', fontSize:'14px', fontWeight:800,
+              color:T.onA1, background:col, outline:hot?'3px solid '+T.ink:'none', outlineOffset:'1px'}});
+            v.stripMain=strip(!toP1,T.a1); v.stripProc=strip(toP1,T.a2); v.mainOn=!toP1; v.p1On=toP1;
+            v.stripTag={flex:'none', fontSize:'9.5px', fontWeight:800, letterSpacing:'.8px', color:T.soft, width:'100%'};
+            v.mainLabel=tr('PRINCIPAL · '+ACTIONS[actNow][0].toUpperCase(),'MAIN · '+ACTIONS[actNow][1].toUpperCase()); v.p1Label=tr('P1 · ATALHO QUE TODAS AS AÇÕES PODEM CHAMAR','P1 · SHORTCUT ANY ACTION CAN CALL');
+            v.pickMain=()=>this.setState({progSlot:'main'}); v.pickP1=()=>this.setState({progSlot:'p1'});
+            v.progBlocks=prog.map((b,i)=>blk(b,!!last&&last[0]==='main'&&last[1]===i,b==='p1'?T.a2:T.a1));
+            v.procBlocks=p1.map((b,i)=>blk(b,!!last&&last[0]==='p1'&&last[1]===i,T.a2));
+            v.progEmpty=prog.length===0; v.procEmpty=p1.length===0; v.emptySlot={fontSize:'11px', fontWeight:700, color:T.soft};
+            v.progEmptyText=tr('toque aqui e depois em um bloco','tap here, then a block'); v.procEmptyText=tr('toque aqui para montar o atalho','tap here to build the shortcut');
+            v.blockPalette=Object.keys(BLOCKS).filter((b)=>!(b==='p1'&&(toP1||ed.noP1))).map((b)=>({glyph:BLOCKS[b][0], label:BLOCKS[b][li+1], style:chip(false,40), glyphStyle:{fontSize:'13px', fontWeight:800},
+              onTap:()=>{ var tgt=toP1?p1:prog; if(tgt.length<12){ tgt.push(b); this.keep(); } else this.say('A faixa está cheia: 12 blocos.','The strip is full: 12 blocks.'); }}));
+            v.undoLabel=tr('tirar o último','remove last'); v.undoStyle=chip(false,40);
+            v.undoBlock=()=>{ var tgt=toP1?p1:prog; if(tgt.length){ tgt.pop(); this.keep(); } };
+            if(!this.test||this.test.act!==actNow) this.testReset(cur,actNow);
+            v.testLabel=tr('TESTE · UM BLOCO DE CADA VEZ','TEST · ONE BLOCK AT A TIME');
+            v.testWrap={flex:'none', width:'210px', height:'210px', borderRadius:'14px', overflow:'hidden', border:'1px solid '+T.line};
+            v.testStepLabel=tr('Passo','Step'); v.testStep=()=>this.testStep(cur,actNow); v.testReset=()=>{ this.testReset(cur,actNow); this.forceUpdate(); };
+            v.testBtnOn={minHeight:'44px', borderRadius:'13px', textAlign:'center', fontSize:'12.5px', fontWeight:800, background:T.a1, color:T.onA1};
+            v.testBtn={minHeight:'44px', borderRadius:'13px', textAlign:'center', fontSize:'14px', fontWeight:800, background:T.panel2, border:'1px solid '+T.line, color:T.ink};
+            v.testHint=tr('O bloco com contorno é o que acabou de rodar.','The outlined block is the one that just ran.');
+          }
+        }
+      }
+      v.mediumTitle=tr('O meio','The medium'); v.mediumHint=tr('Propriedades do mundo: valem para tudo que se move sozinho.','World properties: they apply to everything that drifts.');
+      v.mediumSliders=['medium.temp','medium.drag','medium.weight'].map((k)=>{ var d=KNOBS[k]; return slider(tr(d[0],d[1]),this.getKnob(k),d[2],d[3],d[4],d[5],(x)=>this.setKnob(k,x)); });
+      v.hasPores=W.T.indexOf('o')>=0; v.passLabel=tr('OS POROS DEIXAM PASSAR','THE PORES LET THROUGH');
+      v.passChips=['n','u','m','+','-'].map((k)=>({label:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,18), on:!!W.pass[k], style:chip(!!W.pass[k]), onTap:()=>{ W.pass[k]=!W.pass[k]; this.keep(); }}));
+      v.orderNote=tr('Ordem em cada ciclo: 1 forças e meio empurram · 2 o cérebro age · 3 os corpos se movem · 4 regras de par · 5 regras de contagem. Dentro de cada passo vale a ordem da lista.',
+        'Order within a tick: 1 forces and medium push · 2 the brain acts · 3 bodies move · 4 pair rules · 5 count rules. Within each step the list order applies.');
+    }
+    return v;
+  }
+}
+</script>
+</body>
+</html>

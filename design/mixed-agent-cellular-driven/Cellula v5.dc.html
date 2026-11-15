@@ -77,6 +77,20 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <span style="{{ c.stateStyle }}">{{ c.state }}</span>
 </button>
 </sc-for>
+<div style="{{ sectionLabel }}">{{ questLabel }}</div>
+<sc-for list="{{ quests }}" as="c" hint-placeholder-count="4">
+<button type="button" onClick="{{ c.onTap }}" style="{{ c.row }}">
+<span style="{{ c.badge }}">{{ c.n }}</span>
+<span style="flex:1;min-width:0;display:block">
+<span style="{{ c.nameStyle }}">{{ c.name }}</span>
+<span style="{{ c.descStyle }}">{{ c.desc }}</span>
+<span style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">
+<sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="2"><span style="{{ t.style }}">{{ t.label }}</span></sc-for>
+</span>
+</span>
+<span style="{{ c.stateStyle }}">{{ c.state }}</span>
+</button>
+</sc-for>
 <sc-if value="{{ isAdv }}" hint-placeholder-val="{{ false }}">
 <button type="button" onClick="{{ newBench }}" style="{{ benchBtn }}">{{ benchLabel }}<span style="{{ benchSub }}">{{ benchSubLabel }}</span></button>
 </sc-if>
@@ -137,6 +151,22 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </sc-for>
 </div>
 
+<sc-if value="{{ hasChart }}" hint-placeholder-val="{{ false }}">
+<div style="{{ cardBox }}">
+<div style="{{ sectionLabel }}">{{ chartLabel }}</div>
+<svg viewBox="0 0 300 110" preserveAspectRatio="none" role="img" aria-label="{{ chartLabel }}" style="width:100%;height:96px;display:block;margin-top:6px">
+<line x1="0" y1="104" x2="300" y2="104" stroke="{{ axis }}" stroke-width="1"></line>
+<sc-for list="{{ series }}" as="q" hint-placeholder-count="2">
+<polyline points="{{ q.points }}" fill="none" stroke="{{ q.color }}" stroke-width="2.5" stroke-dasharray="{{ q.dash }}" stroke-linecap="round" stroke-linejoin="round"></polyline>
+</sc-for>
+</svg>
+<div style="display:flex;gap:14px;padding-top:6px;flex-wrap:wrap">
+<sc-for list="{{ series }}" as="q" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:6px"><span style="{{ q.dot }}"></span><span style="{{ q.legend }}">{{ q.label }} {{ q.count }}</span></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
 <button type="button" onClick="{{ simNext }}" style="{{ primaryBtn }}">{{ simNextLabel }}</button>
 </div>
 </sc-if>
@@ -176,14 +206,63 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
 <sc-if value="{{ isLab }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:11px">
+<sc-if value="{{ fullLab }}" hint-placeholder-val="{{ true }}">
 <div style="{{ segTray }}">
 <sc-for list="{{ labTabs }}" as="t" hint-placeholder-count="2">
 <button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}<span style="{{ t.sub }}">{{ t.subLabel }}</span></button>
 </sc-for>
 </div>
+</sc-if>
 <div style="{{ helpLine }}">{{ labHelp }}</div>
 
 <sc-if value="{{ isRec }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ segTray }}">
+<sc-for list="{{ recModes }}" as="t" hint-placeholder-count="2">
+<button type="button" onClick="{{ t.onTap }}" aria-pressed="{{ t.on }}" style="{{ t.style }}">{{ t.label }}</button>
+</sc-for>
+</div>
+
+<sc-if value="{{ isOne }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<div style="{{ arenaWrap }}">
+<canvas id="cv-one" role="img" aria-label="{{ arenaAria }}" onClick="{{ pickPair }}" style="{{ canvasStyle }}"></canvas>
+</div>
+<div style="{{ teachHint }}">{{ oneHint }}</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ gesturePicks }}" as="b" hint-placeholder-count="4">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<sc-for list="{{ dirPicks }}" as="b" hint-placeholder-count="5">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" style="{{ b.style }}">{{ b.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ isPaintGesture }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:5px;flex-wrap:wrap">
+<sc-for list="{{ recPalette }}" as="b" hint-placeholder-count="12">
+<button type="button" onClick="{{ b.onTap }}" aria-pressed="{{ b.on }}" aria-label="{{ b.label }}" style="{{ b.style }}"><span style="{{ b.tile }}">{{ b.glyph }}</span></button>
+</sc-for>
+</div>
+</sc-if>
+<div style="{{ patchRow }}">
+<div>
+<div style="{{ patchGrid }}"><sc-for list="{{ patchBefore }}" as="c" hint-placeholder-count="9"><div style="{{ c.box }}"><span style="{{ c.tile }}">{{ c.glyph }}</span></div></sc-for></div>
+<div style="{{ patchCap }}">{{ beforeLabel }}</div>
+</div>
+<div style="{{ patchArrow }}">➜</div>
+<div>
+<div style="{{ patchGrid }}"><sc-for list="{{ patchAfter }}" as="c" hint-placeholder-count="9"><div style="{{ c.box }}"><span style="{{ c.tile }}">{{ c.glyph }}</span></div></sc-for></div>
+<div style="{{ patchCap }}">{{ afterLabel }}</div>
+</div>
+</div>
+<div style="{{ teachHint }}">{{ gestureNote }}</div>
+<button type="button" onClick="{{ saveOne }}" style="{{ primaryBtn }}">{{ saveOneLabel }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isStrip }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column;gap:11px">
 <div style="{{ arenaWrap }}">
 <canvas id="cv-rec" role="img" aria-label="{{ arenaAria }}" onPointerDown="{{ recDown }}" onPointerMove="{{ recMove }}" onPointerUp="{{ recUp }}" onPointerCancel="{{ recCancel }}" style="{{ canvasStyle }}"></canvas>
@@ -231,8 +310,12 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </sc-for>
 </div>
 </sc-if>
+</div>
+</sc-if>
 
 <sc-if value="{{ isLaws }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
+<sc-if value="{{ fullLab }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column;gap:11px">
 <div style="{{ sectionLabel }}">{{ lawsLabel }}</div>
 <sc-for list="{{ lawRows }}" as="r" hint-placeholder-count="3">
@@ -252,6 +335,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </sc-for>
 </div>
 
+</div>
+</sc-if>
 <sc-if value="{{ hasEditor }}" hint-placeholder-val="{{ false }}">
 <div style="{{ teachCard }}">
 <div style="{{ progName }}">{{ editTitle }}</div>
@@ -376,11 +461,13 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <sc-for list="{{ progBlocks }}" as="b" hint-placeholder-count="2"><span style="{{ b.style }}">{{ b.glyph }}</span></sc-for>
 <sc-if value="{{ progEmpty }}" hint-placeholder-val="{{ false }}"><span style="{{ emptySlot }}">{{ progEmptyText }}</span></sc-if>
 </button>
+<sc-if value="{{ canP1 }}" hint-placeholder-val="{{ true }}">
 <button type="button" onClick="{{ pickP1 }}" aria-pressed="{{ p1On }}" style="{{ stripProc }}">
 <span style="{{ stripTag }}">{{ p1Label }}</span>
 <sc-for list="{{ procBlocks }}" as="b" hint-placeholder-count="2"><span style="{{ b.style }}">{{ b.glyph }}</span></sc-for>
 <sc-if value="{{ procEmpty }}" hint-placeholder-val="{{ true }}"><span style="{{ emptySlot }}">{{ procEmptyText }}</span></sc-if>
 </button>
+</sc-if>
 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
 <sc-for list="{{ blockPalette }}" as="b" hint-placeholder-count="6">
 <button type="button" onClick="{{ b.onTap }}" style="{{ b.style }}"><span style="{{ b.glyphStyle }}">{{ b.glyph }}</span>{{ b.label }}</button>
@@ -417,6 +504,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 </sc-if>
 
+<sc-if value="{{ fullLab }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:11px">
 <div style="{{ cardBox }}">
 <div style="{{ progName }}">{{ mediumTitle }}</div>
 <div style="{{ teachHint }}">{{ mediumHint }}</div>
@@ -437,6 +526,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 
 <div style="{{ noteCard }}">{{ orderNote }}</div>
+</div>
+</sc-if>
 </div>
 </sc-if>
 <button type="button" onClick="{{ goSim }}" style="{{ primaryBtn }}">{{ goSimLabel }}</button>
@@ -621,6 +712,8 @@ function forcePush(W,card){
   if(!(free&&card.direct)){
     F.rho.fill(0);
     for(i=0;i<W.srcCells.length;i++) F.rho[W.srcCells[i].i]+=W.srcCells[i].q;
+    // a new world starts with the field of its fixed sources already spread, so nothing has to wait for it
+    if(!W.warm){ W.warm=true; if(W.srcCells.length) relax(F,d,400); }
     for(i=0;i<W.bodies.length;i++){ b=W.bodies[i]; q=srcOf(card,b.kind); if(!q) continue;
       if(free) deposit(F,b.x,b.y,q); else { var c=cellOf(W,b); if(c>=0) F.rho[c]+=q; } }
     relax(F,d,4);
@@ -648,7 +741,7 @@ const SENSORS = { free:['frente livre','front is free'], wall:['parede','wall'],
 const ACTIONS = { fwd:['nadar','swim'], turn:['dar meia-volta','turn around'], rand:['virar','turn'], eat:['comer','eat'], wait:['esperar','wait'] };
 const BLOCKS = { step:['↑','passo','step'], left:['↺','esquerda','left'], right:['↻','direita','right'], act:['◉','agir','act'], wait:['❙❙','esperar','wait'], p1:['P1','chamar P1','call P1'] };
 // a mount places a sensor on the body: angle from the front (90 = right), range in cells, opening in degrees
-function mountOf(card,id){ var M=card.mounts||[]; for(var i=0;i<M.length;i++) if(M[i].s===id) return M[i]; return null; }
+function mountById(card,id){ var M=card.mounts||[]; for(var i=0;i<M.length;i++) if(M[i].id===id) return M[i]; return null; }
 function dirCell(b,ang,d){ var rad=(b.h+ang)*Math.PI/180; return [Math.round(b.x+Math.cos(rad)*d), Math.round(b.y+Math.sin(rad)*d)]; }
 function coneCells(b,ang,r,f){ var out=[], seen={}, step=Math.max(10,f/6);
   for(var d=1;d<=Math.ceil(r);d++) for(var o=-f/2;o<=f/2+0.01;o+=step){ var p=dirCell(b,ang+o,Math.min(d,r)), k=p[0]+','+p[1]; if(!seen[k]){ seen[k]=1; out.push(p); } }
@@ -656,12 +749,12 @@ function coneCells(b,ang,r,f){ var out=[], seen={}, step=Math.max(10,f/6);
 function aheadOf(b,d){ return dirCell(b,0,d); }
 function openCell(W,x,y){ if(x<0||y<0||x>=W.w||y>=W.h) return false; var i=y*W.w+x; return !KINDS[W.T[i]].solid && !W.B[i]; }
 function terrainAt(W,x,y){ return (x<0||y<0||x>=W.w||y>=W.h)?'g':W.T[y*W.w+x]; }
-function senses(W,b,id,card){
-  var m=mountOf(card,id), ang=m?m.a:0, r=m?m.r:((id==='food'||id==='plant'||id==='crowd')?3:1), f=m?m.f:40, p, d, i, cells;
+function senses(W,b,m){
+  var id=m.s, ang=m.a, r=m.r, f=m.f, p, d, i, cells;
   if(id==='free'){ p=dirCell(b,ang,1); return openCell(W,p[0],p[1]); }
   if(id==='wall'){ for(d=1;d<=Math.max(1,Math.round(r));d++){ p=dirCell(b,ang,d); if(KINDS[terrainAt(W,p[0],p[1])].solid) return true; } return false; }
   if(id==='food'||id==='plant'){ var k=id==='food'?'a':'p';
-    if(terrainAt(W,Math.round(b.x),Math.round(b.y))===k) return true;
+    if(Math.abs(ang)<1&&terrainAt(W,Math.round(b.x),Math.round(b.y))===k) return true;   // a front sensor also feels what it is on
     cells=coneCells(b,ang,r,f); for(i=0;i<cells.length;i++) if(terrainAt(W,cells[i][0],cells[i][1])===k) return true; return false; }
   if(id==='crowd'){ var n=0; cells=coneCells(b,ang,r,f);
     for(i=0;i<cells.length;i++){ var x=cells[i][0], y=cells[i][1]; if(x<0||y<0||x>=W.w||y>=W.h) continue; var o=W.B[y*W.w+x]; if(o&&o!==b) n++; } return n>=2; }
@@ -684,7 +777,7 @@ function brainAct(W,card){
     var main=card.programs[b.act]||[], p1=card.p1||[];
     var busy=!!b.act&&((b.pp>=0&&b.pp<p1.length)||b.pc<main.length);
     if(!busy){ // an action runs to the end before sensors are read again
-      var hit=null; for(var k=0;k<card.wires.length;k++) if(senses(W,b,card.wires[k][0],card)){ hit=card.wires[k]; break; }
+      var hit=null; for(var k=0;k<card.wires.length;k++){ var mt=mountById(card,card.wires[k][0]); if(mt&&senses(W,b,mt)){ hit=card.wires[k]; break; } }
       b.act=card.only||(hit?hit[1]:'fwd'); b.pc=0; b.pp=-1; }
     var blk=nextBlock(card,b); if(!blk) continue;
     var x=Math.round(b.x), y=Math.round(b.y), i=y*W.w+x, p;
@@ -692,8 +785,8 @@ function brainAct(W,card){
       if(openCell(W,p[0],p[1])){ W.B[i]=null; W.V[i]=W.T[i]; b.x=p[0]; b.y=p[1]; var j=p[1]*W.w+p[0]; W.B[j]=b; W.V[j]=b.kind; } }
     else if(blk==='left'||blk==='right'){ b.h=(b.h+(blk==='left'?270:90))%360;
       var c=Math.cos(b.h*Math.PI/180); if(c>0.5) b.kind='>'; else if(c<-0.5) b.kind='<'; W.V[i]=b.kind; }
-    else if(blk==='act'){ p=aheadOf(b,1);
-      [[x,y],p].forEach(function(q){ if(terrainAt(W,q[0],q[1])==='a'&&q[0]>=0&&q[1]>=0&&q[0]<W.w&&q[1]<W.h){ var e=q[1]*W.w+q[0];
+    else if(blk==='act'){ // eats where it is and the three cells in front of its mouth
+      [[x,y],aheadOf(b,1),dirCell(b,-45,1.42),dirCell(b,45,1.42)].forEach(function(q){ if(terrainAt(W,q[0],q[1])==='a'&&q[0]>=0&&q[1]>=0&&q[0]<W.w&&q[1]<W.h){ var e=q[1]*W.w+q[0];
         W.T[e]='_'; if(!W.B[e]) W.V[e]='_'; W.ev.eat=(W.ev.eat||0)+1; } }); }
   }
 }
@@ -773,10 +866,15 @@ const PROBES = {
   walls:function(W){ return (W.mem.hitL?1:0)+(W.mem.hitR?1:0); },
   orbits:function(W){ return W.ev.orbit||0; }, escapes:function(W){ return W.ev.escape||0; }, captures:function(W){ return W.ev.capture||0; },
   eaten:function(W){ return W.ev.eat||0; },
+  reach:function(W,arg){ var t=arg.split(','), tx=+t[0], ty=+t[1];
+    for(var i=0;i<W.bodies.length;i++){ var b=W.bodies[i]; if((b.kind==='>'||b.kind==='<')&&Math.abs(b.x-tx)<=1&&Math.abs(b.y-ty)<=1) return 1; } return 0; },
+  blocks:function(W){ var n=0; W.laws.forEach(function(c){ if(c.type!=='brain') return; n+=(c.p1||[]).length; for(var k in c.programs) n+=c.programs[k].length; }); return n; },
   biggest:biggestCluster,
   count:function(W,k){ var n=0, i; for(i=0;i<W.T.length;i++) if(W.T[i]===k) n++; for(i=0;i<W.bodies.length;i++) if(W.bodies[i].kind===k) n++; return n; },
   right:function(W,k){ var n=0, mid=(W.w-1)/2; for(var i=0;i<W.bodies.length;i++) if(W.bodies[i].kind===k&&W.bodies[i].x>mid) n++; return n; }
 };
+
+function goalMet(W,goal){ return goal.tests.every(function(t){ var p=t[0].split(':'), v=PROBES[p[0]](W,p[1]); return t[1]==='<='?v<=t[2]:v>=t[2]; }); }
 
 // ---- saving and restoring a world (this is all a scenario is: data)
 function snapshot(W){
@@ -872,9 +970,11 @@ function harvestAll(A,B){ if(!A||!B||A.w!==B.w||A.h!==B.h) return []; var M=move
 function pair(b0,b1,a0,a1,dir,prob){ return {type:'pair',on:true,b:[b0,b1],a:[a0,a1],dir:dir,prob:prob||100}; }
 function count(from,what,list,to,mask,prob){ return {type:'count',on:true,from:from,what:what,nums:numsOf(list),to:to,mask:maskOf(mask||'8'),prob:prob||100}; }
 function force(sign,strength,range,direct){ return {type:'force',on:true,sign:sign,strength:strength,range:range,direct:!!direct}; }
-function brain(){ return {type:'brain',on:true,wires:[['wall','turn'],['food','eat'],['free','fwd']],
-  mounts:[{s:'wall',a:0,r:1,f:40},{s:'food',a:0,r:1,f:60}], p1:[],
-  programs:{fwd:['step'],turn:['left','left'],rand:['right'],eat:['act'],wait:['wait']}}; }
+// when no wire is true the fish runs "fwd", so swimming needs no wire of its own
+function brain(o){ o=o||{}; return {type:'brain',on:true,nid:3,
+  mounts:[{id:'m1',s:'wall',a:0,r:1,f:40},{id:'m2',s:'food',a:0,r:1,f:40}],
+  wires:o.wires||[['m1','turn'],['m2','eat']], p1:[],
+  programs:o.programs||{fwd:['step'],turn:['left','left'],rand:['right'],eat:['act'],wait:['wait']}}; }
 function put(W,x,y,k,vx,vy){ if(KINDS[k].body) addBody(W,k,x,y,vx,vy); else W.T[y*W.w+x]=k; }
 function tank(W){ for(var y=0;y<W.h;y++){ W.T[y*W.w]='g'; W.T[y*W.w+W.w-1]='g'; } for(var x=1;x<W.w-1;x++) W.T[(W.h-1)*W.w+x]='s'; }
 function scatter(W,k,n,x0,x1){ var tries=0; buildView(W);
@@ -885,24 +985,24 @@ function wallColumn(W,x,step){ for(var y=0;y<W.h;y++) W.T[y*W.w+x]=(y%step===Mat
 const SCENARIOS = [
   { id:'fish', pt:'O peixe que vai e volta', en:'The fish that turns around',
     dpt:'Quatro regras de par fazem o peixe nadar e bater no vidro.', den:'Four pair rules make the fish swim and bounce off the glass.',
-    tags:['pair'], every:16, probes:[['walls','paredes tocadas','walls touched']], goal:['walls',2,'Faça o peixe tocar as duas paredes de vidro.','Make the fish touch both glass walls.'],
+    tags:['pair'], every:16, probes:[['walls','paredes tocadas','walls touched']], goal:{tests:[['walls','>=',2]],pt:'Faça o peixe tocar as duas paredes de vidro.',en:'Make the fish touch both glass walls.'},
     make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,3,7,'p'); put(W,8,7,'p');
       W.laws=[pair('>','_','_','>','right'),pair('>','g','<','g','right'),pair('<','_','_','<','left'),pair('<','g','>','g','left')]; return W; } },
   { id:'tank', pt:'Aquário vivo', en:'A living aquarium',
     dpt:'As plantas crescem por regras; o peixe tem um cérebro e come as algas.', den:'Plants grow by rules; the fish has a brain and eats the algae.',
-    tags:['pair','brain'], every:12, lens:['cones','grid'], probes:[['eaten','algas comidas','algae eaten'],['count:p','plantas','plants']], goal:['eaten',5,'Deixe o peixe comer 5 algas.','Let the fish eat 5 algae.'],
+    tags:['pair','brain'], every:12, lens:['cones','grid'], probes:[['eaten','algas comidas','algae eaten'],['count:p','plantas','plants']], chart:['count:p','count:a'], goal:{tests:[['eaten','>=',5]],pt:'Deixe o peixe comer 5 algas.',en:'Let the fish eat 5 algae.'},
     make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,3,7,'p'); put(W,8,7,'p'); put(W,6,3,'a'); put(W,4,5,'a');
       W.lens={grid:true,cones:true};
       W.laws=[brain(),pair('p','_','p','p','any',6),pair('p','p','p','_','any',5),pair('s','_','s','a','up',6),pair('a','_','_','a','up',20)]; return W; } },
   { id:'orbit', pt:'Órbitas', en:'Orbits',
     dpt:'Uma estrela puxa tudo. Lance planetas e veja quem entra em órbita.', den:'A star pulls everything. Launch planets and see which ones go into orbit.',
     tags:['force'], every:1, tap:'launch:c', knobs:['force.strength'], lens:['trails','grid'],
-    probes:[['orbits','órbitas','orbits'],['escapes','fugas','escapes'],['captures','capturas','captures']], goal:['orbits',3,'Consiga 3 voltas completas.','Get 3 full orbits.'],
-    make:function(){ var W=makeWorld(31,25,'free'); W.edge='open'; W.medium.drag=0; put(W,15,12,'S'); put(W,23,12,'c',0,0.15);
-      W.laws=[force('all',60,8,true)]; W.lens={grid:false,trails:true}; return W; } },
+    probes:[['orbits','órbitas','orbits'],['escapes','fugas','escapes'],['captures','capturas','captures']], goal:{tests:[['orbits','>=',3]],pt:'Consiga 3 voltas completas.',en:'Get 3 full orbits.'},
+    make:function(){ var W=makeWorld(31,31,'free'); W.edge='open'; W.medium.drag=0; put(W,15,15,'S'); put(W,23,15,'c',0,0.15);
+      W.laws=[force('all',60,12,true)]; W.lens={grid:false,trails:true}; return W; } },
   { id:'dust', pt:'Poeira de estrelas', en:'Stardust',
     dpt:'Todas as partículas se atraem, e a água as agita. Quem vence?', den:'Every particle attracts the others, and the water jiggles them. Who wins?',
-    tags:['force','medium'], every:2, knobs:['force.strength','medium.temp'], lens:['field','conc','grid'], probes:[['biggest','maior grupo','biggest group']],
+    tags:['force','medium'], every:2, knobs:['force.strength','medium.temp'], lens:['field','conc','grid'], chart:['biggest'], probes:[['biggest','maior grupo','biggest group']],
     make:function(){ var W=makeWorld(31,21); scatter(W,'m',60,0,30); W.medium.temp=45; W.laws=[force('all',60,4)]; W.lens={grid:true,field:true}; return W; } },
   { id:'charge', pt:'Cargas', en:'Charges',
     dpt:'Iguais se afastam, diferentes se atraem. Aqueça e os pares se soltam.', den:'Like repels, unlike attracts. Heat it and the pairs come apart.',
@@ -910,18 +1010,42 @@ const SCENARIOS = [
     make:function(){ var W=makeWorld(31,21); scatter(W,'+',16,0,30); scatter(W,'-',16,0,30); W.medium.temp=30; W.laws=[force('like',60,6)]; W.lens={grid:true,field:true}; return W; } },
   { id:'memb', pt:'Duas câmaras', en:'Two chambers',
     dpt:'O sal passa pelos poros; o açúcar não. Veja o que se iguala.', den:'Salt passes the pores; sugar does not. See what evens out.',
-    tags:['medium'], every:2, knobs:['medium.temp'], lens:['conc','grid'], probes:[['right:n','sal à direita','salt on the right'],['right:u','açúcar à direita','sugar on the right']],
+    tags:['medium'], every:2, knobs:['medium.temp'], lens:['conc','grid'], chart:['right:n','right:u'], probes:[['right:n','sal à direita','salt on the right'],['right:u','açúcar à direita','sugar on the right']],
     make:function(){ var W=makeWorld(31,19); wallColumn(W,15,4); scatter(W,'n',34,0,14); scatter(W,'u',24,0,14); W.medium.temp=50; return W; } },
   { id:'life', pt:'Jogo da Vida', en:'Game of Life',
     dpt:'Cada casa conta as vizinhas e decide: nasce, morre ou fica.', den:'Each cell counts its neighbours and decides: born, dies or stays.',
-    tags:['count'], every:7, tap:'paint:a', lens:['numbers','grid'], probes:[['tick','passo','step'],['count:a','algas','algae']],
+    tags:['count'], every:7, tap:'paint:a', lens:['numbers','grid'], chart:['count:a'], probes:[['tick','passo','step'],['count:a','algas','algae']],
     make:function(){ var W=makeWorld(31,21); for(var i=0;i<W.T.length;i++) if(Math.random()<0.28) W.T[i]='a';
       W.laws=[count('_','a',[3],'a'),count('a','a',[0,1,4,5,6,7,8],'_')]; return W; } },
   { id:'crystal', pt:'Cristal', en:'Crystal',
     dpt:'Força, agitação e contagem juntas: quem fica cercada vira cristal.', den:'Force, jiggle and counting together: whoever gets surrounded becomes crystal.',
-    tags:['force','medium','count'], every:2, knobs:['force.strength','medium.temp'], lens:['field','grid'], probes:[['count:x','cristais','crystals']],
+    tags:['force','medium','count'], every:2, knobs:['force.strength','medium.temp'], lens:['field','grid'], chart:['count:x'], probes:[['count:x','cristais','crystals']],
     make:function(){ var W=makeWorld(31,21); scatter(W,'m',60,0,30); W.medium.temp=45;
       W.laws=[force('all',60,4),count('m','m',[5,6,7,8],'x'),count('m','x',[2,3,4,5,6,7,8],'x')]; return W; } }
+];
+// challenges: a ready world plus ONE small tool, declared in `edit`
+const ONLY_FWD = function(list){ return {fwd:list,turn:[],rand:[],eat:[],wait:[]}; };
+const QUESTS = [
+  { id:'walk', pt:'Um peixe que anda', en:'A fish that walks',
+    dpt:'Leve o peixe até a planta só com blocos de passo e giro.', den:'Take the fish to the plant with step and turn blocks only.',
+    tags:['brain'], every:10, edit:{tabs:['blocks'],acts:['fwd'],noP1:true}, probes:[['blocks','blocos usados','blocks used']],
+    goal:{tests:[['reach:8,7','>=',1]],pt:'Chegue à planta do outro lado.',en:'Reach the plant on the other side.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,8,7,'p'); W.laws=[brain({wires:[],programs:ONLY_FWD(['step'])})]; return W; } },
+  { id:'twin', pt:'O mesmo peixe, outro cérebro', en:'Same fish, another brain',
+    dpt:'O problema do primeiro mundo, agora com um sensor ligado a uma ação.', den:'The first world’s problem, now with a sensor wired to an action.',
+    tags:['brain'], every:10, edit:{tabs:['wiring']}, lens:['cones','grid'], probes:[['walls','paredes tocadas','walls touched']],
+    goal:{tests:[['walls','>=',2]],pt:'Faça o peixe tocar as duas paredes: ligue um sensor a “dar meia-volta”.',en:'Make the fish touch both walls: wire a sensor to “turn around”.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,3,7,'p'); W.lens={grid:true,cones:true}; W.laws=[brain({wires:[]})]; return W; } },
+  { id:'eyes', pt:'Olhos que giram', en:'Eyes that turn',
+    dpt:'As algas estão fora da linha do peixe. Monte um sensor de lado.', den:'The algae are off the fish’s line. Mount a sensor on its side.',
+    tags:['brain'], every:8, edit:{tabs:['body','wiring']}, lens:['cones','grid'], probes:[['eaten','algas comidas','algae eaten']],
+    goal:{tests:[['eaten','>=',2]],pt:'Coma as 2 algas. Dica: um sensor “vê alga” à direita, ligado a “virar”.',en:'Eat both algae. Hint: a “sees alga” sensor on the right, wired to “turn”.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,3,'>'); put(W,4,6,'a'); put(W,6,2,'a'); W.lens={grid:true,cones:true}; W.laws=[brain()]; return W; } },
+  { id:'short', pt:'Atalhos que se repetem', en:'Shortcuts that repeat',
+    dpt:'Quatro algas, no máximo 6 blocos. Guarde o trecho repetido em P1.', den:'Four algae, at most 6 blocks. Put the repeated part in P1.',
+    tags:['brain'], every:8, edit:{tabs:['blocks'],acts:['fwd']}, probes:[['eaten','algas comidas','algae eaten'],['blocks','blocos usados','blocks used']],
+    goal:{tests:[['eaten','>=',4],['blocks','<=',6]],pt:'Coma as 4 algas usando no máximo 6 blocos ao todo.',en:'Eat all 4 algae using at most 6 blocks in total.'},
+    make:function(){ var W=makeWorld(11,9); tank(W); put(W,2,2,'>'); put(W,4,2,'a'); put(W,6,2,'a'); put(W,6,4,'a'); put(W,6,6,'a'); W.laws=[brain({wires:[],programs:ONLY_FWD(['step'])})]; return W; } }
 ];
 const BENCH = { id:'bench', pt:'Bancada livre', en:'Free bench', dpt:'', den:'', tags:[], every:4, lens:['grid','field','conc','trails','numbers','cones'], probes:[['tick','passo','step']],
   make:function(){ var W=makeWorld(21,15); for(var y=0;y<W.h;y++){ W.T[y*W.w]='g'; W.T[y*W.w+W.w-1]='g'; } for(var x=0;x<W.w;x++){ W.T[x]='g'; W.T[(W.h-1)*W.w+x]='g'; } W.medium.temp=40; return W; } };
@@ -1009,6 +1133,7 @@ function drawWorld(c,W,cw,T,opt){
       var tx=(i%w+0.5)*cs, ty=(((i/w)|0)+0.5)*cs+0.5; if(W.V[i]!=='_') c.strokeText(String(nn),tx,ty); c.fillText(String(nn),tx,ty); } }
   if(opt&&opt.diff&&W.V&&opt.diff.V.length===W.V.length){ c.strokeStyle=T.a3; c.lineWidth=1.5;
     for(i=0;i<W.V.length;i++) if(W.V[i]!==opt.diff.V[i]) c.strokeRect((i%w)*cs+1,((i/w)|0)*cs+1,cs-2,cs-2); }
+  if(opt&&opt.pair){ c.strokeStyle=T.a2; c.lineWidth=2.5; opt.pair.forEach(function(q){ c.strokeRect((q%w)*cs+1.5,((q/w)|0)*cs+1.5,cs-3,cs-3); }); }
   if(opt&&opt.drag){ var d=opt.drag, P=function(v){ return (v+0.5)*cs; };
     c.fillStyle=T.ink; for(i=0;i<d.path.length;i+=2){ c.beginPath(); c.arc(P(d.path[i]),P(d.path[i+1]),1.4,0,6.2832); c.fill(); }
     c.strokeStyle=T.a2; c.lineWidth=2.4; c.lineCap='round'; c.beginPath(); c.moveTo(P(d.x0),P(d.y0)); c.lineTo(P(d.x1),P(d.y1)); c.stroke();
@@ -1034,7 +1159,7 @@ class Component extends DCLogic {
   state = { screen:'home', mode:(this.props.startMode==='adv'?'adv':'intro'), lang:'pt',
     skin:(SKINS[this.props.skin]?this.props.skin:'pond'), running:false, speed:1,
     sel:-1, slot:null, wide:false, brush:'p', act:'fwd', done:{}, toast:null, pulse:0,
-    labTab:'laws', brainTab:'body', mountIdx:0, advBody:false, wireSel:null, progSlot:'main', tool:'move', recBrush:'p', framePick:null, dropped:[] };
+    labTab:'laws', recMode:'strip', teach:{dir:'right',gesture:'drag'}, pairSel:null, brainTab:'body', mountIdx:0, advBody:false, wireSel:null, progSlot:'main', tool:'move', recBrush:'p', framePick:null, dropped:[] };
 
   componentDidMount(){ this.load(SCENARIOS[0]); this.frame=0; this.clock=0; this.loop(); }
   componentWillUnmount(){ cancelAnimationFrame(this.raf); }
@@ -1043,10 +1168,10 @@ class Component extends DCLogic {
   kn(k){ return KINDS[k][this.state.lang]; }
   say(pt,en){ this.setState({toast:this.tr(pt,en)}); clearTimeout(this.toastT); this.toastT=setTimeout(()=>this.setState({toast:null}),2600); }
 
-  load(sc){ this.sc=sc; this.W=sc.make(); buildView(this.W); this.saved=snapshot(this.W); this.drag=null; this.clock=0; this.frames=null;
-    this.setState({sel:-1, slot:null, running:false, framePick:null, dropped:[]}); }
+  load(sc){ this.sc=sc; this.W=sc.make(); buildView(this.W); this.saved=snapshot(this.W); this.drag=null; this.clock=0; this.frames=null; this.hist=[]; this.test=null;
+    this.setState({sel:-1, slot:null, running:false, framePick:null, dropped:[], pairSel:null, wireSel:null, mountIdx:0}); }
   keep(){ buildView(this.W); this.saved=snapshot(this.W); this.forceUpdate(); }   // an edit becomes the new starting point
-  reset(){ this.W=restore(this.saved); this.drag=null; this.clock=0; this.frames=null; this.forceUpdate(); }
+  reset(){ this.W=restore(this.saved); this.drag=null; this.clock=0; this.frames=null; this.hist=[]; this.forceUpdate(); }
 
   card(type){ return this.W.laws.find((c)=>c.type===type); }
   getKnob(key){ var p=key.split('.'); if(p[0]==='medium') return this.W.medium[p[1]]; var c=this.card(p[0]); return c?c[p[1]]:0; }
@@ -1057,12 +1182,14 @@ class Component extends DCLogic {
     this.raf=requestAnimationFrame(this.loop); this.frame++;
     if(!this.W) return;
     var s=this.state, T=SKINS[s.skin];
-    if(s.running&&s.screen==='sim'){ this.clock+=s.speed/(this.sc.every||4); var n=0; while(this.clock>=1&&n++<8){ this.clock-=1; stepWorld(this.W); } }
+    if(s.running&&s.screen==='sim'){ this.clock+=s.speed/(this.sc.every||4); var n=0; while(this.clock>=1&&n++<8){ this.clock-=1; stepWorld(this.W); this.sample(); } }
     var id=s.screen==='sim'?'cv-sim':(s.screen==='world'?'cv-world':null);
     if(id){ var c=ctxFor(id,CW,CW*this.W.h/this.W.w);
       if(c){ if(this.drag) this.drag.path=this.predict();
         drawWorld(c,this.W,CW,T,{drag:s.screen==='sim'?this.drag:null, countCard:this.countCard(), brain:this.card('brain')}); } }
-    if(s.screen==='lab'&&s.labTab==='rec'){
+    if(s.screen==='lab'&&s.labTab==='rec'&&s.recMode==='one'){ var oc=ctxFor('cv-one',CW,CW*this.W.h/this.W.w);
+      if(oc){ buildView(this.W); drawWorld(oc,this.W,CW,T,{pair:this.pairCells()}); } }
+    if(s.screen==='lab'&&s.labTab==='rec'&&s.recMode==='strip'){
       if(!this.frames||!this.frames.length||this.frames[0].w!==this.W.w||this.frames[0].h!==this.W.h){ this.frames=[photo(this.W)]; this.forceUpdate(); }
       var F=this.frames, rc=ctxFor('cv-rec',CW,CW*this.W.h/this.W.w);
       if(rc){ buildView(this.W); drawWorld(rc,this.W,CW,T,{diff:F[F.length-1], drag:this.hold&&this.hold.x1!==undefined?{x0:this.hold.x,y0:this.hold.y,x1:this.hold.x1,y1:this.hold.y1,path:[]}:null}); }
@@ -1075,8 +1202,11 @@ class Component extends DCLogic {
   };
   countCard(){ var L=this.W.laws, s=this.state.sel; if(s>=0&&L[s]&&L[s].type==='count') return L[s]; return L.find((c)=>c.type==='count')||null; }
   probe(spec){ var p=spec.split(':'); return PROBES[p[0]](this.W,p[1]); }
+  chartSpecs(){ return this.sc.chart||[]; }
+  sample(){ var cs=this.chartSpecs(); if(!cs.length||this.W.tick%4) return; if(!this.hist) this.hist=[];
+    this.hist.push(cs.map((c)=>this.probe(c))); if(this.hist.length>60) this.hist.shift(); }
   checkGoal(){ var g=this.sc.goal; if(!g||this.state.done[this.sc.id]) return;
-    if(this.probe(g[0])>=g[1]){ this.setState((s)=>({done:Object.assign({},s.done,{[this.sc.id]:true})})); this.say('Conseguiu!','You did it!'); } }
+    if(goalMet(this.W,g)){ this.setState((s)=>({done:Object.assign({},s.done,{[this.sc.id]:true})})); this.say('Conseguiu!','You did it!'); } }
 
   // ---- pointer: launch in the free face, paint elsewhere
   at(e){ var r=e.currentTarget.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*this.W.w-0.5,(e.clientY-r.top)/r.height*this.W.h-0.5]; }
@@ -1107,6 +1237,12 @@ class Component extends DCLogic {
   paintDown = (e)=>{ try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(err){} this.painting=this.state.brush; this.paintAt(this.at(e),this.state.brush,true); };
   paintMove = (e)=>{ if(this.painting) this.paintAt(this.at(e),this.painting,false); };
   paintUp = ()=>{ if(this.painting){ this.painting=null; this.keep(); } };
+
+  // ---- the single-rule recorder: pick a pair on the world, choose a gesture, the after is computed
+  pairCells(){ var ps=this.state.pairSel, W=this.W, d=DIRS[this.state.teach.dir]||DIRS.right; if(!ps) return null;
+    var x=ps.x+d[0], y=ps.y+d[1]; if(x<0||y<0||x>=W.w||y>=W.h) return null; return [ps.y*W.w+ps.x, y*W.w+x]; }
+  pickPair = (e)=>{ var p=this.at(e), x=Math.round(p[0]), y=Math.round(p[1]), W=this.W; if(x<0||y<0||x>=W.w||y>=W.h) return;
+    this.setState({pairSel:{x:x,y:y}}, ()=>{ if(!this.pairCells()) this.say('A vizinha nessa direção está fora do mundo: troque a seta.','The neighbour in that direction is outside the world: change the arrow.'); }); };
 
   // ---- the test arena: one action's program, one block at a time
   testReset(cur,act){ var W=makeWorld(7,7); W.lens={grid:true,cones:true}; put(W,5,1,'r'); put(W,5,5,'r'); put(W,4,3,'a'); put(W,3,5,'a'); put(W,1,3,'>'); buildView(W);
@@ -1148,7 +1284,7 @@ class Component extends DCLogic {
     if(c.type==='pair') return this.kn(c.b[0])+' + '+this.kn(c.b[1])+' → '+this.kn(c.a[0])+' + '+this.kn(c.a[1])+(c.prob<100?' · '+c.prob+'%':'');
     if(c.type==='count'){ var n=this.listNums(c.nums,maskSize(c.mask)); return this.tr(this.kn(c.from)+' com '+(n===null?'nenhum':n)+' de '+this.kn(c.what)+' vira '+this.kn(c.to), this.kn(c.from)+' with '+(n===null?'no':n)+' of '+this.kn(c.what)+' becomes '+this.kn(c.to)); }
     if(c.type==='force') return (c.sign==='all'?this.tr('tudo se atrai','everything attracts'):this.tr('iguais se afastam','like repels'))+' · '+c.strength+'%';
-    return this.tr('peixe: ','fish: ')+c.wires.length+this.tr(' ligações',' wires');
+    return this.tr('peixe: ','fish: ')+(c.mounts||[]).length+this.tr(' sensores, ',' sensors, ')+c.wires.length+this.tr(' ligações',' wires');
   }
 
   renderVals(){
@@ -1171,7 +1307,8 @@ class Component extends DCLogic {
       sim:[tr(S.pt,S.en),tr('simular','simulate')], world:[tr('Mundo','World'),tr('pinte o que existe','paint what exists')], lab:[tr('Oficina','Workshop'),tr('as leis e o meio','the laws and the medium')]};
     var t=titles[sc]||titles.home, ah=W?Math.round(CW*W.h/W.w):270;
 
-    var v={ a1:T.a1, title:t[0], subtitle:t[1],
+    var limited=!adv&&!!S.edit;
+    var v={ a1:T.a1, axis:T.faint, title:t[0], subtitle:t[1],
       isHome:sc==='home', isSim:sc==='sim', isWorld:sc==='world', isLab:sc==='lab', isAdv:adv, isIntro:!adv,
       brandSub:tr('um núcleo, muitos modelos','one kernel, many models'),
       pageStyle:{minHeight:'100vh', padding:'28px 16px 40px', display:'flex', flexDirection:'column', alignItems:'center', gap:'18px', background:T.page},
@@ -1198,7 +1335,7 @@ class Component extends DCLogic {
         color:T.ink, fontSize:'10.5px', fontWeight:800, lineHeight:1.15},
       modeSub:{fontSize:'8.5px', fontWeight:700, color:T.soft, display:'block'},
       modeLabel:adv?tr('Avançado','Advanced'):tr('Introdutório','Introductory'), modeSubLabel:tr('toque para trocar','tap to switch'),
-      toggleMode:()=>{ var m=adv?'intro':'adv'; this.setState({mode:m, screen:(m==='intro'&&(sc==='world'||sc==='lab'))?'sim':sc});
+      toggleMode:()=>{ var m=adv?'intro':'adv'; this.setState({mode:m, screen:(m==='intro'&&(sc==='world'||(sc==='lab'&&!S.edit)))?'sim':sc});
         this.say(m==='adv'?'Avançado: Mundo e Oficina destravados.':'Introdutório: só escolher e rodar.', m==='adv'?'Advanced: World and Workshop unlocked.':'Introductory: just pick and run.'); },
       langChip:{minWidth:'40px', minHeight:'40px', borderRadius:'12px', textAlign:'center', fontSize:'11px', fontWeight:800, color:T.ink, background:T.panel2, border:'1px solid '+T.line},
       langLabel:s.lang==='pt'?'PT':'EN', toggleLang:()=>this.setState({lang:s.lang==='pt'?'en':'pt'}),
@@ -1208,7 +1345,7 @@ class Component extends DCLogic {
       primaryBtnWide:{flex:2, textAlign:'center', padding:'12px', borderRadius:'15px', fontSize:'12.5px', fontWeight:800, background:T.a1, color:T.onA1, minHeight:'44px'},
       secondaryBtn:{flex:1, textAlign:'center', padding:'12px', borderRadius:'15px', fontSize:'12.5px', fontWeight:800, background:T.panel2, border:'1px solid '+T.line, color:T.ink, minHeight:'44px'},
       goSim:()=>this.setState({screen:'sim'}), goSimLabel:tr('Ir simular','Go simulate'),
-      tabBar:{position:'relative', flex:'none', display:'grid', gridTemplateColumns:'repeat('+(adv?4:2)+',1fr)', gap:'3px', padding:'8px 8px 20px', background:T.bar, borderTop:'1px solid '+T.line},
+      tabBar:{position:'relative', flex:'none', display:'grid', gridTemplateColumns:'repeat('+(adv?4:(limited?3:2))+',1fr)', gap:'3px', padding:'8px 8px 20px', background:T.bar, borderTop:'1px solid '+T.line},
       toastOn:!!s.toast, toastText:s.toast||'',
       toastWrap:{position:'absolute', left:'14px', right:'14px', bottom:'92px', pointerEvents:'none'},
       toastCard:{padding:'11px 14px', borderRadius:'16px', background:T.dark?'rgba(6,32,42,.96)':'rgba(255,255,255,.97)', border:'1px solid '+T.a1,
@@ -1221,27 +1358,28 @@ class Component extends DCLogic {
       arenaAria:tr('o mundo','the world')
     };
 
-    var tabDefs=[['home',tr('Início','Home')],['world',tr('Mundo','World')],['sim',tr('Simular','Run')],['lab',tr('Oficina','Workshop')]].filter((d)=>adv||d[0]==='home'||d[0]==='sim');
+    var tabDefs=[['home',tr('Início','Home')],['world',tr('Mundo','World')],['sim',tr('Simular','Run')],['lab',tr('Oficina','Workshop')]].filter((d)=>adv||d[0]==='home'||d[0]==='sim'||(d[0]==='lab'&&limited));
     v.tabs=tabDefs.map((d,i)=>{ var on=sc===d[0];
       return {label:d[1], on:on, onTap:()=>this.setState({screen:d[0]}),
         style:{display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', padding:'7px 2px', minHeight:'44px', borderRadius:'12px', fontSize:'11px', fontWeight:800,
           color:on?T.onA1:T.soft, background:on?T.a1:'transparent'},
-        glyph:{width:'11px', height:'11px', display:'block', background:on?T.onA1:T.soft, borderRadius:['3px','2px','50%','40% 60% 55% 45%'][i]}}; });
+        glyph:{width:'11px', height:'11px', display:'block', background:on?T.onA1:T.soft, borderRadius:{home:'3px',world:'2px',sim:'50%',lab:'40% 60% 55% 45%'}[d[0]]}}; });
 
     if(sc==='home'){
       v.homeHelp=adv?tr('Abra um cenário pronto e mexa em tudo, ou comece do zero na bancada.','Open a ready scenario and change anything, or start from scratch on the bench.')
-                    :tr('Cada mundo já vem montado. Toque em um e aperte ▶.','Each world comes ready. Tap one and press ▶.');
-      v.shelfLabel=tr('MUNDOS PRONTOS','READY WORLDS');
-      v.scenarios=SCENARIOS.map((c,i)=>{ var on=S.id===c.id, done=!!s.done[c.id];
+                    :tr('Os mundos já vêm montados: toque e aperte ▶. Nos desafios você ganha uma ferramenta para resolver.','Worlds come ready: tap and press ▶. In challenges you get one tool to solve them.');
+      v.shelfLabel=tr('MUNDOS PARA RODAR','WORLDS TO RUN'); v.questLabel=tr('DESAFIOS · UMA FERRAMENTA DE CADA VEZ','CHALLENGES · ONE TOOL AT A TIME');
+      var shelf=(c,i)=>{ var on=S.id===c.id, done=!!s.done[c.id];
         return {n:i+1, name:tr(c.pt,c.en), desc:tr(c.dpt,c.den), state:done?'✓':'',
           tags:c.tags.map((g)=>({label:tr(TYPE_NAME[g][0],TYPE_NAME[g][1]), style:{fontSize:'9.5px', fontWeight:800, padding:'3px 8px', borderRadius:'8px', background:T.panel2, color:T.soft, border:'1px solid '+T.line}})),
-          onTap:()=>{ this.load(c); this.setState({screen:'sim', running:true}); },
+          onTap:()=>{ this.load(c); this.setState({screen:'sim', running:!c.edit}); },
           row:{display:'flex', gap:'12px', alignItems:'flex-start', padding:'12px', borderRadius:'18px', width:'100%', background:on?hexA(T.a1,0.12):T.panel, border:'1px solid '+(on?T.a1:T.line)},
           badge:{flex:'none', width:'30px', height:'30px', borderRadius:'11px', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Baloo 2',cursive", fontWeight:700,
             fontSize:'15px', color:done?T.onA1:T.ink, background:done?T.a1:hexA(T.a1,0.2)},
           nameStyle:{display:'block', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'16px', color:T.ink, lineHeight:1.2},
           descStyle:{display:'block', fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty'},
-          stateStyle:{flex:'none', fontSize:'14px', fontWeight:800, color:T.a3}}; });
+          stateStyle:{flex:'none', fontSize:'14px', fontWeight:800, color:T.a3}}; };
+      v.scenarios=SCENARIOS.map(shelf); v.quests=QUESTS.map(shelf);
       v.newBench=()=>{ this.load(BENCH); this.setState({screen:'world'}); };
       v.benchBtn={textAlign:'center', padding:'14px', borderRadius:'18px', background:hexA(T.a2,0.14), border:'1px solid '+T.a2, color:T.ink, fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'16px'};
       v.benchSub={display:'block', fontFamily:'Nunito,sans-serif', fontSize:'11px', fontWeight:700, color:T.soft};
@@ -1251,7 +1389,7 @@ class Component extends DCLogic {
 
     if(sc==='sim'&&W){
       var g=S.goal, done=!!s.done[S.id];
-      v.hasGoal=!!g; v.goalText=g?tr(g[2],g[3]):'';
+      v.hasGoal=!!g; v.goalText=g?tr(g.pt,g.en):'';
       v.goalCard={padding:'11px 13px', borderRadius:'16px', background:hexA(done?T.a3:T.a2,0.12), border:'1px solid '+hexA(done?T.a3:T.a2,0.6)};
       v.goalKicker={fontSize:'10px', fontWeight:800, letterSpacing:'1px', color:T.ink}; v.goalKickerLabel=done?tr('✓ RESOLVIDO','✓ SOLVED'):tr('OBJETIVO','GOAL');
       v.probes=(S.probes||[]).map((p)=>({value:this.probe(p[0]), label:tr(p[1],p[2]),
@@ -1275,8 +1413,15 @@ class Component extends DCLogic {
       v.lensLabel=tr('LENTES','LENSES');
       v.lensChips=(adv?Object.keys(LENSES):(S.lens||['grid'])).map((k)=>({label:tr(LENSES[k][0],LENSES[k][1]), on:!!W.lens[k], style:chip(!!W.lens[k],36),
         onTap:()=>{ W.lens[k]=!W.lens[k]; var d=JSON.parse(this.saved); d.lens=W.lens; this.saved=JSON.stringify(d); this.forceUpdate(); }}));
-      v.simNextLabel=adv?tr('Abrir a Oficina deste mundo','Open this world’s Workshop'):tr('Ver como este mundo foi montado','See how this world was built');
-      v.simNext=()=>{ if(!adv) this.say('Avançado: as leis deste mundo estão na Oficina.','Advanced: this world’s laws are in the Workshop.'); this.setState({mode:'adv', screen:'lab', running:false}); };
+      var CS=this.chartSpecs(), H=this.hist||[], cols=[T.a3,T.a1,T.a2];
+      v.hasChart=CS.length>0&&H.length>1; v.chartLabel=tr('AO LONGO DO TEMPO','OVER TIME');
+      var mx=1; H.forEach((r)=>r.forEach((x)=>{ if(x>mx) mx=x; }));
+      v.series=CS.map((c,k)=>{ var pr=(S.probes||[]).find((q)=>q[0]===c), nm=pr?tr(pr[1],pr[2]):(c.indexOf('count:')===0?this.kn(c.split(':')[1]):c);
+        return {label:nm, count:H.length?H[H.length-1][k]:0, color:cols[k%3], dash:k===1?'6 4':'none',   // second series is dashed, so colour is not the only cue
+          points:H.map((r,i)=>(i/(H.length-1)*300).toFixed(1)+','+(104-r[k]/mx*96).toFixed(1)).join(' '),
+          dot:{width:'14px', height:'0', borderTop:(k===1?'3px dashed ':'3px solid ')+cols[k%3], display:'block'}, legend:{fontSize:'11px', fontWeight:700, color:T.soft}}; });
+      v.simNextLabel=adv?tr('Abrir a Oficina deste mundo','Open this world’s Workshop'):(S.edit?tr('Abrir a ferramenta deste desafio','Open this challenge’s tool'):tr('Ver como este mundo foi montado','See how this world was built'));
+      v.simNext=()=>{ if(limited){ this.setState({screen:'lab', running:false}); return; } if(!adv) this.say('Avançado: as leis deste mundo estão na Oficina.','Advanced: this world’s laws are in the Workshop.'); this.setState({mode:'adv', screen:'lab', running:false}); };
     }
 
     if(sc==='world'&&W){
@@ -1295,15 +1440,53 @@ class Component extends DCLogic {
     }
 
     if(sc==='lab'&&W){
-      var L=W.laws, si=s.sel>=0&&s.sel<L.length?s.sel:-1, cur=si>=0?L[si]:null, rec=s.labTab==='rec';
-      v.isRec=rec; v.isLaws=!rec;
+      var L=W.laws, si=s.sel>=0&&s.sel<L.length?s.sel:-1, rec=s.labTab==='rec'&&!limited;
+      if(limited) si=L.findIndex((c)=>c.type==='brain');     // a challenge opens straight on its one tool
+      var cur=si>=0?L[si]:null;
+      v.isRec=rec; v.isLaws=!rec; v.fullLab=!limited;
       v.segTray={display:'flex', gap:'6px', padding:'5px', borderRadius:'15px', background:T.panel2};
       v.labTabs=[['laws',tr('Leis','Laws'),tr('a lista e os cartões','the list and the cards')],['rec',tr('Gravar','Record'),tr('mostre, e o mundo propõe','show it, the world proposes')]].map((d)=>({label:d[1], subLabel:d[2], on:s.labTab===d[0],
         onTap:()=>this.setState({labTab:d[0]}), sub:{display:'block', fontSize:'9px', fontWeight:700, opacity:0.85},
         style:{flex:1, textAlign:'center', padding:'7px 4px', minHeight:'44px', borderRadius:'11px', fontSize:'12px', fontWeight:800, color:s.labTab===d[0]?T.onA1:T.soft, background:s.labTab===d[0]?T.a1:'transparent'}}));
       v.labHelp=rec?tr('Você é o motor: mexa no mundo com a mão e tire uma foto. A colheita compara duas fotos e propõe cartões.','You are the engine: change the world by hand and take a photo. The harvest compares two photos and proposes cards.')
-        :tr('Cada cartão é uma lei. Ligue, desligue, some outras: todas valem no mesmo mundo.','Each card is a law. Switch them on or off, add more: they all apply to the same world.');
+        :(limited?tr(S.goal.pt,S.goal.en):tr('Cada cartão é uma lei. Ligue, desligue, some outras: todas valem no mesmo mundo.','Each card is a law. Switch them on or off, add more: they all apply to the same world.'));
       if(rec){
+        v.recModes=[['strip',tr('Fita: eu mexo, ela grava','Strip: I move, it records')],['one',tr('Uma regra de cada vez','One rule at a time')]].map((d)=>({label:d[1], on:s.recMode===d[0], onTap:()=>this.setState({recMode:d[0]}),
+          style:{flex:1, textAlign:'center', padding:'6px 4px', minHeight:'40px', borderRadius:'11px', fontSize:'11.5px', fontWeight:800, color:s.recMode===d[0]?T.onA1:T.soft, background:s.recMode===d[0]?T.a1:'transparent'}}));
+        v.isOne=s.recMode==='one'; v.isStrip=!v.isOne;
+        if(v.isOne){
+          var te=s.teach, gk=te.gesture, pc=this.pairCells(), dkey=DIRS[te.dir]?te.dir:'right';
+          buildView(W);
+          var bef=pc?[W.V[pc[0]],W.V[pc[1]]]:['>','_'];
+          var aft=gk==='copy'?[bef[0],bef[0]]:(gk==='paint'?[bef[0],s.recBrush]:(gk==='erase'?['_',bef[1]]:['_',bef[0]]));
+          v.pickPair=this.pickPair;
+          v.oneHint=pc?tr('Par escolhido: esta casa e a vizinha na direção da seta. As casas ✳ não importam.','Pair chosen: this cell and its neighbour in the arrow’s direction. The ✳ cells do not matter.')
+            :tr('Toque em uma casa do mundo: ela e a vizinha na direção da seta formam o par da regra.','Tap a cell of the world: it and its neighbour in the arrow’s direction form the rule’s pair.');
+          v.gesturePicks=[['drag',tr('✋ arrastar · anda','✋ drag · moves')],['copy',tr('✌ copiar · duplica','✌ copy · duplicates')],['paint',tr('● pintar · torna-se','● paint · becomes')],['erase',tr('⌫ apagar · some','⌫ erase · vanishes')]]
+            .map((d)=>({label:d[1], on:gk===d[0], style:chip(gk===d[0]), onTap:()=>this.setState({teach:Object.assign({},te,{gesture:d[0]})})}));
+          v.dirPicks=[['right','→'],['left','←'],['up','↑'],['down','↓']].map((d)=>({label:d[1], on:dkey===d[0], style:Object.assign(chip(dkey===d[0]),{minWidth:'40px', justifyContent:'center'}), onTap:()=>this.setState({teach:Object.assign({},te,{dir:d[0]})})}));
+          v.isPaintGesture=gk==='paint';
+          v.recPalette=RULE_KINDS.map((k)=>({label:this.kn(k), glyph:KINDS[k].glyph||'', tile:tile(k,22), on:s.recBrush===k, onTap:()=>this.setState({recBrush:k}),
+            style:{width:'36px', height:'36px', borderRadius:'10px', display:'inline-flex', alignItems:'center', justifyContent:'center', background:s.recBrush===k?hexA(T.a1,0.2):T.panel2, border:'1px solid '+(s.recBrush===k?T.a1:T.line)}}));
+          var slotOf={right:5,left:3,up:1,down:7}[dkey];
+          var patch=(pr)=>{ var out=[]; for(var q=0;q<9;q++){ var k=q===4?pr[0]:(q===slotOf?pr[1]:null);
+            out.push({glyph:k===null?'✳':(KINDS[k].glyph||''), tile:k===null?{fontSize:'12px', fontWeight:800, color:T.faint}:tile(k,22),
+              box:{width:'30px', height:'30px', borderRadius:'7px', display:'flex', alignItems:'center', justifyContent:'center', border:k===null?'1px dashed '+T.line:'1px solid '+T.a2, background:k===null?'transparent':T.panel}}); } return out; };
+          v.patchBefore=patch(bef); v.patchAfter=patch(aft);
+          v.patchRow={display:'flex', alignItems:'center', justifyContent:'center', gap:'12px', padding:'12px', borderRadius:'16px', background:T.panel2};
+          v.patchGrid={display:'grid', gridTemplateColumns:'repeat(3,30px)', gap:'3px'};
+          v.patchCap={fontSize:'9.5px', fontWeight:800, letterSpacing:'.6px', color:T.soft, textAlign:'center', marginTop:'5px'};
+          v.patchArrow={fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'19px', color:T.ink};
+          v.beforeLabel=tr('ANTES','BEFORE'); v.afterLabel=tr('DEPOIS','AFTER');
+          v.gestureNote=gk==='copy'?tr('A original continua ali: por isso é duplicar, e não andar.','The original stays there: that is why it is duplicating, not moving.')
+            :(gk==='erase'?tr('Apagar é a regra de sumir: o que estava aqui deixa de estar.','Erasing is the rule for vanishing: what was here is gone.')
+            :(gk==='paint'?tr('Pintar troca o tipo da vizinha: é assim que uma coisa faz outra aparecer.','Painting changes the neighbour’s kind: this is how one thing makes another appear.')
+            :tr('Arrastar é mover: a casa de origem fica vazia e a seta diz para onde.','Dragging is moving: the origin cell empties and the arrow says where to.')));
+          v.saveOneLabel=tr('Salvar regra','Save rule');
+          v.saveOne=()=>{ if(bef[0]===aft[0]&&bef[1]===aft[1]){ this.say('Antes e depois estão iguais: essa regra não muda nada.','Before and after are the same: this rule changes nothing.'); return; }
+            W.laws.push(pair(bef[0],bef[1],aft[0],aft[1],dkey,60)); this.saved=snapshot(W); this.say('Regra salva na lista de leis.','Rule saved to the list of laws.'); this.forceUpdate(); };
+        }
+        if(v.isStrip){
         v.recDown=this.recDown; v.recMove=this.recMove; v.recUp=this.recUp; v.recCancel=this.recCancel; v.pickFrame=this.pickFrame;
         v.recTools=[['move',tr('✋ mover','✋ move')],['copy',tr('✌ copiar','✌ copy')],['paint',tr('● pintar / apagar','● paint / erase')]].map((d)=>({label:d[1], on:s.tool===d[0], style:chip(s.tool===d[0]), onTap:()=>this.setState({tool:d[0]})}));
         v.isPaintTool=s.tool==='paint';
@@ -1337,6 +1520,7 @@ class Component extends DCLogic {
             times:{flex:'none', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'14px', color:T.ink},
             text:{flex:1, minWidth:0, fontSize:'11.5px', fontWeight:800, color:T.ink, textWrap:'pretty'},
             noteStyle:{fontSize:'11px', fontWeight:600, color:T.soft, textWrap:'pretty', marginTop:'6px'}}; });
+        }
       }
       v.lawsLabel=tr('LEIS DO MUNDO','LAWS OF THE WORLD'); v.noLaws=L.length===0;
       v.noLawsText=tr('Nenhuma lei ainda. Só o meio age. Some um cartão abaixo.','No laws yet. Only the medium acts. Add a card below.');
@@ -1410,10 +1594,14 @@ class Component extends DCLogic {
             .concat(W.face==='free'&&cur.direct?[]:[slider(tr('ALCANCE','RANGE'),cur.range,2,12,1,tr(' casas',' cells'),(x)=>{ cur.range=x; this.keep(); })]);
         } else {
           var li=s.lang==='pt'?0:1, sk=Object.keys(SENSORS), ak=Object.keys(ACTIONS), mounts=cur.mounts||(cur.mounts=[]), p1=cur.p1||(cur.p1=[]), bt=s.brainTab;
+          var ed=limited?S.edit:{}, okTabs=ed.tabs||['body','wiring','blocks']; if(okTabs.indexOf(bt)<0) bt=okTabs[0];
+          var okActs=ed.acts||ak, actNow=okActs.indexOf(s.act)<0?okActs[0]:s.act;
+          var side=(a)=>({0:tr('frente','front'),90:tr('direita','right'),180:tr('trás','back'),270:tr('esquerda','left')}[Math.round(a)]||Math.round(a)+'°');
+          var mlabel=(m)=>SENSORS[m.s][li]+(m.s==='dice'?'':' · '+side(m.a));
           var seg=(on)=>({flex:1, textAlign:'center', minHeight:'40px', borderRadius:'11px', fontSize:'12px', fontWeight:800, color:on?T.onA1:T.soft, background:on?T.a1:'transparent'});
           v.editHint=tr('O corpo sente, as ligações decidem, os blocos agem.','The body senses, the wires decide, the blocks act.');
           v.segTrayGap={display:'flex', gap:'6px', padding:'5px', borderRadius:'15px', background:T.panel2, marginTop:'10px'};
-          v.brainTabs=[['body',tr('Corpo','Body')],['wiring',tr('Ligações','Wiring')],['blocks',tr('Blocos','Blocks')]].map((d)=>({label:d[1], on:bt===d[0], style:seg(bt===d[0]), onTap:()=>this.setState({brainTab:d[0]})}));
+          v.brainTabs=[['body',tr('Corpo','Body')],['wiring',tr('Ligações','Wiring')],['blocks',tr('Blocos','Blocks')]].filter((d)=>okTabs.indexOf(d[0])>=0).map((d)=>({label:d[1], on:bt===d[0], style:seg(bt===d[0]), onTap:()=>this.setState({brainTab:d[0]})}));
           v.isBody=bt==='body'; v.isWiring=bt==='wiring'; v.isBlocks=bt==='blocks';
           if(v.isBody){
             var mi=Math.min(s.mountIdx,Math.max(0,mounts.length-1)), R=64, cm=mounts[mi];
@@ -1435,68 +1623,69 @@ class Component extends DCLogic {
             if(!s.advBody) [0,90,180,270].forEach((ang)=>{ if(!seenAng[ang]) slots.push({angle:ang, i:-1, label:'+', k:0}); });
             v.mountPins=slots.map((sl)=>{ var rad=(sl.angle-90)*Math.PI/180, on=sl.i===mi&&sl.i>=0, RR=R+40*Math.min(1,sl.k);
               return {label:sl.label, on:on, aria:sl.i<0?tr('montar sensor a ','mount a sensor at ')+sl.angle+'°':sl.label,
-                onTap:()=>{ if(sl.i>=0){ this.setState({mountIdx:sl.i}); return; } mounts.push({s:'wall',a:sl.angle,r:1.5,f:50}); this.setState({mountIdx:mounts.length-1}); this.keep(); },
+                onTap:()=>{ if(sl.i>=0){ this.setState({mountIdx:sl.i}); return; } mounts.push({id:'m'+(cur.nid=(cur.nid||10)+1),s:'food',a:sl.angle,r:4,f:50}); this.setState({mountIdx:mounts.length-1}); this.keep(); },
                 style:{position:'absolute', left:'50%', top:'50%', transform:'translate(-50%,-50%) translate('+(Math.cos(rad)*RR)+'px,'+(Math.sin(rad)*RR)+'px)', minWidth:'40px', minHeight:'32px', padding:'0 8px',
                   borderRadius:'11px', textAlign:'center', fontSize:'10.5px', fontWeight:800, whiteSpace:'nowrap', background:on?T.a2:T.shell, color:on?'#1a1205':T.ink, border:'1px solid '+(on?T.a2:T.line)}}; });
             v.hasMount=!!cm; v.noMount=!cm; v.noMountText=tr('Nenhum sensor montado. Toque em um + em volta do peixe.','No sensor mounted. Tap a + around the fish.');
-            v.addMountLabel=tr('+ sensor','+ sensor'); v.addMount=()=>{ if(mounts.length<6){ mounts.push({s:'food',a:s.advBody?40:0,r:2,f:50}); this.setState({mountIdx:mounts.length-1}); this.keep(); } };
+            v.addMountLabel=tr('+ sensor','+ sensor'); v.addMount=()=>{ if(mounts.length<6){ mounts.push({id:'m'+(cur.nid=(cur.nid||10)+1),s:'food',a:s.advBody?40:0,r:2,f:50}); this.setState({mountIdx:mounts.length-1}); this.keep(); } };
             v.mountTitle=cm?tr('SENSOR A ','SENSOR AT ')+Math.round(cm.a)+'°':tr('NENHUM SENSOR','NO SENSOR');
             v.advBody=s.advBody; v.toggleAdvBody=()=>this.setState({advBody:!s.advBody}); v.advLabel=s.advBody?tr('ângulo livre','free angle'):tr('quatro lados','four sides');
             v.advBtn=chip(false,36);
-            v.sensorPick=cm?sk.filter((id)=>id!=='dice').map((id)=>({label:SENSORS[id][li], on:cm.s===id, style:chip(cm.s===id,36), onTap:()=>{ cm.s=id; this.keep(); }})):[];
+            v.sensorPick=cm?sk.map((id)=>({label:SENSORS[id][li], on:cm.s===id, style:chip(cm.s===id,36), onTap:()=>{ cm.s=id; this.keep(); }})):[];
             v.mountSliders=cm?[slider(tr('ALCANCE','RANGE'),cm.r,1,5,0.5,tr(' casas',' cells'),(x)=>{ cm.r=x; this.keep(); }),
               slider(tr('ABERTURA','OPENING'),cm.f,20,150,5,'°',(x)=>{ cm.f=x; this.keep(); })]
               .concat(s.advBody?[slider(tr('DIREÇÃO','DIRECTION'),cm.a,0,350,10,'°',(x)=>{ cm.a=x; this.keep(); })]:[]):[];
             v.removeMountLabel=tr('Tirar este sensor','Remove this sensor');
-            v.removeMount=()=>{ mounts.splice(mi,1); this.setState({mountIdx:0}); this.keep(); };
+            v.removeMount=()=>{ var gone=mounts.splice(mi,1)[0]; cur.wires=cur.wires.filter((w)=>w[0]!==gone.id); this.setState({mountIdx:0, wireSel:null}); this.keep(); };
             v.dangerBtn={display:'block', width:'100%', marginTop:'10px', textAlign:'center', minHeight:'40px', borderRadius:'12px', fontSize:'12px', fontWeight:800, color:T.ink, background:hexA(T.a2,0.16), border:'1px solid '+T.a2};
           }
           if(v.isWiring){
-            var H=sk.length*46-8, yy=(i)=>i*46+19, wired={};
+            var H=Math.max(mounts.length,ak.length)*46-8, yy=(i)=>i*46+19, wired={}, mIdx=(id)=>mounts.findIndex((m)=>m.id===id), selM=mountById(cur,s.wireSel);
             cur.wires.forEach((w)=>{ wired[w[0]]=1; wired['>'+w[1]]=1; });
-            v.wireHelp=s.wireSel?tr('Agora toque em uma ação para ligar “'+SENSORS[s.wireSel][li]+'”.','Now tap an action to wire “'+SENSORS[s.wireSel][li]+'”.'):tr('Toque em um sensor e depois em uma ação. Tocar de novo desfaz.','Tap a sensor, then an action. Tapping again undoes it.');
+            v.wireHelp=selM?tr('Agora toque em uma ação para ligar “'+mlabel(selM)+'”.','Now tap an action to wire “'+mlabel(selM)+'”.')
+              :tr('Toque em um sensor e depois em uma ação. Tocar de novo desfaz. Se nenhum for verdade, o peixe nada.','Tap a sensor, then an action. Tapping again undoes it. If none is true, the fish swims.');
             v.graphCard={padding:'10px', borderRadius:'16px', background:T.panel2, border:'1px solid '+T.line, marginTop:'8px'};
-            v.colLabel={fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.soft}; v.sensorsLabel=tr('SENSORES','SENSORS'); v.actionsLabel=tr('AÇÕES','ACTIONS');
+            v.colLabel={fontSize:'9.5px', fontWeight:800, letterSpacing:'1.1px', color:T.soft}; v.sensorsLabel=tr('SENSORES DO CORPO','BODY SENSORS'); v.actionsLabel=tr('AÇÕES','ACTIONS');
             v.colStack={flex:1, minWidth:0, display:'flex', flexDirection:'column', gap:'8px'};
             v.wireSvg={flex:'none', width:'38px', height:H+'px', overflow:'visible', pointerEvents:'none'}; v.graphView='0 0 38 '+H;
-            v.wirePaths=cur.wires.map((w)=>{ var a=sk.indexOf(w[0]), b=ak.indexOf(w[1]); return {d:'M0 '+yy(a)+' C 15 '+yy(a)+', 23 '+yy(b)+', 38 '+yy(b), stroke:T.a1}; });
-            var node=(sel,on,col)=>({width:'100%', height:'38px', padding:'0 8px', borderRadius:'12px', fontSize:'11px', fontWeight:800, lineHeight:1.1, textAlign:'center', color:T.ink,
+            v.wirePaths=cur.wires.filter((w)=>mIdx(w[0])>=0).map((w)=>{ var a=mIdx(w[0]), b=ak.indexOf(w[1]); return {d:'M0 '+yy(a)+' C 15 '+yy(a)+', 23 '+yy(b)+', 38 '+yy(b), stroke:T.a1}; });
+            var node=(sel,on,col)=>({width:'100%', height:'38px', padding:'0 6px', borderRadius:'12px', fontSize:'10.5px', fontWeight:800, lineHeight:1.1, textAlign:'center', color:T.ink,
               background:sel?hexA(col,0.3):(on?T.panel:'transparent'), border:'1px solid '+(sel||on?col:T.line)});
-            v.sensorNodes=sk.map((id)=>({label:SENSORS[id][li], on:s.wireSel===id, style:node(s.wireSel===id,!!wired[id],T.a1), onTap:()=>this.setState({wireSel:s.wireSel===id?null:id})}));
+            v.sensorNodes=mounts.map((m)=>({label:mlabel(m), on:s.wireSel===m.id, style:node(s.wireSel===m.id,!!wired[m.id],T.a1), onTap:()=>this.setState({wireSel:s.wireSel===m.id?null:m.id})}));
             v.actionNodes=ak.map((id)=>({label:ACTIONS[id][li], style:node(false,!!wired['>'+id],T.a2),
-              onTap:()=>{ if(!s.wireSel) return; var k=cur.wires.findIndex((w)=>w[0]===s.wireSel&&w[1]===id);
-                if(k>=0) cur.wires.splice(k,1); else cur.wires.push([s.wireSel,id]); this.setState({wireSel:null}); this.keep(); }}));
+              onTap:()=>{ if(!selM) return; var k=cur.wires.findIndex((w)=>w[0]===selM.id&&w[1]===id);
+                if(k>=0) cur.wires.splice(k,1); else { cur.wires=cur.wires.filter((w)=>w[0]!==selM.id); cur.wires.push([selM.id,id]); } this.setState({wireSel:null}); this.keep(); }}));
             v.orderLabel=tr('A PRIMEIRA QUE FOR VERDADE VENCE','THE FIRST ONE THAT IS TRUE WINS');
             var sbtn={flex:'none', width:'32px', height:'32px', borderRadius:'10px', textAlign:'center', fontSize:'12px', fontWeight:800, color:T.ink, background:T.panel2, border:'1px solid '+T.line};
-            v.wireRows=cur.wires.map((w,i)=>({n:i+1, when:SENSORS[w[0]][li], then:ACTIONS[w[1]][li], btn:sbtn, upAria:tr('subir','move up'), delAria:tr('tirar ligação','remove wire'),
+            v.wireRows=cur.wires.map((w,i)=>({n:i+1, when:mountById(cur,w[0])?mlabel(mountById(cur,w[0])):'?', then:ACTIONS[w[1]][li], btn:sbtn, upAria:tr('subir','move up'), delAria:tr('tirar ligação','remove wire'),
               num:{flex:'none', width:'16px', fontFamily:"'Baloo 2',cursive", fontWeight:700, fontSize:'13px', color:T.soft},
               text:{flex:1, minWidth:0, fontSize:'11.5px', fontWeight:800, color:T.ink},
               onUp:()=>{ if(i>0){ var t0=cur.wires[i-1]; cur.wires[i-1]=cur.wires[i]; cur.wires[i]=t0; this.keep(); } },
               onDel:()=>{ cur.wires.splice(i,1); this.keep(); }}));
           }
           if(v.isBlocks){
-            var prog=cur.programs[s.act]||(cur.programs[s.act]=[]), toP1=s.progSlot==='p1', tb=this.test&&this.test.act===s.act?this.test.W.bodies[0]:null, last=tb&&tb.last?tb.last:null;
-            v.actTabs=ak.map((a)=>({label:ACTIONS[a][li], on:s.act===a, style:chip(s.act===a,36), onTap:()=>this.setState({act:a})}));
+            var prog=cur.programs[actNow]||(cur.programs[actNow]=[]), toP1=s.progSlot==='p1'&&!ed.noP1, tb=this.test&&this.test.act===actNow?this.test.W.bodies[0]:null, last=tb&&tb.last?tb.last:null;
+            v.canP1=!ed.noP1; v.actTabs=okActs.map((a)=>({label:ACTIONS[a][li], on:actNow===a, style:chip(actNow===a,36), onTap:()=>this.setState({act:a})}));
             var strip=(on,col)=>({display:'flex', flexWrap:'wrap', gap:'6px', alignItems:'center', width:'100%', minHeight:'56px', padding:'8px', marginTop:'8px', borderRadius:'14px',
               background:hexA(col,on?0.16:0.06), border:(on?'2px solid ':'1px solid ')+(on?col:T.line)});
             var blk=(b,hot,col)=>({glyph:BLOCKS[b][0], style:{display:'inline-flex', alignItems:'center', justifyContent:'center', minWidth:'38px', height:'38px', padding:'0 6px', borderRadius:'11px', fontSize:'14px', fontWeight:800,
               color:T.onA1, background:col, outline:hot?'3px solid '+T.ink:'none', outlineOffset:'1px'}});
             v.stripMain=strip(!toP1,T.a1); v.stripProc=strip(toP1,T.a2); v.mainOn=!toP1; v.p1On=toP1;
             v.stripTag={flex:'none', fontSize:'9.5px', fontWeight:800, letterSpacing:'.8px', color:T.soft, width:'100%'};
-            v.mainLabel=tr('PRINCIPAL · '+ACTIONS[s.act][0].toUpperCase(),'MAIN · '+ACTIONS[s.act][1].toUpperCase()); v.p1Label=tr('P1 · ATALHO QUE TODAS AS AÇÕES PODEM CHAMAR','P1 · SHORTCUT ANY ACTION CAN CALL');
+            v.mainLabel=tr('PRINCIPAL · '+ACTIONS[actNow][0].toUpperCase(),'MAIN · '+ACTIONS[actNow][1].toUpperCase()); v.p1Label=tr('P1 · ATALHO QUE TODAS AS AÇÕES PODEM CHAMAR','P1 · SHORTCUT ANY ACTION CAN CALL');
             v.pickMain=()=>this.setState({progSlot:'main'}); v.pickP1=()=>this.setState({progSlot:'p1'});
             v.progBlocks=prog.map((b,i)=>blk(b,!!last&&last[0]==='main'&&last[1]===i,b==='p1'?T.a2:T.a1));
             v.procBlocks=p1.map((b,i)=>blk(b,!!last&&last[0]==='p1'&&last[1]===i,T.a2));
             v.progEmpty=prog.length===0; v.procEmpty=p1.length===0; v.emptySlot={fontSize:'11px', fontWeight:700, color:T.soft};
             v.progEmptyText=tr('toque aqui e depois em um bloco','tap here, then a block'); v.procEmptyText=tr('toque aqui para montar o atalho','tap here to build the shortcut');
-            v.blockPalette=Object.keys(BLOCKS).filter((b)=>!(toP1&&b==='p1')).map((b)=>({glyph:BLOCKS[b][0], label:BLOCKS[b][li+1], style:chip(false,40), glyphStyle:{fontSize:'13px', fontWeight:800},
-              onTap:()=>{ var tgt=toP1?p1:prog; if(tgt.length<8){ tgt.push(b); this.keep(); } }}));
+            v.blockPalette=Object.keys(BLOCKS).filter((b)=>!(b==='p1'&&(toP1||ed.noP1))).map((b)=>({glyph:BLOCKS[b][0], label:BLOCKS[b][li+1], style:chip(false,40), glyphStyle:{fontSize:'13px', fontWeight:800},
+              onTap:()=>{ var tgt=toP1?p1:prog; if(tgt.length<12){ tgt.push(b); this.keep(); } else this.say('A faixa está cheia: 12 blocos.','The strip is full: 12 blocks.'); }}));
             v.undoLabel=tr('tirar o último','remove last'); v.undoStyle=chip(false,40);
             v.undoBlock=()=>{ var tgt=toP1?p1:prog; if(tgt.length){ tgt.pop(); this.keep(); } };
-            if(!this.test||this.test.act!==s.act) this.testReset(cur,s.act);
+            if(!this.test||this.test.act!==actNow) this.testReset(cur,actNow);
             v.testLabel=tr('TESTE · UM BLOCO DE CADA VEZ','TEST · ONE BLOCK AT A TIME');
             v.testWrap={flex:'none', width:'210px', height:'210px', borderRadius:'14px', overflow:'hidden', border:'1px solid '+T.line};
-            v.testStepLabel=tr('Passo','Step'); v.testStep=()=>this.testStep(cur,s.act); v.testReset=()=>{ this.testReset(cur,s.act); this.forceUpdate(); };
+            v.testStepLabel=tr('Passo','Step'); v.testStep=()=>this.testStep(cur,actNow); v.testReset=()=>{ this.testReset(cur,actNow); this.forceUpdate(); };
             v.testBtnOn={minHeight:'44px', borderRadius:'13px', textAlign:'center', fontSize:'12.5px', fontWeight:800, background:T.a1, color:T.onA1};
             v.testBtn={minHeight:'44px', borderRadius:'13px', textAlign:'center', fontSize:'14px', fontWeight:800, background:T.panel2, border:'1px solid '+T.line, color:T.ink};
             v.testHint=tr('O bloco com contorno é o que acabou de rodar.','The outlined block is the one that just ran.');

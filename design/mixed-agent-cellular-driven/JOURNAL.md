@@ -269,8 +269,32 @@ foi até a estrela. Nova lente **sensores** desenha os cones no mundo.
 Mudança de padrão: o sensor de alga agora olha só 1 casa à frente. Com alcance 3, o peixe
 tentava comer algas que ainda não alcançava e ficava parado.
 
-### Ainda não portado da v4
-- O gravador de uma regra só (escolher o par no aquário, recortes 3×3 antes/depois com ✳).
+## v1.3 — v5 completa e pacote de implementação
+**Files:** `Cellula v5.dc.html`, `handoff/` (documentos e núcleo de referência)
+
+Feito de uma vez, com decisões autônomas a pedido do usuário (todas em `handoff/docs/10-decisions.md`).
+
+- **Gravador de uma regra** (Oficina › Gravar › “Uma regra de cada vez”): escolher o par no mundo,
+  quatro gestos, recortes 3×3 antes/depois com ✳.
+- **Desafios**: segunda prateleira no Início, com os capítulos da v4 — *Um peixe que anda*, *O mesmo
+  peixe, outro cérebro*, *Olhos que giram*, *Atalhos que se repetem*. Cada um declara UMA ferramenta
+  (`edit`), que aparece como terceira aba mesmo no Introdutório.
+- **Ligações saem dos sensores montados**, não do tipo de sensor: dois “vê alga” em lados
+  diferentes podem acionar ações diferentes. Sem nenhuma ligação verdadeira, o peixe nada.
+- **Gráfico ao longo do tempo** nos mundos que declaram `chart`.
+- Objetivos viraram listas de testes sobre medidas (`goal.tests`), com as medidas novas `reach` e `blocks`.
+- Consertos achados nos testes: “agir” come as três casas à frente; o mundo das órbitas ficou
+  quadrado (31×31), porque em 31×25 as órbitas pelo campo escapavam; o campo das fontes fixas já
+  começa espalhado.
+
+**Pacote `handoff/`** para o Claude Code: `CLAUDE.md`, doze documentos em `docs/` (visão geral,
+arquitetura, núcleo, modelos, gravação, cenários, interface, desenho visual, testes, plano,
+decisões, limites) e `reference/` com o núcleo e o conteúdo extraídos da v5 e 14 testes sem
+interface (`node --test`).
+
+### Ainda não feito
+- Nada da v5 foi revisto visualmente; só a lógica foi testada. A lista de conferência está em
+  `handoff/docs/08-testing.md`.
 - P1 aqui é um só para todas as ações (na v4 cada ação tinha o seu).
 - A escada de 7 níveis (virou dois) e os capítulos c2, c4, c5 com seus objetivos.
 - Gráfico de população; rótulo PT+EN ao mesmo tempo (aqui é um idioma por vez).
